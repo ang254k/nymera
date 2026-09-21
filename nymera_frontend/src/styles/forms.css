@@ -1,0 +1,163 @@
+/* ==========================
+   Formularios
+========================== */
+
+.form{
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+}
+
+
+/* ==========================
+   Labels
+========================== */
+
+.label{
+
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+
+    font-size:.95rem;
+    font-weight:500;
+
+    color:var(--text-muted);
+
+}
+
+
+/* ==========================
+   Inputs
+========================== */
+
+.input,
+.textarea,
+.select{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    font-family:var(--font-body);
+    font-size:1rem;
+
+    outline:none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background-color .2s ease;
+
+}
+
+
+/* Placeholder */
+
+.input::placeholder,
+.textarea::placeholder{
+
+    color:var(--text-subtle);
+
+}
+
+
+/* Focus */
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible{
+
+    border-color:var(--primary);
+
+    box-shadow:var(--ring-primary);
+
+}
+
+
+/* Autofill Chrome */
+
+.input:-webkit-autofill,
+.input:-webkit-autofill:focus{
+
+    -webkit-text-fill-color:var(--text);
+
+    -webkit-box-shadow:
+        0 0 0 1000px var(--surface) inset;
+
+    caret-color:var(--text);
+
+}
+
+
+/* Textarea */
+
+.textarea{
+
+    resize:vertical;
+
+    min-height:150px;
+
+    line-height:1.6;
+
+}
+
+
+/* Select */
+
+.select{
+
+    cursor:pointer;
+
+}
+
+
+/* Error */
+
+.input-error{
+
+    border-color:var(--danger);
+
+}
+
+.input-error:focus-visible{
+
+    border-color:var(--danger);
+
+    box-shadow:var(--ring-danger);
+
+}
+
+
+/* Texto error */
+
+.form-error{
+
+    font-size:.9rem;
+
+    color:var(--danger);
+
+}
+
+
+/* Texto ayuda */
+
+.form-help{
+
+    margin-top: -6px;
+
+    font-size: .9rem;
+
+    color: var(--text-subtle);
+
+    line-height: 1.5;
+}

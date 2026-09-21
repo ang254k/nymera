@@ -1,0 +1,209 @@
+/* ==========================
+   Página
+========================== */
+
+.page,
+.page-center {
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    padding: var(--space-6) var(--space-5);
+
+}
+
+
+/* ==========================
+   Página centrada
+========================== */
+
+.page-center {
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: var(--space-6) var(--space-5);
+
+}
+
+
+/* ==========================
+   Containers
+========================== */
+
+.container {
+
+    width: 100%;
+
+    max-width: var(--content-width-wide);
+
+    margin: 0 auto;
+
+}
+
+.container-sm {
+
+    width: 100%;
+
+    max-width: var(--content-width);
+
+    margin: 0 auto;
+
+}
+
+
+/* ==========================
+   Stack
+========================== */
+
+.stack {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+}
+
+.stack-sm {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+}
+
+.stack-lg {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-6);
+
+}
+
+
+/* ==========================
+   Rows
+========================== */
+
+.row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-4);
+
+}
+
+.row-between {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: var(--space-4);
+
+}
+
+.row-wrap {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-2);
+
+    flex-wrap: wrap;
+
+}
+
+.row-center{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:var(--space-4);
+
+}
+
+/* ==========================
+   Helpers
+========================== */
+
+.center {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.push-right {
+
+    margin-left: auto;
+
+}
+
+.full-width{
+
+    width:100%;
+
+}
+
+.grid{
+
+    display:grid;
+
+    gap:var(--space-5);
+
+}
+
+@media (max-width: 600px) {
+
+    .page,
+    .page-center {
+        padding: var(--space-5) var(--space-3);
+    }
+
+    .auth-card {
+        max-width: 100%;
+    }
+
+}
+
+/* ==========================
+   Espaciado puntual
+========================== */
+
+/* .mt-sm { margin-top: var(--space-2); }
+
+.mt-md { margin-top: var(--space-4); }
+
+.mt-lg { margin-top: var(--space-6); }
+
+.mb-sm { margin-bottom: var(--space-2); }
+
+.mb-md { margin-bottom: var(--space-4); }
+
+.mb-lg { margin-bottom: var(--space-6); } */
+
+

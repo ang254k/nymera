@@ -1,0 +1,170 @@
+:root {
+
+   /* ========================================
+       COLORS
+    ======================================== */
+
+   /* Backgrounds */
+
+   --bg: #12101c;
+
+   --surface: #1c1830;
+
+   --surface-hover: #262040;
+
+   --border: #322a4d;
+
+   /* Text */
+
+   --text: #ece7f5;
+
+   --text-muted: #a79cc0;
+
+   --text-subtle: #6f6689;
+
+   /* Brand */
+
+   --primary: #c77dff;
+
+   --primary-hover: #d99bff;
+
+   --on-primary: #1a1230;
+
+   --secondary: #64e0d0;
+
+   /* Accent (⭐ pequeños detalles "mágicos") */
+
+   --accent: #F6D365;
+
+   /* RGB */
+
+   --primary-rgb: 199, 125, 255;
+
+   --secondary-rgb: 100, 224, 208;
+
+   --danger-rgb: 255, 128, 149;
+
+   --surface-rgb: 28, 24, 48;
+
+   /* States */
+
+   --success: #6ee7a8;
+
+   --danger: #ff8095;
+
+   --danger-hover: #ff6b83;
+
+   --warning: #ffd27d;
+
+   /* ========================================
+       TYPOGRAPHY
+    ======================================== */
+
+   --font-title: "Fraunces", serif;
+
+   --font-body: "Inter", sans-serif;
+
+   /* ========================================
+       SPACING
+    ======================================== */
+
+   --space-1: 4px;
+
+   --space-2: 8px;
+
+   --space-3: 12px;
+
+   --space-4: 16px;
+
+   --space-5: 24px;
+
+   --space-6: 32px;
+
+   --space-7: 48px;
+
+   --space-8: 64px;
+
+   /* ========================================
+       CONTENT WIDTH
+    ======================================== */
+
+   --content-width: 720px;
+
+   --content-width-wide: 1100px;
+
+   /* ========================================
+       RADIUS
+    ======================================== */
+
+   --radius-sm: 8px;
+
+   --radius-md: 14px;
+
+   --radius-lg: 22px;
+
+   --radius-xl: 30px;
+
+   --radius-full: 999px;
+
+   /* ========================================
+       SHADOWS
+    ======================================== */
+
+   --shadow-sm:
+      0 4px 12px rgba(0, 0, 0, .15);
+
+   --shadow-md:
+      0 10px 30px rgba(0, 0, 0, .25);
+
+   --shadow-lg:
+      0 18px 40px rgba(0, 0, 0, .35);
+
+   /* ========================================
+       FOCUS RINGS
+    ======================================== */
+
+   --ring-primary:
+      0 0 0 3px rgba(var(--primary-rgb), .18);
+
+   --ring-danger:
+      0 0 0 3px rgba(var(--danger-rgb), .18);
+
+   /* ========================================
+       TRANSITIONS
+    ======================================== */
+
+   --transition-fast: .18s ease;
+
+   --transition: .25s ease;
+
+   /* Z-INDEX */
+
+   --z-dropdown: 100;
+   --z-header: 200;
+   --z-modal: 500;
+   --z-toast: 1000;
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+   *,
+   *::before,
+   *::after {
+
+      animation-duration: .01ms !important;
+
+      transition-duration: .01ms !important;
+
+      animation-iteration-count: 1 !important;
+
+      scroll-behavior: auto !important;
+
+   }
+
+
+}

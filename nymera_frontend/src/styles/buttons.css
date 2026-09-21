@@ -1,0 +1,166 @@
+/* ==========================
+   Reset básico
+========================== */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* ==========================
+   Botón base
+========================== */
+
+.btn {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 12px 20px;
+
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+
+}
+
+
+/* ==========================
+   Accesibilidad
+========================== */
+
+.btn:focus-visible {
+
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+
+}
+
+.btn:disabled {
+
+    opacity: .55;
+    cursor: not-allowed;
+
+    transform: none;
+    box-shadow: none;
+
+}
+
+
+/* ==========================
+   Primary
+========================== */
+
+.btn-primary {
+
+    background: var(--primary);
+    color: var(--on-primary);
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+.btn-primary:hover:not(:disabled) {
+
+    background: var(--primary-hover);
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+
+}
+
+.btn-primary:active:not(:disabled) {
+
+    transform: translateY(0);
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+.btn-full{
+
+    width:100%;
+
+}
+
+/* ==========================
+   Secondary
+========================== */
+
+.btn-secondary {
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    border-color: var(--border);
+
+}
+
+.btn-secondary:hover:not(:disabled) {
+
+    background: var(--surface-hover);
+
+    border-color: var(--secondary);
+
+}
+
+
+/* ==========================
+   Ghost
+========================== */
+
+.btn-ghost {
+
+    background: transparent;
+
+    color: var(--text-muted);
+
+}
+
+.btn-ghost:hover:not(:disabled) {
+
+    background: var(--surface-hover);
+
+    color: var(--text);
+
+}
+
+
+/* ==========================
+   Danger
+========================== */
+
+.btn-danger {
+
+    background: transparent;
+
+    color: var(--danger);
+
+    border-color: var(--border);
+
+}
+
+.btn-danger:hover:not(:disabled) {
+
+    background: var(--danger);
+
+    color: var(--bg);
+
+    border-color: var(--danger);
+
+}

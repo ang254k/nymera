@@ -1,0 +1,112 @@
+/* ==========================
+   Card base
+========================== */
+
+.card {
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    padding: var(--card-padding, var(--space-6));
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+
+/* ==========================
+   Card Hover
+========================== */
+
+.card-hover {
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+
+}
+
+.card-hover:hover {
+
+    background: var(--surface-hover);
+
+    border-color: rgba(var(--primary-rgb), .25);
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+
+}
+
+
+/* ==========================
+   Header
+========================== */
+
+.card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-3);
+
+}
+
+
+/* ==========================
+   Body
+========================== */
+
+.card-body {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+}
+
+
+/* ==========================
+   Footer
+========================== */
+
+.card-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: var(--space-3);
+
+}
+
+
+/* ==========================
+   Reduced motion
+========================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .card-hover {
+
+        transition: none;
+
+    }
+
+    .card-hover:hover {
+
+        transform: none;
+
+    }
+
+}
