@@ -2,8 +2,9 @@ function ConfirmModal({
     open,
     title,
     message,
-    confirmText = "Borrar",
-    cancelText = "Cancelar",
+    confirmText,
+    cancelText,
+    loadingText,
     loading = false,
     onConfirm,
     onCancel
@@ -47,7 +48,7 @@ function ConfirmModal({
                         onClick={onConfirm}
                         disabled={loading}
                     >
-                        {loading ? "Eliminando..." : confirmText}
+                        {loading ? loadingText : confirmText}
                     </button>
                 </div>
             </div>

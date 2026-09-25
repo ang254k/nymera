@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
@@ -7,6 +8,7 @@ import { forgotPassword } from "../api/auth"
 import { useToast } from "../context/ToastContext"
 
 export default function ForgotPasswordPage() {
+    const { t } = useTranslation()
 
     const { showToast } = useToast()
 
@@ -19,10 +21,8 @@ export default function ForgotPasswordPage() {
         if (loading) return
 
         setLoading(true)
-        
-        try {
-            setLoading(true)
 
+        try {
             const data = await forgotPassword(email)
 
             showToast(data.message, "success")
@@ -55,24 +55,23 @@ export default function ForgotPasswordPage() {
                     </div>
 
                     <h2 className="section-title">
-                        Recuperar contraseña
+                        {t("auth.forgotPasswordTitle")}
                     </h2>
 
                     <p className="auth-description">
-                        Introduce tu correo electrónico. Si existe una cuenta asociada,
-                        recibirás un enlace para restablecer la contraseña.
+                        {t("auth.forgotPasswordDescription")}
                     </p>
 
                     <form className="stack" onSubmit={handleSubmit}>
 
                         <label className="label stack-sm">
 
-                            Correo electrónico
+                            {t("auth.email")}
 
                             <input
                                 className="input"
                                 type="email"
-                                placeholder="Introduce tu correo electrónico"
+                                placeholder={t("auth.emailPlaceholderForgot")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -84,20 +83,20 @@ export default function ForgotPasswordPage() {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? "Enviando..." : "Enviar enlace"}
+                            {loading ? t("auth.sending") : t("auth.sendLink")}
                         </button>
 
                     </form>
 
                     <p className="auth-footer">
-                        ¿Recordaste tu contraseña?
+                        {t("auth.rememberedPassword")}
                     </p>
 
                     <Link
                         className="auth-link"
                         to="/login"
                     >
-                        Volver al inicio de sesión
+                        {t("auth.backToLogin")}
                     </Link>
 
 

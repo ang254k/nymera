@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { getSuenosByHashtag } from "../api/hashtag"
 import SuenoCard from "../components/SuenoCard"
@@ -7,6 +8,7 @@ import { useToast } from "../context/ToastContext"
 import { useDreamFilter } from "../context/DreamFilterContext"
 
 export default function HashtagPage() {
+    const { t } = useTranslation()
 
     const { nombre } = useParams()
     const { showToast } = useToast()
@@ -26,7 +28,7 @@ export default function HashtagPage() {
 
                 setSuenos(data)
             } catch (err) {
-                showToast(err.message || "Error cargando hashtag", "error")
+                showToast(err.message || t("hashtag.error"), "error")
             } finally {
                 setLoadingInicial(false)
                 setLoadingSuenos(false)
@@ -36,7 +38,7 @@ export default function HashtagPage() {
     }, [nombre, categoriasSeleccionadas, orden.field, orden.direction])
 
     if (loadingInicial) {
-        return <p className="hashtag-loading">Cargando...</p>
+        return <p className="hashtag-loading">{t("hashtag.loading")}</p>
     }
 
     return (
@@ -47,14 +49,14 @@ export default function HashtagPage() {
 
             {loadingSuenos ? (
                 <p className="hashtag-loading">
-                    Cargando sueños...
+                    {t("hashtag.loadingDreams")}
                 </p>
             ) :
                 suenos.length === 0 ? (
                     hayFiltros ? (
-                        <p className="hashtag-empty">No hay sueños con este hashtag que coincidan con los filtros seleccionados</p>
+                        <p className="hashtag-empty">{t("hashtag.emptyWithFilters")}</p>
                     ) : (
-                        <p className="hashtag-empty">No hay sueños con este hashtag.</p>
+                        <p className="hashtag-empty">{t("hashtag.empty")}</p>
                     )
                 ) : (
                     <div className="hashtag-dreams">

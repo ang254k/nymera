@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
 
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
@@ -9,6 +10,7 @@ import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 
 function LoginPage() {
+    const { t } = useTranslation()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -38,7 +40,7 @@ function LoginPage() {
 
             loginUser(data.access_token, user)
 
-            showToast("Sesión iniciada", "success")
+            showToast(t("auth.loginSuccess"), "success")
 
             navigate("/home")
 
@@ -67,7 +69,7 @@ function LoginPage() {
                     </div>
 
                     <h2 className="section-title">
-                        Iniciar sesión
+                        {t("auth.loginTitle")}
                     </h2>
 
                     <form
@@ -75,12 +77,12 @@ function LoginPage() {
                         onSubmit={handleLogin}
                     >
                         <label className="label stack-sm">
-                            Correo electrónico
+                            {t("auth.email")}
 
                             <input
                                 className="input"
                                 type="email"
-                                placeholder="correo@ejemplo.com"
+                                placeholder={t("auth.emailPlaceholder")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -88,11 +90,11 @@ function LoginPage() {
 
 
                         <label className="label stack-sm">
-                            Contraseña
+                            {t("auth.password")}
                             <input
                                 className="input"
                                 type="password"
-                                placeholder="Introduce tu contraseña"
+                                placeholder={t("auth.passwordPlaceholder")}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -102,7 +104,7 @@ function LoginPage() {
                             className="forgot-link"
                             to="/forgot-password"
                         >
-                            ¿Olvidaste tu contraseña?
+                            {t("auth.forgotPassword")}
                         </Link>
 
                         <button
@@ -110,18 +112,18 @@ function LoginPage() {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+                            {loading ? t("auth.loggingIn") : t("auth.loginButton")}
                         </button>
 
                     </form>
                     <p className="auth-footer">
-                        ¿No tienes cuenta todavía?
+                        {t("auth.noAccount")}
                     </p>
                     <Link
                         className="auth-link"
                         to="/register"
                     >
-                        Crear una cuenta →
+                        {t("auth.createAccount")}
                     </Link>
 
 

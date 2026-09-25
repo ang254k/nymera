@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { deleteSueno, toggleLike } from "../api/suenos"
 import { useAuth } from "../context/AuthContext"
@@ -18,6 +19,8 @@ import HashtagText from "./HashtagText"
 import Avatar from "./Avatar"
 
 function SuenoCard({ sueno, onSuenoEliminado }) {
+    const { t } = useTranslation()
+
     const navigate = useNavigate()
 
     const [likesCount, setLikesCount] = useState(sueno.likes_count)
@@ -37,7 +40,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
         if (loadingLike) return
 
         if (!user) {
-            showToast("Debes iniciar sesión", "error")
+            showToast(t("dreamCard.loginRequired"), "error")
             return
         }
 
@@ -55,12 +58,14 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
             }
 
             showToast(
-                data.status === "liked" ? "Like añadido" : "Like eliminado",
+                data.status === "liked"
+                    ? t("dreamCard.likeAdded")
+                    : t("dreamCard.likeRemoved"),
                 "success"
             )
 
         } catch (err) {
-            showToast("Error al dar like", "error")
+            showToast(t("dreamCard.likeError"), "error")
         } finally {
             setLoadingLike(false)
         }
@@ -76,11 +81,11 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
             await deleteSueno(sueno.id)
             onSuenoEliminado(sueno.id)
 
-            showToast("Sueño eliminado", "success")
+            showToast(t("dreamCard.deleted"), "success")
 
             setShowDeleteModal(false)
         } catch (err) {
-            showToast("Error al eliminar", "error")
+            showToast(t("dreamCard.deleteError"), "error")
         } finally {
             setDeleting(false)
         }
@@ -144,12 +149,12 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                 {sueno.publico ? (
                                     <>
                                         <Globe size={14} />
-                                        <span>Público</span>
+                                        <span>{t("dreamCard.public")}</span>
                                     </>
                                 ) : (
                                     <>
                                         <Lock size={14} />
-                                        <span>Privado</span> </>
+                                        <span>{t("dreamCard.private")}</span> </>
                                 )}
                             </span>
                         )}
@@ -197,7 +202,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                     }}
                                 >
                                     <Pencil size={14} />
-                                    Editar
+                                    {t("dreamCard.edit")}
                                 </button>
 
                                 <button
@@ -209,7 +214,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                     disabled={deleting}
                                 >
                                     <Trash2 size={14} />
-                                    {deleting ? "Eliminando..." : "Eliminar"}
+                                    {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
                                 </button>
                             </div>
                         )}
@@ -221,9 +226,15 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
 
             <ConfirmModal
                 open={showDeleteModal}
-                title="Eliminar sueño"
-                message="¿Estás seguro de que quieres eliminar este sueño? Esta acción no se puede deshacer."
-                confirmText={deleting ? "Eliminando..." : "Eliminar"}
+                title={t("dreamCard.deleteTitle")}
+                message={t("dreamCard.deleteMessage")}
+                confirmText={
+                    deleting
+                        ? t("dreamCard.deleting")
+                        : t("dreamCard.delete")
+                }
+                loadingText={t("dreamCard.deleting")}
+                cancelText={t("dreamCard.cancel")}
                 onConfirm={handleDelete}
                 onCancel={() => setShowDeleteModal(false)}
                 loading={deleting}

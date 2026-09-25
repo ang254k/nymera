@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
@@ -8,6 +9,7 @@ import { resetPassword } from "../api/auth"
 import { useToast } from "../context/ToastContext"
 
 export default function ResetPasswordPage() {
+    const { t } = useTranslation()
 
     const { token } = useParams()
     const navigate = useNavigate()
@@ -21,7 +23,7 @@ export default function ResetPasswordPage() {
         e.preventDefault()
 
         if (newPassword !== confirmPassword) {
-            showToast("Las contraseñas no coinciden", "error")
+            showToast(t("auth.passwordMismatch"), "error")
             return
         }
 
@@ -32,7 +34,7 @@ export default function ResetPasswordPage() {
         try {
             await resetPassword(token, newPassword)
 
-            showToast("Contraseña actualizada correctamente", "success")
+            showToast(t("auth.resetPasswordSuccess"), "success")
 
             navigate("/login")
         } catch (err) {
@@ -61,11 +63,11 @@ export default function ResetPasswordPage() {
                     </div>
 
                     <h2 className="section-title">
-                        Restablecer contraseña
+                        {t("auth.resetPasswordTitle")}
                     </h2>
 
                     <p className="auth-description">
-                        Introduce tu nueva contraseña para acceder de nuevo a tu cuenta.
+                        {t("auth.resetPasswordDescription")}
                     </p>
 
                     <form
@@ -76,31 +78,31 @@ export default function ResetPasswordPage() {
 
                             <label className="label stack-sm">
 
-                                Nueva contraseña
+                                {t("auth.newPassword")}
 
                                 <input
                                     className="input"
                                     type="password"
-                                    placeholder="Introduce tu nueva contraseña"
+                                    placeholder={t("auth.newPasswordPlaceholder")}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                 />
                             </label>
 
                             <p className="form-help">
-                                Mínimo 8 caracteres.
+                                {t("auth.passwordHelp")}
                             </p>
                         </div>
 
 
                         <label className="label stack-sm">
 
-                            Confirmar contraseña
+                            {t("auth.confirmPassword")}
 
                             <input
                                 className="input"
                                 type="password"
-                                placeholder="Confirma tu nueva contraseña"
+                                placeholder={t("auth.confirmNewPasswordPlaceholder")}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
@@ -112,20 +114,20 @@ export default function ResetPasswordPage() {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? "Cambiando..." : "Cambiar contraseña"}
+                            {loading ? t("auth.changingPassword") : t("auth.changePassword")}
                         </button>
 
                     </form>
 
                     <p className="auth-footer">
-                        ¿Todo listo?
+                        {t("auth.ready")}
                     </p>
 
                     <Link
                         className="auth-link"
                         to="/login"
                     >
-                        Volver al inicio de sesión
+                        {t("auth.backToLogin")}
                     </Link>
 
 

@@ -1,7 +1,9 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 function SearchBar() {
+    const { t } = useTranslation()
 
     const [query, setQuery] = useState("")
 
@@ -21,7 +23,7 @@ function SearchBar() {
         <input
             className="input search-bar"
             type="text"
-            placeholder="Buscar sueños, usuarios o hashtags..."
+            placeholder={t("search.placeholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}

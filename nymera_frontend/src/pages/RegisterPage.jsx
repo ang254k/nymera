@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
 
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
@@ -7,6 +8,8 @@ import { register } from "../api/auth"
 import { useToast } from "../context/ToastContext"
 
 function RegisterPage() {
+    const { t } = useTranslation()
+
     const [nombre, setNombre] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -21,7 +24,7 @@ function RegisterPage() {
         e.preventDefault()
 
         if (password !== confirmPassword) {
-            showToast("Las contraseñas no coinciden", "error")
+            showToast(t("auth.passwordMismatch"), "error")
             setConfirmPassword("")
             return
         }
@@ -33,7 +36,7 @@ function RegisterPage() {
         try {
             await register({ nombre, email, password })
 
-            showToast("Usuario creado correctamente", "success")
+            showToast(t("auth.registerSuccess"), "success")
 
             navigate("/login")
 
@@ -64,7 +67,7 @@ function RegisterPage() {
                     </div>
 
                     <h2 className="section-title">
-                        Crear una cuenta
+                        {t("auth.registerTitle")}
                     </h2>
 
                     <form
@@ -74,12 +77,12 @@ function RegisterPage() {
 
                         <label className="label stack-sm">
 
-                            Nombre
+                            {t("auth.name")}
 
                             <input
                                 className="input"
                                 type="text"
-                                placeholder="Tu nombre"
+                                placeholder={t("auth.namePlaceholder")}
                                 value={nombre}
                                 onChange={(e) => setNombre(e.target.value)}
                             />
@@ -88,12 +91,12 @@ function RegisterPage() {
 
                         <label className="label stack-sm">
 
-                            Correo electrónico
+                            {t("auth.email")}
 
                             <input
                                 className="input"
                                 type="email"
-                                placeholder="correo@ejemplo.com"
+                                placeholder={t("auth.emailPlaceholder")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -102,28 +105,28 @@ function RegisterPage() {
 
                         <label className="label stack-sm">
 
-                            Contraseña
+                            {t("auth.password")}
 
                             <input
                                 className="input"
                                 type="password"
-                                placeholder="Introduce tu contraseña"
+                                placeholder={t("auth.passwordPlaceholder")}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <p className="form-help">
-                                Mínimo 8 caracteres.
+                                {t("auth.passwordHelp")}
                             </p>
                         </label>
 
                         <label className="label stack-sm">
 
-                            Confirmar contraseña
+                            {t("auth.confirmPassword")}
 
                             <input
                                 className="input"
                                 type="password"
-                                placeholder="Confirma tu contraseña"
+                                placeholder={t("auth.confirmPasswordPlaceholder")}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
@@ -135,20 +138,20 @@ function RegisterPage() {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? "Creando cuenta..." : "Crear cuenta"}
+                            {loading ? t("auth.registering") : t("auth.registerButton")}
                         </button>
 
                     </form>
 
                     <p className="auth-footer">
-                        ¿Ya tienes una cuenta?
+                        {t("auth.alreadyAccount")}
                     </p>
 
                     <Link
                         className="auth-link"
                         to="/login"
                     >
-                        Iniciar sesión
+                        {t("auth.goToLogin")}
                     </Link>
 
                 </div>

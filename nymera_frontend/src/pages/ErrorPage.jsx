@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import error404Image from "../assets/404-dream.png"
 
 function ErrorPage() {
+    const { t } = useTranslation()
+
     const navigate = useNavigate()
 
     return (
@@ -10,25 +13,25 @@ function ErrorPage() {
 
                 <img
                     src={error404Image}
-                    alt={"Sueño perdido"}
+                    alt={t("error.alt")}
                     className="error-illustration"
                 />
 
                 <h1 className="error-title">
-                    Página no encontrada
+                    {t("error.title")}
                 </h1>
 
                 <p className="error-description">
-                    Parece que este sueño se ha desvanecido...
+                    {t("error.description")}
                     <br />
-                    Pero no te preocupes, siempre hay más por descubrir.
+                    {t("error.descriptionContinue")}
                 </p>
 
                 <button
                     className="btn btn-primary"
                     onClick={() => navigate("/home")}
                 >
-                    Volver al inicio
+                    {t("error.backHome")}
                 </button>
 
             </div>

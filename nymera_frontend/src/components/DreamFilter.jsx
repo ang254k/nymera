@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { useDreamFilter } from "../context/DreamFilterContext"
 import {
     CalendarDays,
@@ -9,6 +10,7 @@ import {
 } from "../lib/icons"
 
 function DreamFilter() {
+    const { t } = useTranslation()
 
     const {
         categorias,
@@ -55,14 +57,14 @@ function DreamFilter() {
     return (
         <div className="card dream-filter">
             <h3 className="dream-filter-title">
-                Explorar
+                {t("filter.explore")}
             </h3>
 
             <hr className="divider" />
 
             <h4 className="dream-filter-section-title">
                 <ChevronDown size={16} />
-                Categorías
+                {t("filter.categories")}
             </h4>
 
             <div className="dream-filter-categories">
@@ -99,7 +101,7 @@ function DreamFilter() {
 
             <h4 className="dream-filter-section-title">
                 <ChevronDown size={16} />
-                Ordenar
+                {t("filter.sort")}
             </h4>
 
             <div className="dream-filter-order">
@@ -109,7 +111,7 @@ function DreamFilter() {
                 >
                     <span>
                         <CalendarDays size={16} />
-                        Fecha
+                        {t("filter.date")}
                     </span>
 
                     <span>
@@ -124,7 +126,7 @@ function DreamFilter() {
                 >
                     <span>
                         <Heart size={16} />
-                        Likes
+                        {t("filter.likes")}
                     </span>
 
                     <span>
@@ -138,7 +140,7 @@ function DreamFilter() {
                 >
                     <span>
                         <MessageCircle size={16} />
-                        Comentarios
+                        {t("filter.comments")}
                     </span>
                     <span>
                         {getOrdenIcon("comentarios")}

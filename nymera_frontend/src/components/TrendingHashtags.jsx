@@ -1,8 +1,11 @@
+import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getTrendingHashtags } from "../api/hashtag"
 
 function TrendingHashtags() {
+    const { t } = useTranslation()
+
     const [hashtags, setHashtags] = useState([])
 
     const navigate = useNavigate()
@@ -26,7 +29,7 @@ function TrendingHashtags() {
     return (
         <div className="card trending-hashtags">
             <h3 className="trending-hashtags-title">
-                Tendencias
+                {t("trending.title")}
             </h3>
 
             <div className="trending-hashtag-list">

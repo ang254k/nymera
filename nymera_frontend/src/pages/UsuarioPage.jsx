@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 
 import { getUsuario } from "../api/usuarios"
@@ -10,6 +11,8 @@ import Avatar from "../components/Avatar"
 
 
 function UsuarioPage() {
+    const { t } = useTranslation()
+
     const { id } = useParams()
 
     const [suenos, setSuenos] = useState([])
@@ -26,7 +29,7 @@ function UsuarioPage() {
             const usuarioData = await getUsuario(id)
             setUsuario(usuarioData)
         } catch (err) {
-            showToast("Error cargando perfil", "error")
+            showToast(t("userProfile.errorProfile"), "error")
         } finally {
             setLoading(false)
         }
@@ -38,7 +41,7 @@ function UsuarioPage() {
             const suenoData = await getSuenosByUser(id, categoriasSeleccionadas, orden.field, orden.direction)
             setSuenos(suenoData)
         } catch (err) {
-            showToast("Error cargando sueños", "error")
+            showToast(t("userProfile.errorDreams"), "error")
         } finally {
             setLoadingSuenos(false)
         }
@@ -59,7 +62,7 @@ function UsuarioPage() {
 
     if (loading || !usuario) {
         return <p className="usuario-page-loading">
-            Cargando perfil...
+            {t("userProfile.loading")}
         </p>
     }
 
@@ -79,7 +82,7 @@ function UsuarioPage() {
 
                 <div className="usuario-profile-stats">
                     <span>
-                        <strong>{suenos.length}</strong> sueños
+                        <strong>{suenos.length}</strong> {t("userProfile.dreams")}
                     </span>
 
                     <span>.</span>
@@ -87,7 +90,7 @@ function UsuarioPage() {
                     <span>
                         <strong>
                             {suenos.reduce((acc, s) => acc + s.likes_count, 0)}
-                        </strong> likes
+                        </strong> {t("userProfile.likes")}
                     </span>
                 </div>
 
@@ -97,20 +100,20 @@ function UsuarioPage() {
             {/* Lista Sueños */}
 
             <h2 className="usuarios-suenos-title">
-                Sueños públicos
+                {t("userProfile.publicDreams")}
             </h2>
 
             {loadingSuenos ? (
 
                 <p className="usuario-suenos-loading">
-                    Cargando sueños...
+                    {t("userProfile.loadingDreams")}
                 </p>
 
             ) : suenos.length === 0 ? (
                 hayFiltros ? (
-                    <p className="usuarios-suenos-empty">No hay sueños que coincidan con los filtros seleccionados.</p>
+                    <p className="usuarios-suenos-empty">{t("userProfile.emptyWithFilters")}</p>
                 ) : (
-                    <p className="usuarios-suenos-empty">Este usuario no tiene sueños públicos</p>
+                    <p className="usuarios-suenos-empty">{t("userProfile.empty")}</p>
                 )
             ) : (
                 <div className="usuarios-suenos-list">

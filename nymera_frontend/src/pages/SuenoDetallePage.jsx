@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useParams, useLocation, useNavigate } from "react-router-dom"
 
 import { getSuenoDetalle, updateSueno, deleteSueno, toggleLike } from "../api/suenos"
@@ -27,6 +28,8 @@ import {
 import Avatar from "../components/Avatar"
 
 function SuenoDetallePage() {
+    const { t } = useTranslation()
+
     // useParams obtiene el id de la URL
     const { id } = useParams()
     const { user } = useAuth()
@@ -118,7 +121,7 @@ function SuenoDetallePage() {
         if (loadingLike) return
 
         if (!user) {
-            showToast("Debes iniciar sesión", "error")
+            showToast(t("dreamDetail.like.loginRequired"), "error")
             return
         }
 
@@ -141,13 +144,13 @@ function SuenoDetallePage() {
 
             showToast(
                 data.status === "liked"
-                    ? "Like añadido"
-                    : "Like eliminado",
+                    ? t("dreamDetail.like.added")
+                    : t("dreamDetail.like.removed"),
                 "success"
             )
 
         } catch (err) {
-            showToast("Error al dar like", "error")
+            showToast(t("dreamDetail.like.error"), "error")
         } finally {
             setLoadingLike(false)
         }
@@ -157,13 +160,13 @@ function SuenoDetallePage() {
         if (commenting) return
 
         if (!user) {
-            setError("Debes iniciar sesión para comentar")
-            showToast("Debes iniciar sesión", "error")
+            setError(t("dreamDetail.comments.loginRequired"))
+            showToast(t("dreamDetail.like.loginRequired"), "error")
             return
         }
 
         if (!nuevoComentario.trim()) {
-            setError("Escribe algo antes de comentar")
+            setError(t("dreamDetail.comments.empty"))
             return
         }
         setCommenting(true)
@@ -171,7 +174,7 @@ function SuenoDetallePage() {
         try {
             const nuevo = await createComentario(id, nuevoComentario)
 
-            showToast("Comentario añadido", "success")
+            showToast(t("dreamDetail.comments.added"), "success")
 
             setComentarios((prev) => [...prev, nuevo])
             setNuevoId(nuevo.id)
@@ -186,7 +189,7 @@ function SuenoDetallePage() {
         }
         catch (err) {
             setError(err.message)
-            showToast("Error al comentar", "error")
+            showToast(t("dreamDetail.comments.error"), "error")
         } finally {
             setCommenting(false)
         }
@@ -198,17 +201,17 @@ function SuenoDetallePage() {
         if (savingEdit) return
 
         if (!tituloEdit.trim()) {
-            setError("El título no puede estar vacío")
+            setError(t("dreamDetail.edit.titleRequired"))
             return
         }
 
         if (tituloEdit.trim().length < 3) {
-            setError("El título debe tener al menos 3 caracteres")
+            setError(t("dreamDetail.edit.titleMinLength"))
             return
         }
 
         if (contenidoEdit.trim().length < 5) {
-            setError("El contenido debe tener al menos 5 caracteres")
+            setError(t("dreamDetail.edit.contentMinLength"))
             return
         }
 
@@ -224,14 +227,14 @@ function SuenoDetallePage() {
 
             const suenoActualizado = await getSuenoDetalle(id)
 
-            showToast("Sueño actualizado", "success")
+            showToast(t("dreamDetail.edit.updated"), "success")
 
             setSueno(suenoActualizado)
             setEditando(false)
 
         } catch (err) {
             setError(err.message)
-            showToast("Error al editar sueño", "error")
+            showToast(t("dreamDetail.edit.error"), "error")
         } finally {
             setSavingEdit(false)
         }
@@ -246,11 +249,11 @@ function SuenoDetallePage() {
 
         try {
             await deleteSueno(id)
-            showToast("Sueño eliminado", "success")
+            showToast(t("dreamDetail.delete.deleted"), "success")
             navigate("/home")
         } catch (err) {
             setError(err.message)
-            showToast("Error al eliminar", "error")
+            showToast(t("dreamDetail.delete.error"), "error")
         } finally {
             setDeleting(false)
         }
@@ -262,7 +265,7 @@ function SuenoDetallePage() {
         if (savingComentario) return
 
         if (!contenidoEditComentario.trim()) {
-            showToast("Comentario vacío", "error")
+            showToast(t("dreamDetail.comments.emptyComment"), "error")
             return
         }
 
@@ -283,10 +286,10 @@ function SuenoDetallePage() {
             setComentarioEditandoId(null)
             setContenidoEditComentario("")
 
-            showToast("Comentario actualizado", "success")
+            showToast(t("dreamDetail.comments.updated"), "success")
 
         } catch (err) {
-            showToast("Error al editar comentario", "error")
+            showToast(t("dreamDetail.comments.updateError"), "error")
         } finally {
             setSavingComentario(false)
         }
@@ -305,13 +308,13 @@ function SuenoDetallePage() {
                 prev.filter(c => c.id !== comentarioAEliminar)
             )
 
-            showToast("Comentario eliminado", "success")
+            showToast(t("dreamDetail.comments.deleted"), "success")
 
             setComentarioAEliminar(null)
 
         } catch (err) {
             setError(err.message)
-            showToast("Error al eliminar comentario", "error")
+            showToast(t("dreamDetail.comments.deleteError"), "error")
         } finally {
             setDeletingComentario(false)
         }
@@ -320,7 +323,7 @@ function SuenoDetallePage() {
     if (loading) {
         return (
             <p className="sueno-detalle-loading">
-                Cargando sueño...
+                {t("dreamDetail.loading")}
             </p>
         )
     }
@@ -328,7 +331,7 @@ function SuenoDetallePage() {
     if (!sueno) {
         return (
             <p className="sueno-detalle-empty">
-                No encontrado
+                {t("dreamDetail.notFound")}
             </p>
         )
     }
@@ -369,7 +372,7 @@ function SuenoDetallePage() {
                             value={categoriaId}
                             onChange={(e) => setCategoriaId(Number(e.target.value))}
                         >
-                            {!categoriaId && <option value="">Selecciona categoría</option>}
+                            {!categoriaId && <option value="">{t("dreamDetail.edit.selectCategory")}</option>}
                             {categorias.map(c => (
                                 <option key={c.id} value={c.id}>
                                     {c.nombre}
@@ -395,7 +398,7 @@ function SuenoDetallePage() {
                                 />
 
                                 {" "}
-                                Hacer público
+                                {t("dreamDetail.edit.makePublic")}
                             </label>
                         </div>
 
@@ -404,13 +407,15 @@ function SuenoDetallePage() {
                                 className="btn btn-primary"
                                 onClick={handleGuardar}
                                 disabled={savingEdit}>
-                                {savingEdit ? "Guardando..." : "Guardar"}
+                                {savingEdit
+                                    ? t("dreamDetail.edit.saving")
+                                    : t("dreamDetail.edit.save")}
                             </button>
 
                             <button
                                 className="btn btn-secondary"
                                 onClick={() => setEditando(false)}>
-                                Cancelar
+                                {t("dreamDetail.edit.cancel")}
                             </button>
                         </div>
                     </div>
@@ -446,12 +451,12 @@ function SuenoDetallePage() {
                                     {sueno.publico ? (
                                         <>
                                             <Globe size={14} />
-                                            <span>Público</span>
+                                            <span>{t("dreamDetail.visibility.public")}</span>
                                         </>
                                     ) : (
                                         <>
                                             <Lock size={14} />
-                                            <span>Privado</span>
+                                            <span>{t("dreamDetail.visibility.private")}</span>
                                         </>
                                     )}
                                 </span>
@@ -504,7 +509,7 @@ function SuenoDetallePage() {
                             }}
                         >
                             <Pencil size={14} />
-                            Editar
+                            {t("dreamDetail.edit.edit")}
                         </button>
 
 
@@ -515,7 +520,10 @@ function SuenoDetallePage() {
                             disabled={deleting}
                         >
                             <Trash2 size={14} />
-                            {deleting ? "Eliminando..." : "Eliminar"}
+                            {deleting
+                                ? t("dreamDetail.delete.deleting")
+                                : t("dreamDetail.delete.delete")
+                            }
                         </button>
                     </div>
                 )}
@@ -527,7 +535,7 @@ function SuenoDetallePage() {
 
 
                 <h3 className="sueno-detalle-comments-title">
-                    Comentarios
+                    {t("dreamDetail.comments.title")}
                 </h3>
 
                 <div className="sueno-detalle-comment-form">
@@ -535,7 +543,7 @@ function SuenoDetallePage() {
                         className=" textarea sueno-detalle-comment-input"
                         value={nuevoComentario}
                         onChange={(e) => setNuevoComentario(e.target.value)}
-                        placeholder="Escribe un comentario..."
+                        placeholder={t("dreamDetail.comments.placeholder")}
                         disabled={commenting}
                     />
 
@@ -544,7 +552,7 @@ function SuenoDetallePage() {
                         onClick={handleCrearComentario}
                         disabled={commenting || !nuevoComentario.trim()}
                     >
-                        {commenting ? "Comentando..." : "Comentar"}
+                        {commenting ? t("dreamDetail.comments.commenting") : t("dreamDetail.comments.comment")}
                     </button>
                 </div>
                 <div className="sueno-detalle-comments-list">
@@ -576,7 +584,7 @@ function SuenoDetallePage() {
                                                 setContenidoEditComentario(c.contenido)
                                             }}
                                         >
-                                            Editar
+                                            {t("dreamDetail.comments.edit")}
                                         </button>
                                     )}
 
@@ -589,7 +597,7 @@ function SuenoDetallePage() {
                                                     setComentarioAEliminar(c.id)
                                                 }
                                             >
-                                                Eliminar
+                                                {t("dreamDetail.comments.delete")}
                                             </button>
                                         )}
 
@@ -623,7 +631,9 @@ function SuenoDetallePage() {
                                                 onClick={() => handleEditarComentario(c.id)}
                                                 disabled={savingComentario}
                                             >
-                                                {savingComentario ? "Guardando..." : "Guardar"}
+                                                {savingComentario
+                                                    ? t("dreamDetail.comments.saving")
+                                                    : t("dreamDetail.comments.save")}
                                             </button>
 
                                             <button
@@ -633,7 +643,7 @@ function SuenoDetallePage() {
                                                     setContenidoEditComentario("")
                                                 }}
                                             >
-                                                Cancelar
+                                                {t("dreamDetail.comments.cancel")}
                                             </button>
                                         </div>
                                     </>
@@ -645,24 +655,29 @@ function SuenoDetallePage() {
                             </div>
                         </div>
                     ))}
-
+                    {/* Comentario */}
                     <ConfirmModal
                         open={comentarioAEliminar !== null}
-                        title="¿Eliminar comentario?"
-                        message="Esta acción no se puede deshacer."
-                        confirmText="Borrar"
+                        title={t("dreamDetail.comments.confirmTitle")}
+                        message={t("dreamDetail.comments.confirmMessage")}
+                        confirmText={t("dreamDetail.comments.confirm")}
+                        loadingText={t("dreamDetail.comments.deleting")}
+                        cancelText={t("dreamDetail.comments.cancel")}
                         loading={deletingComentario}
                         onConfirm={handleDeleteComentario}
                         onCancel={() => setComentarioAEliminar(null)}
                     />
                 </div>
             </section>
-
+            {/* Sueño */}
             <ConfirmModal
                 open={confirmandoBorrado}
-                title="¿Eliminar sueño?"
-                message="Esta acción no se puede deshacer."
-                confirmText="Borrar"
+                title={t("dreamDetail.delete.title")}
+                message={t("dreamDetail.delete.message")}
+                confirmText={t("dreamDetail.delete.confirm")}
+                loadingText={t("dreamDetail.delete.deleting")}
+                cancelText={t("dreamDetail.delete.cancel")}
+                loading={deleting}
                 onConfirm={handleDelete}
                 onCancel={() => setConfirmandoBorrado(false)}
             />

@@ -1,0 +1,255 @@
+{
+    "navigation": {
+        "home": "Inicio",
+        "notifications": "Notificaciones",
+        "profile": "Perfil",
+        "logout": "Salir",
+        "login": "Iniciar sesión",
+        "register": "Registro"
+    },
+    "messages": {
+        "logoutSuccess": "Sesión cerrada"
+    },
+    "auth": {
+        "loginTitle": "Iniciar sesión",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "correo@ejemplo.com",
+        "password": "Contraseña",
+        "passwordPlaceholder": "Introduce tu contraseña",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "loginButton": "Iniciar sesión",
+        "loggingIn": "Iniciando sesión...",
+        "noAccount": "¿No tienes cuenta todavía?",
+        "createAccount": "Crear una cuenta →",
+        "loginSuccess": "Sesión iniciada",
+        "registerTitle": "Crear una cuenta",
+        "name": "Nombre",
+        "namePlaceholder": "Tu nombre",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "registerSuccess": "Usuario creado correctamente",
+        "passwordHelp": "Mínimo 8 caracteres.",
+        "confirmPassword": "Confirmar contraseña",
+        "confirmPasswordPlaceholder": "Confirma tu contraseña",
+        "registerButton": "Crear cuenta",
+        "registering": "Creando cuenta...",
+        "alreadyAccount": "¿Ya tienes una cuenta?",
+        "goToLogin": "Iniciar sesión",
+        "forgotPasswordTitle": "Recuperar contraseña",
+        "forgotPasswordDescription": "Introduce tu correo electrónico. Si existe una cuenta asociada, recibirás un enlace para restablecer la contraseña.",
+        "emailPlaceholderForgot": "Introduce tu correo electrónico",
+        "sending": "Enviando...",
+        "sendLink": "Enviar enlace",
+        "rememberedPassword": "¿Recordaste tu contraseña?",
+        "backToLogin": "Volver al inicio de sesión",
+        "resetPasswordSuccess": "Contraseña actualizada correctamente",
+        "resetPasswordTitle": "Restablecer contraseña",
+        "resetPasswordDescription": "Introduce tu nueva contraseña para acceder de nuevo a tu cuenta.",
+        "newPassword": "Nueva contraseña",
+        "newPasswordPlaceholder": "Introduce tu nueva contraseña",
+        "confirmNewPasswordPlaceholder": "Confirma tu nueva contraseña",
+        "changingPassword": "Cambiando...",
+        "changePassword": "Cambiar contraseña",
+        "ready": "¿Todo listo?",
+        "loginRequired": "Debes iniciar sesión",
+        "loading": "Cargando..."
+    },
+    "accessibility": {
+        "goHome": "Ir al inicio"
+    },
+    "search": {
+        "placeholder": "Buscar sueños, usuarios o hashtags..."
+    },
+    "filter": {
+        "explore": "Explorar",
+        "categories": "Categorías",
+        "sort": "Ordenar",
+        "date": "Fecha",
+        "likes": "Likes",
+        "comments": "Comentarios"
+    },
+    "dream": {
+        "createTitle": "¿Qué has soñado?",
+        "titlePlaceholder": "Título",
+        "selectCategory": "Selecciona categoría",
+        "contentPlaceholder": "Cuenta tu sueño...",
+        "makePublic": "Hacer público",
+        "publish": "Publicar",
+        "publishing": "Publicando...",
+        "published": "Sueño publicado",
+        "loadCategoriesError": "Error cargando categorías"
+    },
+    "trending": {
+        "title": "Tendencias"
+    },
+    "dreamCard": {
+        "loginRequired": "Debes iniciar sesión",
+        "likeAdded": "Like añadido",
+        "likeRemoved": "Like eliminado",
+        "likeError": "Error al dar like",
+        "deleted": "Sueño eliminado",
+        "deleteError": "Error al eliminar",
+        "public": "Público",
+        "private": "Privado",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "deleting": "Eliminando...",
+        "deleteTitle": "Eliminar sueño",
+        "deleteMessage": "¿Estás seguro de que quieres eliminar este sueño? Esta acción no se puede deshacer."
+    },
+    "feed": {
+        "loading": "Cargando sueños...",
+        "loadingMore": "Cargando más sueños...",
+        "empty": "No hay sueños todavía. Sé el primero en compartir uno :)",
+        "loadError": "Error cargando el feed",
+        "loadMoreError": "Error cargando más sueños"
+    },
+    "searchResults": {
+        "searching": "Buscando...",
+        "title": "Resultados para:",
+        "users": "Usuarios",
+        "dreams": "Sueños",
+        "empty": "No se encontraron resultados.",
+        "emptyWithFilters": "No se encontraron resultados con los filtros seleccionados.",
+        "error": "Error realizando la búsqueda"
+    },
+    "hashtag": {
+        "loading": "Cargando...",
+        "loadingDreams": "Cargando sueños...",
+        "empty": "No hay sueños con este hashtag.",
+        "emptyWithFilters": "No hay sueños con este hashtag que coincidan con los filtros seleccionados.",
+        "error": "Error cargando hashtag"
+    },
+    "profile": {
+        "loginRequired": "Debes iniciar sesión",
+        "loading": "Cargando perfil...",
+        "avatar": {
+            "change": "Cambiar avatar"
+        },
+        "info": {
+            "memberSince": "Miembro desde",
+            "dreams": "sueños",
+            "likes": "likes"
+        },
+        "edit": {
+            "title": "Editar perfil",
+            "newName": "Nuevo nombre",
+            "currentPassword": "Contraseña actual",
+            "saving": "Guardando...",
+            "save": "Guardar cambios"
+        },
+        "password": {
+            "title": "Cambiar contraseña",
+            "current": "Contraseña actual",
+            "new": "Nueva contraseña",
+            "repeat": "Repetir nueva contraseña",
+            "changing": "Cambiando...",
+            "change": "Cambiar contraseña",
+            "mismatch": "Las contraseñas no coinciden"
+        },
+        "dreams": {
+            "title": "Sueños publicados",
+            "loading": "Cargando sueños publicados...",
+            "empty": "No has publicado sueños aún",
+            "emptyWithFilters": "No hay sueños que coincidan con los filtros seleccionados."
+        },
+        "likedDreams": {
+            "title": "Sueños que te gustaron",
+            "loading": "Cargando sueños que te gustaron...",
+            "empty": "Aún no has dado like a ningún sueño",
+            "emptyWithFilters": "No hay sueños que coincidan con los filtros seleccionados."
+        },
+        "messages": {
+            "profileUpdated": "Perfil actualizado",
+            "passwordUpdated": "Contraseña actualizada",
+            "avatarUpdated": "Avatar actualizado"
+        }
+    },
+    "userProfile": {
+        "errorProfile": "Error cargando perfil",
+        "errorDreams": "Error cargando sueños",
+        "loading": "Cargando perfil...",
+        "dreams": "sueños",
+        "likes": "likes",
+        "publicDreams": "Sueños públicos",
+        "loadingDreams": "Cargando sueños...",
+        "emptyWithFilters": "No hay sueños que coincidan con los filtros seleccionados.",
+        "empty": "Este usuario no tiene sueños públicos"
+    },
+    "dreamDetail": {
+        "loading": "Cargando sueño...",
+        "notFound": "No encontrado",
+        "like": {
+            "loginRequired": "Debes iniciar sesión",
+            "added": "Like añadido",
+            "removed": "Like eliminado",
+            "error": "Error al dar like"
+        },
+        "edit": {
+            "selectCategory": "Selecciona categoría",
+            "makePublic": "Hacer público",
+            "saving": "Guardando...",
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "updated": "Sueño actualizado",
+            "error": "Error al editar sueño",
+            "titleRequired": "El título no puede estar vacío",
+            "titleMinLength": "El título debe tener al menos 3 caracteres",
+            "contentMinLength": "El contenido debe tener al menos 5 caracteres",
+            "edit": "Editar"
+        },
+        "delete": {
+            "deleted": "Sueño eliminado",
+            "error": "Error al eliminar",
+            "deleting": "Eliminando...",
+            "delete": "Eliminar",
+            "title": "¿Eliminar sueño?",
+            "message": "Esta acción no se puede deshacer.",
+            "confirm": "Borrar"
+        },
+        "visibility": {
+            "public": "Público",
+            "private": "Privado"
+        },
+        "comments": {
+            "title": "Comentarios",
+            "loginRequired": "Debes iniciar sesión para comentar",
+            "empty": "Escribe algo antes de comentar",
+            "added": "Comentario añadido",
+            "error": "Error al comentar",
+            "emptyComment": "Comentario vacío",
+            "updated": "Comentario actualizado",
+            "updateError": "Error al editar comentario",
+            "deleted": "Comentario eliminado",
+            "deleteError": "Error al eliminar comentario",
+            "placeholder": "Escribe un comentario...",
+            "commenting": "Comentando...",
+            "comment": "Comentar",
+            "saving": "Guardando...",
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "confirmTitle": "¿Eliminar comentario?",
+            "confirmMessage": "Esta acción no se puede deshacer.",
+            "confirm": "Borrar",
+            "deleting": "Eliminando..."
+        }
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "loading": "Cargando notificaciones...",
+        "empty": "No tienes notificaciones",
+        "loadError": "Error cargando notificaciones",
+        "markReadError": "No se pudo marcar la notificación como leída",
+        "like": "ha dado like",
+        "comment": "ha comentado"
+    },
+    "error": {
+        "alt": "Sueño perdido",
+        "title": "Página no encontrada",
+        "description": "Parece que este sueño se ha desvanecido...",
+        "descriptionContinue": "Pero no te preocupes, siempre hay más por descubrir.",
+        "backHome": "Volver al inicio"
+    }
+}

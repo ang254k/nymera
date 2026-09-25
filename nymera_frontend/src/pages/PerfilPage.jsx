@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 import {
     getSuenosByUser,
@@ -18,6 +19,8 @@ import { useDreamFilter } from "../context/DreamFilterContext"
 
 
 function PerfilPage() {
+    const { t } = useTranslation()
+
     const { user, updateUserData } = useAuth()
 
     const [suenos, setSuenos] = useState([])
@@ -80,7 +83,7 @@ function PerfilPage() {
     async function handleUpdatePerfil(e) {
         e.preventDefault()
 
-        if(savingPerfil) return
+        if (savingPerfil) return
 
         setSavingPerfil(true)
 
@@ -93,7 +96,7 @@ function PerfilPage() {
             const usuarioActualizado = await me()
             updateUserData(usuarioActualizado)
 
-            showToast("Perfil actualizado", "success")
+            showToast(t("profile.messages.profileUpdated"), "success")
 
             setPasswordActualPerfil("")
             setEditando(false)
@@ -111,7 +114,7 @@ function PerfilPage() {
         if (changingPassword) return
 
         if (nuevaPassword !== confirmarPassword) {
-            showToast("Las contraseñas no coinciden", "error")
+            showToast(t("profile.password.mismatch"), "error")
             setConfirmarPassword("")
             return
         }
@@ -120,7 +123,7 @@ function PerfilPage() {
 
         try {
             await changePassword(passwordActualCambio, nuevaPassword)
-            showToast("Contraseña actualizada", "success")
+            showToast(t("profile.messages.passwordUpdated"), "success")
 
             setPasswordActualCambio("")
             setNuevaPassword("")
@@ -143,7 +146,7 @@ function PerfilPage() {
 
             updateUserData(usuarioActualizado)
 
-            showToast("Avatar actualizado", "success")
+            showToast(t("profile.messages.avatarUpdated"), "success")
 
             e.target.value = ""
         } catch (err) {
@@ -154,7 +157,7 @@ function PerfilPage() {
     if (!user) {
         return (
             <p className="perfil-message">
-                Debes iniciar sesión
+                {t("profile.loginRequired")}
             </p>
         )
     }
@@ -162,7 +165,7 @@ function PerfilPage() {
     if (loading) {
         return (
             <p className="perfil-loading">
-                Cargando perfil...
+                {t("profile.loading")}
             </p>
         )
     }
@@ -199,7 +202,7 @@ function PerfilPage() {
                     className="perfil-avatar-button"
                     onClick={() => fileInputRef.current?.click()}
                 >
-                    Cambiar avatar
+                    {t("profile.avatar.change")}
                 </button>
 
 
@@ -215,14 +218,14 @@ function PerfilPage() {
                     </p>
 
                     <p className="perfil-member-since">
-                        Miembro desde{" "}
+                        {t("profile.info.memberSince")}{" "}
                         {new Date(user.fecha_creacion).toLocaleDateString("es-ES")}
                     </p>
 
                     {/* Num sueños y likes */}
                     <div className="perfil-stats">
                         <span>
-                            <strong>{suenos.length}</strong> sueños
+                            <strong>{suenos.length}</strong> {t("profile.info.dreams")}
                         </span>
 
                         <span className="perfil-stats-separator">·</span>
@@ -230,7 +233,7 @@ function PerfilPage() {
                         <span>
                             <strong>
                                 {suenosLikeados.length}
-                            </strong> likes
+                            </strong> {t("profile.info.likes")}
                         </span>
                     </div>
 
@@ -240,7 +243,7 @@ function PerfilPage() {
                         className="perfil-edit-button"
                         onClick={() => setEditando(!editando)}
                     >
-                        Editar perfil
+                        {t("profile.edit.title")}
                     </button>
 
 
@@ -252,7 +255,7 @@ function PerfilPage() {
                             <input
                                 className="input"
                                 type="text"
-                                placeholder="Nuevo nombre"
+                                placeholder={t("profile.edit.newName")}
                                 value={nuevoNombre}
                                 onChange={(e) => setNuevoNombre(e.target.value)}
                             />
@@ -260,7 +263,7 @@ function PerfilPage() {
                             <input
                                 className="input"
                                 type="password"
-                                placeholder="Contraseña actual"
+                                placeholder={t("profile.edit.currentPassword")}
                                 value={passwordActualPerfil}
                                 onChange={(e) => setPasswordActualPerfil(e.target.value)}
                             />
@@ -270,7 +273,7 @@ function PerfilPage() {
                                 type="submit"
                                 disabled={savingPerfil}
                             >
-                                {savingPerfil ? "Guardando..." : "Guardar cambios"}
+                                {savingPerfil ? t("profile.edit.saving") : t("profile.edit.save")}
                             </button>
                         </form>
                     )}
@@ -278,7 +281,7 @@ function PerfilPage() {
                     <hr className="perfil-divider" />
 
                     <h3 className="perfil-password-title">
-                        Cambiar contraseña
+                        {t("profile.password.title")}
                     </h3>
 
                     <form
@@ -288,7 +291,7 @@ function PerfilPage() {
                         <input
                             className="input"
                             type="password"
-                            placeholder="Contraseña actual"
+                            placeholder={t("profile.password.current")}
                             value={passwordActualCambio}
                             onChange={(e) => setPasswordActualCambio(e.target.value)}
                         />
@@ -296,7 +299,7 @@ function PerfilPage() {
                         <input
                             className="input"
                             type="password"
-                            placeholder="Nueva contraseña"
+                            placeholder={t("profile.password.new")}
                             value={nuevaPassword}
                             onChange={(e) => setNuevaPassword(e.target.value)}
                         />
@@ -304,7 +307,7 @@ function PerfilPage() {
                         <input
                             className="input"
                             type="password"
-                            placeholder="Repetir nueva contraseña"
+                            placeholder={t("profile.password.repeat")}
                             value={confirmarPassword}
                             onChange={(e) => setConfirmarPassword(e.target.value)}
                         />
@@ -314,7 +317,7 @@ function PerfilPage() {
                             type="submit"
                             disabled={changingPassword}
                         >
-                            {changingPassword ? "Cambiando..." : "Cambiar contraseña"}
+                            {changingPassword ? t("profile.password.changing") : t("profile.password.change")}
                         </button>
                     </form>
 
@@ -325,18 +328,18 @@ function PerfilPage() {
             <section className="perfil-dreams">
 
                 <h2 className="perfil-section-title">
-                    Sueños publicados
+                    {t("profile.dreams.title")}
                 </h2>
 
                 {loadingSuenos ? (
                     <p className="perfil-loading">
-                        Cargando sueños publicados...
+                        {t("profile.dreams.loading")}
                     </p>
                 ) : suenos.length === 0 ? (
                     hayFiltros ? (
-                        <p className="perfil-empty">No hay sueños que coincidan con los filtros seleccionados.</p>
+                        <p className="perfil-empty">{t("profile.dreams.emptyWithFilters")}</p>
                     ) : (
-                        <p className="perfil-empty">No has publicado sueños aún</p>
+                        <p className="perfil-empty">{t("profile.dreams.empty")}</p>
                     )
                 ) : (
                     suenos.map((sueno) => (
@@ -353,21 +356,21 @@ function PerfilPage() {
             <section className="perfil-liked">
                 <h2 className="perfil-section-title">
                     <Heart size={20} />
-                    <span>Sueños que te gustaron</span>
+                    <span>{t("profile.likedDreams.title")}</span>
                 </h2>
 
                 {loadingSuenos ? (
                     <p className="perfil-loading">
-                        Cargando sueños que te gustaron...
+                        {t("profile.likedDreams.loading")}
                     </p>
                 ) : suenosLikeadosExternos.length === 0 ? (
                     hayFiltros ? (
                         <p className="perfil-empty">
-                            No hay sueños que coincidan con los filtros seleccionados.
+                            {t("profile.likedDreams.emptyWithFilters")}
                         </p>
                     ) : (
                         <p className="perfil-empty">
-                            Aún no has dado like a ningún sueño
+                            {t("profile.likedDreams.empty")}
                         </p>
                     )
                 ) : (

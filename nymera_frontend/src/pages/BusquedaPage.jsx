@@ -1,5 +1,6 @@
 import { useSearchParams, Link } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { search } from "../api/busqueda"
 
@@ -11,6 +12,8 @@ import { useToast } from "../context/ToastContext"
 
 
 export default function BusquedaPage() {
+    const { t } = useTranslation()
+
     const [usuarios, setUsuarios] = useState([])
     const [suenos, setSuenos] = useState([])
     const [loadingResultados, setLoadingResultados] = useState(true)
@@ -35,12 +38,12 @@ export default function BusquedaPage() {
                 setSuenos(data.suenos)
 
             } catch (err) {
-                showToast("Error realizando la búsqueda", "error")
+                showToast(t("searchResults.error"), "error")
             } finally {
                 setLoadingResultados(false)
             }
         }
-        
+
         if (q) {
             loadResults()
         }
@@ -49,7 +52,7 @@ export default function BusquedaPage() {
     if (loadingResultados) {
         return (
             <p className="search-loading">
-                Buscando...
+                {t("searchResults.searching")}
             </p>
         )
     }
@@ -58,13 +61,13 @@ export default function BusquedaPage() {
 
         <div className="search-page">
             <h2 className="search-title">
-                Resultados para: {q}
+                {t("searchResults.title")} {q}
             </h2>
 
             {usuarios.length > 0 && (
                 <section className="search-section">
                     <h3 className="search-section-title">
-                        Usuarios
+                        {t("searchResults.users")}
                     </h3>
                     <div className="search-users">
                         {usuarios.map((u) => (
@@ -91,7 +94,7 @@ export default function BusquedaPage() {
             {suenos.length > 0 && (
                 <section className="search-section">
                     <h3 className="search-section-title">
-                        Sueños
+                        {t("searchResults.dreams")}
                     </h3>
 
                     <div className="search-dreams">
@@ -109,11 +112,9 @@ export default function BusquedaPage() {
             {usuarios.length === 0 &&
                 suenos.length === 0 && (
                     <p className="search-empty">
-                        {hayFiltros ?
-                            "No se encontraron resultados con los filtros seleccionados."
-                            :
-
-                            "No se encontraron resultados."
+                        {hayFiltros
+                            ? t("searchResults.emptyWithFilters")
+                            : t("searchResults.empty")
                         }
                     </p>
                 )}

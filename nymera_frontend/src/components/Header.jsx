@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+
 import { Link, useNavigate, useLocation } from "react-router-dom"
 
 import { APP_NAME, APP_ICON } from "../config/app"
@@ -10,6 +12,8 @@ import { getNotificaciones } from "../api/notificaciones"
 import { useToast } from "../context/ToastContext"
 
 function Header() {
+  const { t, i18n } = useTranslation()
+
   const { user, logoutUser } = useAuth()
 
   const navigate = useNavigate()
@@ -35,7 +39,7 @@ function Header() {
 
   function handleLogout() {
     setCount(0)
-    showToast("Sesión cerrada", "info")
+    showToast(t("messages.logoutSuccess"), "info")
     logoutUser()
     navigate("/login")
   }
@@ -60,11 +64,11 @@ function Header() {
         <Link
           className="header-link"
           to="/home"
-          aria-label={`${APP_NAME}, ir al inicio`}
+          aria-label={`${APP_NAME}, ${t("accessibility.goHome")}`}
         >
           <Home size={18} />
           <span className="header-link-text">
-            Inicio
+            {t("navigation.home")}
           </span>
 
         </Link>
@@ -103,23 +107,42 @@ function Header() {
             >
               <LogOut size={16} />
               <span className="header-link-text">
-                Salir
+                {t("navigation.logout")}
               </span>
             </button>
+
 
           </>
         ) : (
           <>
             <Link className="header-link" to="/login">
-              Login
+              {t("navigation.login")}
             </Link>
             <Link
               className="btn btn-primary btn-sm"
               to="/register">
-              Registro
+              {t("navigation.register")}
             </Link>
           </>
         )}
+
+        <div className="language-switcher">
+          <button
+            type="button"
+            onClick={() => i18n.changeLanguage("es")}
+          >
+            ES
+          </button>
+
+          <span>|</span>
+
+          <button
+            type="button"
+            onClick={() => i18n.changeLanguage("en")}
+          >
+            EN
+          </button>
+        </div>
 
       </nav>
 

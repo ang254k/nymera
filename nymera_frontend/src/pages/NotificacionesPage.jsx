@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { getNotificaciones, marcarNotificacionLeida } from "../api/notificaciones"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../context/ToastContext"
@@ -6,6 +7,8 @@ import { useToast } from "../context/ToastContext"
 import { Heart, MessageCircle } from "../lib/icons"
 
 function NotificacionesPage() {
+    const { t } = useTranslation()
+
     const [notificaciones, setNotificaciones] = useState([])
     const [loading, setLoading] = useState(true)
     const { showToast } = useToast()
@@ -18,7 +21,7 @@ function NotificacionesPage() {
                 const data = await getNotificaciones()
                 setNotificaciones(data)
             } catch (err) {
-                showToast("Error cargando notificaciones", "error")
+                showToast(t("notifications.loadError"), "error")
             } finally {
                 setLoading(false)
             }
@@ -29,7 +32,7 @@ function NotificacionesPage() {
     if (loading) {
         return (
             <p className="notificaciones-loading">
-                Cargando notificaciones...
+                {t("notifications.loading")}
             </p>
         )
     }
@@ -38,12 +41,12 @@ function NotificacionesPage() {
     return (
         <div className="notificaciones-page">
             <h1 className="notificaciones-title">
-                Notificaciones
+                {t("notifications.title")}
             </h1>
 
             {notificaciones.length === 0 ? (
                 <p className="notificaciones-empty">
-                    No tienes notificaciones
+                    {t("notifications.empty")}
                 </p>
             ) : (
                 <div className="notificaciones-list">
@@ -64,7 +67,7 @@ function NotificacionesPage() {
                                             )
                                         )
                                     } catch (err) {
-                                        showToast("No se pudo marcar la notificación como leída", "error")
+                                        showToast(t("notifications.markReadError"), "error")
                                     }
                                 }
                                 navigate(`/suenos/${n.sueno_id}`)
@@ -73,14 +76,14 @@ function NotificacionesPage() {
                             <div className="notificacion-content">
                                 {n.tipo === "like" && (
                                     <p>
-                                        <strong>{n.emisor_nombre}</strong> ha dado like{" "}
+                                        <strong>{n.emisor_nombre}</strong> {t("notifications.like")}{" "}
                                         <Heart size={16} />
                                     </p>
                                 )}
 
                                 {n.tipo === "comentario" && (
                                     <p>
-                                        <strong>{n.emisor_nombre}</strong> ha comentado{" "}
+                                        <strong>{n.emisor_nombre}</strong> {t("notifications.comment")}{" "}
                                         <MessageCircle size={16} />
                                     </p>
                                 )}

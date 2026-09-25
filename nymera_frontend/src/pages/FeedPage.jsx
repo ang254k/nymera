@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { getFeed } from "../api/suenos"
 
@@ -10,6 +11,8 @@ import { useToast } from "../context/ToastContext"
 import { useDreamFilter } from "../context/DreamFilterContext"
 
 function FeedPage() {
+    const { t } = useTranslation()
+
     const [suenos, setSuenos] = useState([])
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -35,7 +38,7 @@ function FeedPage() {
                 setSuenos(data)
                 setHasMore(data.length === 20)
             } catch (err) {
-                showToast("Error cargando el feed", "error")
+                showToast(t("feed.loadError"), "error")
             } finally {
                 setLoading(false)
             }
@@ -62,7 +65,7 @@ function FeedPage() {
             setPage(nextPage)
             setHasMore(data.length === 20)
         } catch (err) {
-            showToast("Error cargando más sueños", "error")
+            showToast(t("feed.loadMoreError"), "error")
         } finally {
             setLoadingMore(false)
         }
@@ -89,7 +92,7 @@ function FeedPage() {
         return () => {
             observer.disconnect()
         }
-    }, [loading, hasMore, loadingMore,page, categoriasSeleccionadas, orden.field, orden.direction])
+    }, [loading, hasMore, loadingMore, page, categoriasSeleccionadas, orden.field, orden.direction])
 
 
     function handleNuevoSueno(sueno) {
@@ -102,7 +105,7 @@ function FeedPage() {
 
     if (loading) return (
         <p className="feed-loading">
-            Cargando sueños...
+            {t("feed.loading")}
         </p>
     )
 
@@ -119,7 +122,7 @@ function FeedPage() {
 
             {suenos.length === 0 ? (
                 <p className="feed-empty">
-                    No hay sueños todavía. Sé el primero en compartir uno  {":)"}
+                    {t("feed.empty")}
                 </p>
             ) : (
                 <>
@@ -139,7 +142,7 @@ function FeedPage() {
 
                     {loadingMore && (
                         <p className="feed-loading-more">
-                            Cargando más sueños...
+                            {t("feed.loadingMore")}
                         </p>
                     )}
                 </>

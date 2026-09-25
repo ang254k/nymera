@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { createSueno } from "../api/suenos"
 import { getCategorias } from "../api/categorias"
 import { useToast } from "../context/ToastContext"
 
 function CrearSueno({ onSuenoCreado }) {
+    const { t } = useTranslation()
 
     const [titulo, setTitulo] = useState("")
     const [categorias, setCategorias] = useState([])
@@ -22,7 +24,7 @@ function CrearSueno({ onSuenoCreado }) {
                 setCategorias(data)
 
             } catch (err) {
-                showToast("Error cargando categorías", "error")
+                showToast(t("dream.loadCategoriesError"), "error")
             }
         }
         loadCategorias()
@@ -44,7 +46,7 @@ function CrearSueno({ onSuenoCreado }) {
             })
 
             onSuenoCreado(nuevoSueno)
-            showToast("Sueño publicado", "success")
+            showToast(t("dream.published"), "success")
             setTitulo("")
             setContenido("")
             setCategoriaId("")
@@ -60,7 +62,7 @@ function CrearSueno({ onSuenoCreado }) {
     return (
         <div className="card crear-sueno">
             <h3 className="crear-sueno-title">
-                ¿Qué has soñado?
+                {t("dream.createTitle")}
             </h3>
             {error && (
                 <p className="form-error">
@@ -73,7 +75,7 @@ function CrearSueno({ onSuenoCreado }) {
                 <input
                     className="input"
                     type="text"
-                    placeholder="Título"
+                    placeholder={t("dream.titlePlaceholder")}
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                 />
@@ -86,7 +88,7 @@ function CrearSueno({ onSuenoCreado }) {
                         setCategoriaId(value === "" ? "" : Number(value))
                     }}
                 >
-                    <option value="">Selecciona categoría</option>
+                    <option value="">{t("dream.selectCategory")}</option>
                     {categorias.map(c => (
                         <option key={c.id} value={c.id}>
                             {c.nombre}
@@ -96,7 +98,7 @@ function CrearSueno({ onSuenoCreado }) {
 
                 <textarea
                     className="textarea"
-                    placeholder="Cuenta tu sueño..."
+                    placeholder={t("dream.contentPlaceholder")}
                     value={contenido}
                     onChange={(e) => setContenido(e.target.value)}
                 />
@@ -107,14 +109,14 @@ function CrearSueno({ onSuenoCreado }) {
                         checked={publico}
                         onChange={(e) => setPublico(e.target.checked)}
                     />
-                    Hacer público
+                    {t("dream.makePublic")}
                 </label>
 
                 <button
                     className="btn btn-primary"
                     type="submit"
                     disabled={saving}>
-                    {saving ? "Publicando..." : "Publicar"}
+                    {saving ? t("dream.publishing") : t("dream.publish")}
                 </button>
             </form>
         </div>
