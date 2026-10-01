@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { deleteSueno, toggleLike } from "../api/suenos"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
+import { formatDate } from "../utils/formatDate"
 import {
     Heart,
     MessageCircle,
@@ -19,7 +20,7 @@ import HashtagText from "./HashtagText"
 import Avatar from "./Avatar"
 
 function SuenoCard({ sueno, onSuenoEliminado }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const navigate = useNavigate()
 
@@ -91,13 +92,10 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
         }
     }
 
-    const fechaFormateada = new Date(sueno.fecha_creacion).toLocaleString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    const fechaFormateada = formatDate(
+        sueno.fecha_creacion,
+        i18n.language
+    )
 
     return (
         <>

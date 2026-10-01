@@ -14,6 +14,8 @@ import { getCategorias } from "../api/categorias"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 
+import { formatDate } from "../utils/formatDate"
+
 import ConfirmModal from "../components/ConfirmModal"
 import HashtagText from "../components/HashtagText"
 import {
@@ -28,8 +30,7 @@ import {
 import Avatar from "../components/Avatar"
 
 function SuenoDetallePage() {
-    const { t } = useTranslation()
-
+    const { t, i18n } = useTranslation()
     // useParams obtiene el id de la URL
     const { id } = useParams()
     const { user } = useAuth()
@@ -336,13 +337,10 @@ function SuenoDetallePage() {
         )
     }
 
-    const fechaFormateada = new Date(sueno.fecha_creacion).toLocaleString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
+    const fechaFormateada = formatDate(
+        sueno.fecha_creacion,
+        i18n.language
+    )
 
     return (
 
@@ -602,13 +600,7 @@ function SuenoDetallePage() {
                                         )}
 
                                     <span className="comentario-date">
-                                        {new Date(c.fecha_creacion).toLocaleString("es-ES", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "2-digit",
-                                            hour: "2-digit",
-                                            minute: "2-digit"
-                                        })}
+                                        {formatDate(c.fecha_creacion, i18n.language)}
                                     </span>
 
                                 </div>

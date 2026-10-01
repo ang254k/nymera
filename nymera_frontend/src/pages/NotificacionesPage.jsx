@@ -4,10 +4,12 @@ import { getNotificaciones, marcarNotificacionLeida } from "../api/notificacione
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../context/ToastContext"
 
+import { formatDate } from "../utils/formatDate"
+
 import { Heart, MessageCircle } from "../lib/icons"
 
 function NotificacionesPage() {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const [notificaciones, setNotificaciones] = useState([])
     const [loading, setLoading] = useState(true)
@@ -89,7 +91,7 @@ function NotificacionesPage() {
                                 )}
 
                                 <span className="notificacion-date">
-                                    {new Date(n.fecha_creacion).toLocaleString("es-ES")}
+                                    {formatDate(n.fecha_creacion, i18n.language)}
                                 </span>
                             </div>
                         </div>
