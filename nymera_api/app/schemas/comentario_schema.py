@@ -1,13 +1,13 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
 #Peticiones
 class ComentarioCreateRequest(BaseModel):
-    contenido: str = Field(min_length= 2, max_length= 500)
+    contenido: str
 
 class ComentarioUpdateRequest(BaseModel):
-    contenido: str = Field(min_length= 2, max_length= 500)
+    contenido: str
     
 #Respuestas
 class ComentarioDetalleResponse(BaseModel):

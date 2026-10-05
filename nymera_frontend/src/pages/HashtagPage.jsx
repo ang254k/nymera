@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next"
 
 import { getSuenosByHashtag } from "../api/hashtag"
 import SuenoCard from "../components/SuenoCard"
+
+import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 import { useDreamFilter } from "../context/DreamFilterContext"
 
@@ -28,7 +30,7 @@ export default function HashtagPage() {
 
                 setSuenos(data)
             } catch (err) {
-                showToast(err.message || t("hashtag.error"), "error")
+                showToast(getErrorMessage(err, t), "error")
             } finally {
                 setLoadingInicial(false)
                 setLoadingSuenos(false)

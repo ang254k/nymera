@@ -16,11 +16,11 @@ class ComentarioService:
         contenido = contenido.strip()
         #Validaciones comentario
         if not contenido:
-            raise ValueError("Comentario vacio")
+            raise ValueError("comment_empty")
         if len(contenido)<2:
-            raise ValueError("Comentario demasiado corto")
+            raise ValueError("comment_too_short")
         if len(contenido)>500:
-            raise ValueError("Comentario demasiado largo")
+            raise ValueError("comment_too_long")
         
         comentario = self.comentario_repository.create(contenido,usuario_id, sueno_id)
         
@@ -38,18 +38,18 @@ class ComentarioService:
         #Validacion comentario
         comentario = self.comentario_repository.get_by_id(comentario_id)
         if not comentario:
-            raise ValueError("Comentario no existe")
+            raise ValueError("comment_not_found")
         #Validacion dueño
         if comentario.usuario_id != usuario_id:
-            raise PermissionError("No autorizado")
+            raise PermissionError("unauthorized")
         #Validacion nuevo comentario
         nuevo_comentario = nuevo_comentario.strip()
         if not nuevo_comentario:
-            raise ValueError("Comentario vacio")
+            raise ValueError("comment_empty")
         if len(nuevo_comentario)<2:
-            raise ValueError("Comentario demasiado corto")
+            raise ValueError("comment_too_short")
         if len(nuevo_comentario)>500:
-            raise ValueError("Comentario demasiado largo")
+            raise ValueError("comment_too_long")
         
         self.comentario_repository.update(nuevo_comentario,comentario_id)
         
@@ -59,7 +59,7 @@ class ComentarioService:
         #Validacion comentario
         comentario = self.comentario_repository.get_by_id(comentario_id)
         if not comentario:
-            raise ValueError("Comentario no existe.")
+            raise ValueError("comment_not_found")
         #Validacion sueño
         sueno = self.sueno_service.get_sueno(
             comentario.sueno_id,
@@ -70,7 +70,7 @@ class ComentarioService:
             comentario.usuario_id != usuario_id
             and sueno.usuario_id != usuario_id
         ):
-            raise PermissionError("No autorizado.")
+            raise PermissionError("unauthorized")
 
         deleted = self.comentario_repository.delete(comentario_id)
 

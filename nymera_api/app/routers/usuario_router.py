@@ -69,11 +69,11 @@ def update_me(
         if not actualizado:
             raise HTTPException(
                 status_code=400,
-                detail = "No se pudo actualizar el perfil"
+                detail = "profile_update_failed"
             )
             
         return {
-            "message": "Perfil actualizado correctamente"
+            "message": "profile_updated"
         }
 
     except ValueError as e:
@@ -113,10 +113,10 @@ def change_password(
         if not actualizado:
             raise HTTPException(
                 status_code=400,
-                detail="No se pudo actualizar la contraseña"
+                detail="password_update_failed"
             )
         return {
-            "message": "Contraseña actualizada correctamente"
+            "message": "password_updated"
         }
     except ValueError as e:
         raise HTTPException(
@@ -131,6 +131,6 @@ def get_usuario(id: int):
     if not usuario:
         raise HTTPException(
             status_code=404, 
-            detail="Usuario no encontrado"
+            detail="user_not_found"
         )
     return usuario

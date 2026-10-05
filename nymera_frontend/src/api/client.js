@@ -27,13 +27,13 @@ export async function apiRequest(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-        let message = "Error en la petición"
+        let message = "request_error"
 
         if (data?.detail) {
             if (typeof data.detail === "string") {
                 message = data.detail
             } else if (Array.isArray(data.detail)) {
-                message = "Completa correctamente todos los campos"
+                message = "validation_error"
             }
         }
 

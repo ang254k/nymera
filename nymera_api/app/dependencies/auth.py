@@ -21,7 +21,7 @@ def get_current_user(
     
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED,
-        detail = "No se pudo validar credenciales"
+        detail = "unauthorized"
     )
 
     payload = decode_token(token)

@@ -6,6 +6,7 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { login, me } from "../api/auth"
 
+import { getErrorMessage } from "../utils/getErrorMessage"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 
@@ -45,7 +46,7 @@ function LoginPage() {
             navigate("/home")
 
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
         }

@@ -21,7 +21,7 @@ class AuthService:
 
         if usuario is None:
             return {
-                "message": "Si existe una cuenta asociada a ese correo, recibirás un email."
+                "message": "password_reset_email_sent"
             }
         # Genera token
         token = secrets.token_urlsafe(32)
@@ -38,7 +38,7 @@ class AuthService:
         )
 
         return {
-            "message": "Si existe una cuenta asociada a ese correo, recibirás un email."
+            "message": "password_reset_email_sent"
         }
 
     def reset_password(self, token, new_password):
@@ -46,19 +46,26 @@ class AuthService:
         #Validaciones
         #Existe?
         if token_obj is None:
-            raise ValueError("Token inválido")
+            raise ValueError("token_invalid")
         #Usado?
         if token_obj.usado:
-            raise ValueError("Este enlace ya fue utilizado")
+            raise ValueError("reset_link_used")
         #Fecha ok?
         if datetime.now() > token_obj.fecha_expiracion:
-            raise ValueError("El enlace ha expirado")
+            raise ValueError("reset_link_expired")
 
         #Se busca usuario
         usuario = self.usuario_repo.get_by_id_with_password(token_obj.usuario_id)
 
         if usuario is None:
-            raise ValueError("Usuario no encontrado")
+            raise ValueError("user_not_found")
+        
+        if not new_password:
+            raise ValueError("new_password_required")
+
+        if len(new_password) < 8:
+            raise ValueError("new_password_too_short")
+
         #Hash pw
         nuevo_hash = bcrypt.hash(new_password)
         #Actualiza usuario(pw)
@@ -68,13 +75,13 @@ class AuthService:
         )
         
         if not actualizado:
-            raise ValueError("No se pudo actualizar la contraseña")
+            raise ValueError("password_update_failed")
         #Se marca token
         marcado = self.reset_repo.mark_as_used(token_obj.id)
         
         if not marcado:
-            raise ValueError("No se pudo invalidar el token")
+            raise ValueError("token_invalidation_failed")
         
         return{
-            "message": "Contraseña actualizada correctamente"
+            "message": "password_updated"
         }

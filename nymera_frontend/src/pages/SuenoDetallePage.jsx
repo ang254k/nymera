@@ -11,6 +11,8 @@ import {
 } from "../api/comentarios"
 import { getCategorias } from "../api/categorias"
 
+import { getErrorMessage } from "../utils/getErrorMessage"
+
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 
@@ -83,7 +85,7 @@ function SuenoDetallePage() {
                 setCategorias(categoriasData)
                 setComentarios(comentariosData)
             } catch (err) {
-                setError(err.message)
+                setError(getErrorMessage(err, t))
             } finally {
                 setLoading(false)
             }
@@ -189,7 +191,7 @@ function SuenoDetallePage() {
             }, 100)
         }
         catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, t))
             showToast(t("dreamDetail.comments.error"), "error")
         } finally {
             setCommenting(false)
@@ -234,7 +236,7 @@ function SuenoDetallePage() {
             setEditando(false)
 
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, t))
             showToast(t("dreamDetail.edit.error"), "error")
         } finally {
             setSavingEdit(false)
@@ -253,7 +255,7 @@ function SuenoDetallePage() {
             showToast(t("dreamDetail.delete.deleted"), "success")
             navigate("/home")
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, t))
             showToast(t("dreamDetail.delete.error"), "error")
         } finally {
             setDeleting(false)
@@ -314,7 +316,7 @@ function SuenoDetallePage() {
             setComentarioAEliminar(null)
 
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, t))
             showToast(t("dreamDetail.comments.deleteError"), "error")
         } finally {
             setDeletingComentario(false)

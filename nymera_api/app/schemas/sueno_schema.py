@@ -1,18 +1,17 @@
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 #Peticiones
 class SuenoCreateRequest(BaseModel):
-    titulo: str = Field(min_length=3, max_length=100)
-    contenido: str = Field(min_length= 5, max_length= 2000)
+    titulo: str
+    contenido: str
     publico: bool
-    #usuario_id: int De momento borramos por seguridad
     categoria_id:int
     
 class SuenoUpdateRequest(BaseModel):
-    titulo: str = Field(min_length=3, max_length=100)
-    contenido: str = Field(min_length=5, max_length=2000)
+    titulo: str
+    contenido: str 
     publico: bool
     categoria_id: int
     

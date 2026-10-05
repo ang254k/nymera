@@ -87,7 +87,7 @@ def update_sueno(
         raise HTTPException(status_code=400, detail=str(e))
 
     except PermissionError:
-        raise HTTPException(status_code=403, detail="No autorizado")
+        raise HTTPException(status_code=403, detail="unauthorized")
 
 
 # Borrar Sueno
@@ -99,7 +99,7 @@ def delete_sueno(id: int, current_user: Usuario = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail=str(e))
 
     except PermissionError:
-        raise HTTPException(status_code=403, detail="No autorizado")
+        raise HTTPException(status_code=403, detail="unauthorized")
 
 
 # Sueno por id
@@ -145,7 +145,7 @@ def create_comentario(
         raise HTTPException(status_code=400, detail=str(e))
 
     except PermissionError:
-        raise HTTPException(status_code=403, detail="No autorizado")
+        raise HTTPException(status_code=403, detail="unauthorized")
 
 
 # Sueños likeados por usuario
@@ -158,7 +158,7 @@ def get_liked_suenos(
     current_user: Usuario = Depends(get_current_user),
 ):
     if current_user.id != id:
-        raise HTTPException(status_code=403, detail="No autorizado")
+        raise HTTPException(status_code=403, detail="unauthorized")
 
     return sueno_service.get_liked_suenos(
         id, current_user.id, categorias, ordenar_por, direccion

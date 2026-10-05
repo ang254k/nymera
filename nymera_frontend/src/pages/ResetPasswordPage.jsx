@@ -6,6 +6,8 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { resetPassword } from "../api/auth"
 
+import { getErrorMessage } from "../utils/getErrorMessage"
+
 import { useToast } from "../context/ToastContext"
 
 export default function ResetPasswordPage() {
@@ -38,7 +40,7 @@ export default function ResetPasswordPage() {
 
             navigate("/login")
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
         }

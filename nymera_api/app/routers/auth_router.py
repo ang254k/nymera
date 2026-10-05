@@ -30,7 +30,7 @@ def register(data: RegisterRequest):
         usuario = usuario_service.register(data.nombre, data.email, data.password)
 
         if usuario is None:
-            raise HTTPException(status_code=400, detail="Email ya registrado")
+            raise HTTPException(status_code=400, detail="email_already_registered")
 
         return usuario
 
@@ -44,7 +44,7 @@ def login(data: LoginRequest):
     usuario = usuario_service.login(data.email, data.password)
 
     if usuario is None:
-        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+        raise HTTPException(status_code=401, detail="invalid_credentials")
     token = create_access_token({"sub": str(usuario.id)})
 
     return {"access_token": token, "token_type": "bearer"}

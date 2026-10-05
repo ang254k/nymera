@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { register } from "../api/auth"
+
+import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
 function RegisterPage() {
@@ -41,7 +43,7 @@ function RegisterPage() {
             navigate("/login")
 
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
         }

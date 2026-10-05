@@ -13,7 +13,7 @@ class HashtagService:
         hashtag_obj = self.hashtag_repository.get_by_nombre(hashtag)
 
         if hashtag_obj is None:
-            raise ValueError("Hashtag no encontrado")
+            raise ValueError("hashtag_not_found")
 
         return self.hashtag_repository.get_suenos_by_nombre(
             hashtag, usuario_id, categorias, ordenar_por, direccion

@@ -26,17 +26,25 @@ class SuenoService:
         usuario = self.usuario_repository.get_by_id(usuario_id)
         categoria = self.categoria_repository.get_by_id(categoria_id)
 
-        if not categoria:
-            raise ValueError("La categoria no existe")
-        if not usuario:
-            raise ValueError("El usuario no existe")
-
         if not titulo or titulo.strip() == "":
-            raise ValueError("El título no puede estar vacío")
+            raise ValueError("title_empty")
+
+        if len(titulo.strip()) < 3:
+            raise ValueError("title_too_short")
+
+        if len(titulo.strip()) > 100:
+            raise ValueError("title_too_long")
+        if not categoria:
+            raise ValueError("category_not_found")
+        if not usuario:
+            raise ValueError("user_does_not_exist")
 
         if not contenido or len(contenido.strip()) < 5:
-            raise ValueError("El contenido debe tener al menos 5 caracteres")
+            raise ValueError("content_too_short")
 
+        if len(contenido.strip()) > 2000:
+            raise ValueError("content_too_long")
+        
         sueno = self.sueno_repository.create(
             titulo, contenido, usuario_id, categoria_id, publico
         )
@@ -56,15 +64,6 @@ class SuenoService:
             sueno.id,
             usuario_id,
         )
-        # feed_items = self.sueno_repository.get_feed_detalle(
-        #     usuario_id, limit=1, offset=0
-        # )
-
-        # for item in feed_items:
-        #     if item.id == sueno.id:
-        #         return item
-
-        # return feed_items[0] if feed_items else None
 
     def update_sueno(
         self, sueno_id, titulo, contenido, categoria_id, publico, usuario_actual_id
@@ -72,24 +71,33 @@ class SuenoService:
         # Validación sueño
         sueno = self.sueno_repository.get_by_id(sueno_id)
         if not sueno:
-            raise ValueError("El sueño no existe")
+            raise ValueError("dream_not_found")
 
         # Validación autoría
         if sueno.usuario_id != usuario_actual_id:
-            raise PermissionError("No autorizado")
+            raise PermissionError("unauthorized")
 
         # Validación categoría
         categoria = self.categoria_repository.get_by_id(categoria_id)
         if not categoria:
-            raise ValueError("La categoría no existe")
+            raise ValueError("category_not_found")
 
         # Validación titulo
         if not titulo or titulo.strip() == "":
-            raise ValueError("El título no puede estar vacío")
+            raise ValueError("title_empty")
+
+        if len(titulo.strip()) < 3:
+            raise ValueError("title_too_short")
+
+        if len(titulo.strip()) > 100:
+            raise ValueError("title_too_long")
         
         # Validación contenido
         if not contenido or len(contenido.strip()) < 5:
-            raise ValueError("El contenido debe tener al menos 5 caracteres")
+            raise ValueError("content_too_short")
+
+        if len(contenido.strip()) > 2000:
+            raise ValueError("content_too_long")
 
         sueno_actualizado = self.sueno_repository.update(
             sueno_id, titulo, contenido, categoria_id, publico
@@ -116,10 +124,10 @@ class SuenoService:
         # Validacion sueño
         sueno = self.sueno_repository.get_by_id(sueno_id)
         if not sueno:
-            raise ValueError("El sueño no existe")
+            raise ValueError("dream_not_found")
         # Validación autoría
         if sueno.usuario_id != usuario_actual_id:
-            raise PermissionError("No autorizado")
+            raise PermissionError("unauthorized")
 
         return self.sueno_repository.delete(sueno_id)
 
@@ -127,19 +135,19 @@ class SuenoService:
         # Validacion Sueno
         sueno = self.sueno_repository.get_detalles(usuario_actual_id, sueno_id)
         if not sueno:
-            raise ValueError("Error: No existe sueño.")
+            raise ValueError("dream_not_found")
         if not sueno.publico:
             if usuario_actual_id != sueno.usuario_id:
-                raise PermissionError("No autorizado")
+                raise PermissionError("unauthorized")
         return sueno
 
     def get_sueno(self, sueno_id, usuario_actual_id=None):
         sueno = self.sueno_repository.get_by_id(sueno_id)
         if not sueno:
-            raise ValueError("Error: No existe sueño.")
+            raise ValueError("dream_not_found")
         if not sueno.publico:
             if usuario_actual_id != sueno.usuario_id:
-                raise PermissionError("No autorizado")
+                raise PermissionError("unauthorized")
         return sueno
 
     def get_user_suenos(
@@ -154,7 +162,7 @@ class SuenoService:
         usuario = self.usuario_repository.get_by_id(perfil_usuario_id)
 
         if not usuario:
-            raise ValueError("Usuario no existe")
+            raise ValueError("user_does_not_exist")
 
         return self.sueno_repository.get_feed_by_user(
             perfil_usuario_id, usuario_actual_id, categorias, ordenar_por, direccion
@@ -165,7 +173,7 @@ class SuenoService:
     ):
 
         if page < 1:
-            raise ValueError("La página debe ser mayor que cero.")
+            raise ValueError("page_invalid")
 
         PAGE_SIZE = 20
         # Se salta el numero de página que se selecciona, por la cantidad de contenido, en este caso 20
@@ -187,7 +195,7 @@ class SuenoService:
         usuario = self.usuario_repository.get_by_id(perfil_usuario_id)
 
         if not usuario:
-            raise ValueError("Usuario no existe")
+            raise ValueError("user_does_not_exist")
 
         return self.sueno_repository.get_liked_by_user(
             perfil_usuario_id, usuario_actual_id, categorias, ordenar_por, direccion

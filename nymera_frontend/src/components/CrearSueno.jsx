@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { useEffect, useState } from "react"
 import { createSueno } from "../api/suenos"
 import { getCategorias } from "../api/categorias"
+import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
 function CrearSueno({ onSuenoCreado }) {
@@ -53,7 +54,7 @@ function CrearSueno({ onSuenoCreado }) {
             setPublico(true)
 
         } catch (err) {
-            setError(err.message)
+            setError(getErrorMessage(err, t))
         } finally {
             setSaving(false)
         }

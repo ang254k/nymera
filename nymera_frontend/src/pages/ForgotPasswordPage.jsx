@@ -5,6 +5,7 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { forgotPassword } from "../api/auth"
 
+import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
 export default function ForgotPasswordPage() {
@@ -23,13 +24,13 @@ export default function ForgotPasswordPage() {
         setLoading(true)
 
         try {
-            const data = await forgotPassword(email)
+            await forgotPassword(email)
 
-            showToast(data.message, "success")
+            showToast(t("success.password_reset_email_sent"), "success")
 
             setEmail("")
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
         }

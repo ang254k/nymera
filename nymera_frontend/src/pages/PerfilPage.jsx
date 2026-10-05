@@ -13,6 +13,8 @@ import Avatar from "../components/Avatar"
 
 import { Heart } from "../lib/icons"
 
+import { getErrorMessage } from "../utils/getErrorMessage"
+
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 import { useDreamFilter } from "../context/DreamFilterContext"
@@ -55,7 +57,7 @@ function PerfilPage() {
                 setSuenosLikeados(likedData)
 
             } catch (err) {
-                setError(err.message)
+                setError(getErrorMessage(err, t))
             } finally {
                 setLoading(false)
                 setLoadingSuenos(false)
@@ -102,7 +104,7 @@ function PerfilPage() {
             setEditando(false)
         }
         catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setSavingPerfil(false)
         }
@@ -129,7 +131,7 @@ function PerfilPage() {
             setNuevaPassword("")
             setConfirmarPassword("")
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         } finally {
             setChangingPassword(false)
         }
@@ -150,7 +152,7 @@ function PerfilPage() {
 
             e.target.value = ""
         } catch (err) {
-            showToast(err.message, "error")
+            showToast(getErrorMessage(err, t), "error")
         }
     }
 
