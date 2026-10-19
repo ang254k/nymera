@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useParams, useLocation, useNavigate } from "react-router-dom"
 
-import { getSuenoDetalle, updateSueno, deleteSueno, toggleLike } from "../api/suenos"
+import { getSuenoDetalle, updateSueno, deleteSueno, toggleLike, translateSueno } from "../api/suenos"
 import {
     getComentarios,
     createComentario,
@@ -40,6 +40,9 @@ function SuenoDetallePage() {
     const location = useLocation()
 
     const [sueno, setSueno] = useState(null)
+    const [traduccion, setTraduccion] = useState(null)
+    const [mostrarTraduccion, setMostrarTraduccion] = useState(false)
+    const [loadingTraduccion, setLoadingTraduccion] = useState(false)
     const [categorias, setCategorias] = useState([])
     const [categoriaId, setCategoriaId] = useState(null)
 
@@ -118,6 +121,39 @@ function SuenoDetallePage() {
             window.history.replaceState({}, document.title)
         }
     }, [location.state, sueno, editFromFeed])
+
+
+    async function handleTranslate() {
+        if (loadingTraduccion) return
+
+        if (mostrarTraduccion) {
+            setMostrarTraduccion(false)
+            return
+        }
+
+        if (traduccion) {
+            setMostrarTraduccion(true)
+            return
+        }
+
+        const idiomaActual = i18n.language.startsWith("en") ? "en" : "es"
+        const idiomaOriginal = sueno.idioma_original
+
+        if (!idiomaOriginal || idiomaOriginal === idiomaActual) return
+
+        setLoadingTraduccion(true)
+
+        try {
+            const data = await translateSueno(sueno.id, idiomaActual)
+            setTraduccion(data)
+            setMostrarTraduccion(true)
+        } catch (err) {
+            showToast(t("dreamCard.translationError"), "error")
+        } finally {
+            setLoadingTraduccion(false)
+        }
+    }
+
 
     // Manejo del like
     async function handleLike() {
@@ -375,7 +411,7 @@ function SuenoDetallePage() {
                             {!categoriaId && <option value="">{t("dreamDetail.edit.selectCategory")}</option>}
                             {categorias.map(c => (
                                 <option key={c.id} value={c.id}>
-                                    {c.nombre}
+                                    {t(`categories.${c.id}`, c.nombre)}
                                 </option>
                             ))}
                         </select>
@@ -421,7 +457,7 @@ function SuenoDetallePage() {
                     </div>
                 ) : (
                     <div className="sueno-detalle-content">
-
+                        {/* Avatar + usuario */}
                         <div className="sueno-detalle-author-section">
                             <Avatar
                                 avatarUrl={sueno.avatar_url}
@@ -435,6 +471,25 @@ function SuenoDetallePage() {
 
                         </div>
 
+                        {/* Botón traducir */}
+                        <div className="sueno-detalle-translation">
+                            {sueno.idioma_original &&
+                                sueno.idioma_original !==
+                                (i18n.language.startsWith("en") ? "en" : "es") && (
+                                    <button
+                                        className="sueno-owner-button"
+                                        onClick={handleTranslate}
+                                        disabled={loadingTraduccion}
+                                    >
+                                        {loadingTraduccion
+                                            ? t("dreamCard.translating")
+                                            : mostrarTraduccion
+                                                ? t("dreamCard.showOriginal")
+                                                : t("dreamCard.translate")}
+                                    </button>
+                                )}
+                        </div>
+
                         <h2 className="sueno-detalle-title">
                             <HashtagText texto={sueno.titulo} />
                         </h2>
@@ -443,7 +498,9 @@ function SuenoDetallePage() {
 
                             <p className="sueno-detalle-category">
                                 <Tag size={14} />
-                                <span>{sueno.categoria_nombre}</span>
+                                <span>
+                                    {t(`categories.${sueno.categoria_id}`, sueno.categoria_nombre)}
+                                </span>
                             </p>
 
                             {user?.id === sueno.usuario_id && (
@@ -464,13 +521,16 @@ function SuenoDetallePage() {
                         </div>
 
                         <p className="sueno-detalle-text">
-                            <HashtagText texto={sueno.contenido} />
+                            <HashtagText texto={
+                                mostrarTraduccion ? traduccion.contenido : sueno.contenido
+                            } />
                         </p>
                     </div>
 
                 )}
 
                 <div className="sueno-detalle-meta">
+                    {/* Izquierda: likes, comentarios */}
                     <div className="sueno-detalle-stats">
                         <button
                             className={`sueno-like-button ${liked ? "is-liked" : ""} ${likeAnimating ? "is-animating" : ""}`} onClick={handleLike}
@@ -488,45 +548,47 @@ function SuenoDetallePage() {
                         </span>
                     </div>
 
+                    {/* Centro: Acciones propietario */}
+                    {!editando && user?.id === sueno.usuario_id && (
+                        <div className="sueno-detalle-owner-actions">
+
+                            {/* Botón Editar */}
+                            <button
+                                className="sueno-owner-button"
+                                onClick={() => {
+                                    setEditando(true)
+                                    setTituloEdit(sueno.titulo)
+                                    setCategoriaId(sueno.categoria_id)
+                                    setContenidoEdit(sueno.contenido)
+                                    setPublicoEdit(sueno.publico)
+                                }}
+                            >
+                                <Pencil size={14} />
+                                {t("dreamDetail.edit.edit")}
+                            </button>
+
+
+                            {/* Botón eliminar */}
+                            <button
+                                className="sueno-owner-button"
+                                onClick={() => setConfirmandoBorrado(true)}
+                                disabled={deleting}
+                            >
+                                <Trash2 size={14} />
+                                {deleting
+                                    ? t("dreamDetail.delete.deleting")
+                                    : t("dreamDetail.delete.delete")
+                                }
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Derecha: fecha */}
                     <div className="sueno-detalle-date">
                         {fechaFormateada}
                     </div>
                 </div>
 
-                {/* Acciones propietario */}
-                {!editando && user?.id === sueno.usuario_id && (
-                    <div className="sueno-detalle-owner-actions">
-
-                        {/* Botón Editar */}
-                        <button
-                            className="sueno-owner-button"
-                            onClick={() => {
-                                setEditando(true)
-                                setTituloEdit(sueno.titulo)
-                                setCategoriaId(sueno.categoria_id)
-                                setContenidoEdit(sueno.contenido)
-                                setPublicoEdit(sueno.publico)
-                            }}
-                        >
-                            <Pencil size={14} />
-                            {t("dreamDetail.edit.edit")}
-                        </button>
-
-
-                        {/* Botón eliminar */}
-                        <button
-                            className="sueno-owner-button"
-                            onClick={() => setConfirmandoBorrado(true)}
-                            disabled={deleting}
-                        >
-                            <Trash2 size={14} />
-                            {deleting
-                                ? t("dreamDetail.delete.deleting")
-                                : t("dreamDetail.delete.delete")
-                            }
-                        </button>
-                    </div>
-                )}
             </div>
 
             {/* Comentarios */}

@@ -24,5 +24,6 @@ class Settings:
         # Email
         self.RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
-        
+        # Traducción
+        self.LIBRETRANSLATE_URL = os.getenv("LIBRETRANSLATE_URL")
 settings = Settings()

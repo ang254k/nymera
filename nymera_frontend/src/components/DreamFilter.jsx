@@ -91,7 +91,7 @@ function DreamFilter() {
                                 }
                             }}
                         >
-                            {cat.nombre}
+                            {t(`categories.${cat.id}`, cat.nombre)}
                         </button>
                     )
                 })}

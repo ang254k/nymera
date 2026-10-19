@@ -1,21 +1,24 @@
-
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
-#Peticiones
+
+# Peticiones
 class SuenoCreateRequest(BaseModel):
     titulo: str
     contenido: str
     publico: bool
-    categoria_id:int
-    
+    categoria_id: int
+    idioma_original: str
+
+
 class SuenoUpdateRequest(BaseModel):
     titulo: str
-    contenido: str 
+    contenido: str
     publico: bool
     categoria_id: int
-    
-#Respuestas
+
+
+# Respuestas
 class SuenoResponse(BaseModel):
     id: int
     titulo: str
@@ -24,8 +27,10 @@ class SuenoResponse(BaseModel):
     fecha_creacion: datetime
     usuario_id: int
     categoria_id: int
-    
+    idioma_original: str
+
     model_config = ConfigDict(from_attributes=True)
+
 
 class SuenoFeedItem(BaseModel):
     id: int
@@ -36,12 +41,15 @@ class SuenoFeedItem(BaseModel):
     usuario_id: int
     usuario_nombre: str
     avatar_url: str | None = None
+    categoria_id: int
     categoria_nombre: str
     likes_count: int
     comentarios_count: int
     liked_by_user: bool
-    
+    idioma_original: str
+
     model_config = ConfigDict(from_attributes=True)
+
 
 class SuenoDetalleResponse(BaseModel):
     id: int
@@ -57,6 +65,13 @@ class SuenoDetalleResponse(BaseModel):
     publico: bool
     categoria_id: int
     categoria_nombre: str
-    
+    idioma_original: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class SuenoTraduccionResponse(BaseModel):
+    idioma: str
+    titulo: str
+    contenido: str
+    preview_contenido: str

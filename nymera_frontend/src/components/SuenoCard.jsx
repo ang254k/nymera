@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { deleteSueno, toggleLike } from "../api/suenos"
+
+import { deleteSueno, toggleLike, translateSueno } from "../api/suenos"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 import { formatDate } from "../utils/formatDate"
@@ -31,6 +32,10 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [likeAnimating, setLikeAnimating] = useState(false)
 
+    const [traduccion, setTraduccion] = useState(null)
+    const [mostrarTraduccion, setMostrarTraduccion] = useState(false)
+    const [loadingTraduccion, setLoadingTraduccion] = useState(false)
+
     const { user } = useAuth()
     const { showToast } = useToast()
 
@@ -53,6 +58,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
 
             setLikesCount(data.likes_count)
             setLiked(data.status === "liked")
+
             if (data.status === "liked") {
                 setLikeAnimating(true)
                 setTimeout(() => setLikeAnimating(false), 250)
@@ -83,7 +89,6 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
             onSuenoEliminado(sueno.id)
 
             showToast(t("dreamCard.deleted"), "success")
-
             setShowDeleteModal(false)
         } catch (err) {
             showToast(t("dreamCard.deleteError"), "error")
@@ -92,15 +97,61 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
         }
     }
 
+    async function handleTranslate(e) {
+        e.stopPropagation()
+
+        if (mostrarTraduccion) {
+            setMostrarTraduccion(false)
+            return
+        }
+
+        if (traduccion) {
+            setMostrarTraduccion(true)
+            return
+        }
+
+        if (!user) {
+            showToast(t("dreamCard.loginRequired"), "error")
+            return
+        }
+
+        if (loadingTraduccion) return
+
+        setLoadingTraduccion(true)
+
+        try {
+            const idiomaActual = i18n.language.startsWith("en") ? "en" : "es"
+            const data = await translateSueno(sueno.id, idiomaActual)
+
+            setTraduccion(data)
+            setMostrarTraduccion(true)
+        } catch (err) {
+            showToast(t("dreamCard.translationError"), "error")
+        } finally {
+            setLoadingTraduccion(false)
+        }
+    }
+
     const fechaFormateada = formatDate(
         sueno.fecha_creacion,
         i18n.language
     )
 
+    const tituloVisible = mostrarTraduccion
+        ? traduccion?.titulo ?? sueno.titulo
+        : sueno.titulo
+
+    const previewVisible = mostrarTraduccion
+        ? traduccion?.preview_contenido ?? sueno.preview_contenido
+        : sueno.preview_contenido
+
+    const idiomaActual = i18n.language.startsWith("en") ? "en" : "es"
+
+    const mostrarBotonTraduccion = sueno.idioma_original !== idiomaActual
+
     return (
         <>
             <div className="sueno-card">
-
                 {/*Contenido clickable*/}
                 <div
                     className="sueno-card-body"
@@ -131,13 +182,32 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                     </div>
 
 
+                    {/* Botón traducir */}
+                    {mostrarBotonTraduccion && (
+                        <button
+                            className="sueno-owner-button"
+                            onClick={handleTranslate}
+                            disabled={loadingTraduccion}
+                        >
+                            {loadingTraduccion
+                                ? t("dreamCard.translating")
+                                : mostrarTraduccion
+                                    ? t("dreamCard.showOriginal")
+                                    : t("dreamCard.translate")}
+                        </button>
+                    )}
+
+
                     <h3 className="sueno-title">
-                        <HashtagText texto={sueno.titulo} />
+                        <HashtagText texto={tituloVisible} />
                     </h3>
+
                     <div className="sueno-details">
                         <p className="sueno-category">
                             <Tag size={14} />
-                            <span>{sueno.categoria_nombre}</span>
+                            <span>
+                                {t(`categories.${sueno.categoria_id}`, sueno.categoria_nombre)}
+                            </span>
                         </p>
 
                         {user?.id === sueno.usuario_id && (
@@ -159,7 +229,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                     </div>
 
                     <p className="sueno-preview">
-                        <HashtagText texto={sueno.preview_contenido} />
+                        <HashtagText texto={previewVisible} />
                     </p>
                 </div>
 
@@ -181,46 +251,48 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                         </span>
                     </div>
 
+                    {/* Centro: Acciones propietario (Borrar + Editar) */}
+                    {user && user.id === sueno.usuario_id && (
+                        <div className="sueno-owner-actions">
+                            <button
+                                className="sueno-owner-button"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate(`/suenos/${sueno.id}`, {
+                                        state: { editar: true }
+                                    })
+                                }}
+                            >
+                                <Pencil size={14} />
+                                {t("dreamCard.edit")}
+                            </button>
+
+                            <button
+                                className="sueno-owner-button"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowDeleteModal(true)
+                                }}
+                                disabled={deleting}
+                            >
+                                <Trash2 size={14} />
+                                {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
+                            </button>
+                        </div>
+                    )}
+
                     {/* Derecha: fecha + delete */}
                     <div className="sueno-meta">
                         <div className="sueno-date">
                             {fechaFormateada}
                         </div>
-
-                        {/* Acciones propietario (Borrar + Editar) */}
-                        {user && user.id === sueno.usuario_id && (
-                            <div className="sueno-owner-actions">
-                                <button
-                                    className="sueno-owner-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        navigate(`/suenos/${sueno.id}`, {
-                                            state: { editar: true }
-                                        })
-                                    }}
-                                >
-                                    <Pencil size={14} />
-                                    {t("dreamCard.edit")}
-                                </button>
-
-                                <button
-                                    className="sueno-owner-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        setShowDeleteModal(true)
-                                    }}
-                                    disabled={deleting}
-                                >
-                                    <Trash2 size={14} />
-                                    {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
-                                </button>
-                            </div>
-                        )}
                     </div>
 
                 </div>
 
+
             </div>
+
 
             <ConfirmModal
                 open={showDeleteModal}

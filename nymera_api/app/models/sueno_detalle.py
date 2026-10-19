@@ -8,6 +8,7 @@ class SuenoDetalle:
         fecha_creacion,
         usuario_id,
         categoria_id,
+        idioma_original,
         usuario_nombre,
         avatar_url,
         categoria_nombre,
@@ -22,6 +23,7 @@ class SuenoDetalle:
         self.fecha_creacion = fecha_creacion
         self.usuario_id = usuario_id
         self.categoria_id = categoria_id
+        self.idioma_original = idioma_original
         self.usuario_nombre = usuario_nombre
         self.avatar_url = avatar_url
         self.categoria_nombre = categoria_nombre

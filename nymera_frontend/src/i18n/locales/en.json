@@ -95,7 +95,11 @@
         "cancel": "Cancel",
         "deleting": "Deleting...",
         "deleteTitle": "Delete dream",
-        "deleteMessage": "Are you sure you want to delete this dream? This action cannot be undone."
+        "deleteMessage": "Are you sure you want to delete this dream? This action cannot be undone.",
+        "translate": "Translate",
+        "translating": "Translating...",
+        "showOriginal": "View original",
+        "translationError": "Could not translate the dream."
     },
     "feed": {
         "loading": "Loading dreams...",
@@ -256,6 +260,8 @@
         "email_invalid": "The email format is invalid",
         "email_already_registered": "This email is already registered",
         "invalid_credentials": "Invalid credentials",
+        "invalid_language": "Invalid language.",
+        "same_language": "The dream is already written in this language.",
         "user_not_found": "User not found",
         "unauthorized": "Unauthorized",
         "token_invalid": "Invalid token",
@@ -301,5 +307,17 @@
         "profile_updated": "Profile updated successfully",
         "password_updated": "Password updated successfully",
         "password_reset_email_sent": "If an account exists for that email, you will receive an email."
+    },
+    "categories": {
+        "1": "Everyday",
+        "2": "Nightmare",
+        "3": "Fantasy",
+        "4": "Lucid",
+        "5": "Recurring",
+        "6": "Happy",
+        "7": "Romance",
+        "8": "Strange",
+        "9": "Adventure",
+        "10": "Sadness"
     }
 }

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 
 import { APP_NAME, APP_ICON } from "../config/app"
+import banderaES from "../assets/flags/es.svg"
+import banderaEN from "../assets/flags/en.svg"
 
 import { Home, Bell, User, LogOut } from "../lib/icons"
 
@@ -130,17 +132,21 @@ function Header() {
           <button
             type="button"
             onClick={() => i18n.changeLanguage("es")}
+            aria-label="Cambiar idioma a español"
+            title="Español"
+            aria-pressed={i18n.language.startsWith("es")}
           >
-            ES
+            <img src={banderaES} alt="" />
           </button>
-
-          <span>|</span>
 
           <button
             type="button"
             onClick={() => i18n.changeLanguage("en")}
+            aria-label="Change language to English"
+            title="English"
+            aria-pressed={i18n.language.startsWith("en")}
           >
-            EN
+            <img src={banderaEN} alt="" />
           </button>
         </div>
 

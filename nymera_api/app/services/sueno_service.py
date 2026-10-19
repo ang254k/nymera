@@ -3,6 +3,7 @@ from app.repositories.usuario_repository import UsuarioRepository
 from app.repositories.sueno_repository import SuenoRepository
 from app.repositories.categoria_repository import CategoriaRepository
 from app.repositories.hashtag_repository import HashtagRepository
+from app.services.translation_service import TranslationService
 
 import re
 
@@ -15,13 +16,17 @@ class SuenoService:
         usuario_repository: UsuarioRepository,
         categoria_repository: CategoriaRepository,
         hashtag_repository: HashtagRepository,
+        translation_service: TranslationService,
     ):
         self.sueno_repository = sueno_repository
         self.usuario_repository = usuario_repository
         self.categoria_repository = categoria_repository
         self.hashtag_repository = hashtag_repository
+        self.translation_service = translation_service
 
-    def create_sueno(self, titulo, contenido, usuario_id, categoria_id, publico=True):
+    def create_sueno(
+        self, titulo, contenido, usuario_id, categoria_id, idioma_original, publico=True
+    ):
 
         usuario = self.usuario_repository.get_by_id(usuario_id)
         categoria = self.categoria_repository.get_by_id(categoria_id)
@@ -44,9 +49,12 @@ class SuenoService:
 
         if len(contenido.strip()) > 2000:
             raise ValueError("content_too_long")
-        
+
+        if idioma_original not in ("es", "en"):
+            raise ValueError("invalid_language")
+
         sueno = self.sueno_repository.create(
-            titulo, contenido, usuario_id, categoria_id, publico
+            titulo, contenido, usuario_id, categoria_id, idioma_original, publico
         )
 
         # Despues de crear el sueño, se extraen los posibles hashtags
@@ -91,7 +99,7 @@ class SuenoService:
 
         if len(titulo.strip()) > 100:
             raise ValueError("title_too_long")
-        
+
         # Validación contenido
         if not contenido or len(contenido.strip()) < 5:
             raise ValueError("content_too_short")
@@ -102,6 +110,9 @@ class SuenoService:
         sueno_actualizado = self.sueno_repository.update(
             sueno_id, titulo, contenido, categoria_id, publico
         )
+
+        # Eliminar traduccion anterior
+        self.sueno_repository.delete_traducciones(sueno_id)
 
         # Eliminar relaciones hashtags antiguas
         self.hashtag_repository.delete_relaciones_sueno(sueno_id)
@@ -203,3 +214,59 @@ class SuenoService:
 
     def extract_hashtags(self, contenido: str):
         return list(set(re.findall(r"#([a-zA-Z0-9_áéíóúñÁÉÍÓÚÑ]+)", contenido.lower())))
+
+    def translate_sueno(self, sueno_id, idioma_destino, usuario_actual_id=None):
+        # Validar sueño
+        sueno = self.sueno_repository.get_by_id(sueno_id)
+
+        if not sueno:
+            raise ValueError("dream_not_found")
+
+        # Validar acceso
+        if not sueno.publico and usuario_actual_id != sueno.usuario_id:
+            raise PermissionError("unauthorized")
+
+        # Validar idioma
+        if idioma_destino not in ("es", "en"):
+            raise ValueError("invalid_language")
+
+        if idioma_destino == sueno.idioma_original:
+            raise ValueError("same_language")
+
+        # Consultar traduccion BD
+        traduccion = self.sueno_repository.get_traduccion(sueno_id, idioma_destino)
+
+        if traduccion:
+            idioma, titulo, contenido = traduccion
+
+        else:
+            # Traducir título y contenido
+            titulo = self.translation_service.translate(
+                sueno.titulo,
+                sueno.idioma_original,
+                idioma_destino,
+            )
+
+            contenido = self.translation_service.translate(
+                sueno.contenido,
+                sueno.idioma_original,
+                idioma_destino,
+            )
+
+            # Guardar traduccion en BD
+            idioma, titulo, contenido = self.sueno_repository.save_traduccion(
+                sueno_id,
+                idioma_destino,
+                titulo,
+                contenido,
+            )
+
+        preview_contenido = self.sueno_repository.crear_preview(contenido)
+
+        return {
+            "idioma": idioma,
+            "titulo": titulo,
+            "contenido": contenido,
+            "preview_contenido": preview_contenido,
+        }
+

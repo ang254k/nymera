@@ -1,5 +1,15 @@
 class Sueno:
-    def __init__(self, id, titulo, contenido, publico, fecha_creacion, usuario_id: int | None, categoria_id):
+    def __init__(
+        self,
+        id,
+        titulo,
+        contenido,
+        publico,
+        fecha_creacion,
+        usuario_id: int | None,
+        categoria_id,
+        idioma_original
+    ):
         self.id = id
         self.titulo = titulo
         self.contenido = contenido
@@ -7,6 +17,7 @@ class Sueno:
         self.fecha_creacion = fecha_creacion
         self.usuario_id = usuario_id
         self.categoria_id = categoria_id
+        self.idioma_original = idioma_original
 
     def __repr__(self):
         return (

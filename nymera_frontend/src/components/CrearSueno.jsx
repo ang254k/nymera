@@ -6,7 +6,7 @@ import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
 function CrearSueno({ onSuenoCreado }) {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const [titulo, setTitulo] = useState("")
     const [categorias, setCategorias] = useState([])
@@ -43,7 +43,8 @@ function CrearSueno({ onSuenoCreado }) {
                 titulo,
                 contenido,
                 categoria_id: categoriaId,
-                publico
+                publico,
+                idioma_original: i18n.language.startsWith("en") ? "en" : "es"
             })
 
             onSuenoCreado(nuevoSueno)
@@ -92,7 +93,7 @@ function CrearSueno({ onSuenoCreado }) {
                     <option value="">{t("dream.selectCategory")}</option>
                     {categorias.map(c => (
                         <option key={c.id} value={c.id}>
-                            {c.nombre}
+                            {t(`categories.${c.id}`, c.nombre)}
                         </option>
                     ))}
                 </select>

@@ -33,14 +33,15 @@ export function toggleLike(id) {
     })
 }
 
-export function createSueno({ titulo, contenido, categoria_id, publico }) {
+export function createSueno({ titulo, contenido, categoria_id, publico, idioma_original }) {
     return apiRequest("/suenos", {
         method: "POST",
         body: JSON.stringify({
             titulo,
             contenido,
             categoria_id,
-            publico
+            publico,
+            idioma_original
         })
     })
 }
@@ -101,4 +102,12 @@ export async function getLikedSuenosByUser(
     }
 
     return apiRequest(`/suenos/usuarios/${userId}/likes?${params.toString()}`)
+}
+
+
+export function translateSueno(id, idioma) {
+    const params = new URLSearchParams()
+    params.append("idioma", idioma)
+
+    return apiRequest(`/suenos/${id}/traduccion?${params.toString()}`)
 }

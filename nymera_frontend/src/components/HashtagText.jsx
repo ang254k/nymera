@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
-export default function HashtagText({ texto }) {
-    const partes = texto.split(/(#[\p{L}\p{N}_]+)/gu)
+export default function HashtagText({ texto = "" }) {
+    const textoSeguro = typeof texto === "string" ? texto : ""
+    const partes = textoSeguro.split(/(#[\p{L}\p{N}_]+)/gu)
 
     return partes.map((parte, index) => {
-
         if (parte.startsWith("#")) {
-
             const hashtag = parte.slice(1)
 
             return (

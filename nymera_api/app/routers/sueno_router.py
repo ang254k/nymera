@@ -6,6 +6,7 @@ from app.schemas.sueno_schema import (
     SuenoDetalleResponse,
     SuenoUpdateRequest,
     SuenoFeedItem,
+    SuenoTraduccionResponse,
 )
 from app.schemas.comentario_schema import (
     ComentarioDetalleResponse,
@@ -18,6 +19,7 @@ from app.services.sueno_service import SuenoService
 from app.services.like_service import LikeService
 from app.services.comentario_service import ComentarioService
 from app.services.notificacion_service import NotificacionService
+from app.services.translation_service import TranslationService
 
 from app.repositories.like_repository import LikeRepository
 from app.repositories.sueno_repository import SuenoRepository
@@ -33,7 +35,11 @@ from app.models.usuario import Usuario
 router = APIRouter(prefix="/suenos", tags=["suenos"])
 
 sueno_service = SuenoService(
-    SuenoRepository(), UsuarioRepository(), CategoriaRepository(), HashtagRepository()
+    SuenoRepository(),
+    UsuarioRepository(),
+    CategoriaRepository(),
+    HashtagRepository(),
+    TranslationService(),
 )
 
 notificacion_repository = NotificacionRepository()
@@ -57,6 +63,7 @@ def create_sueno(
             contenido=data.contenido,
             usuario_id=current_user.id,
             categoria_id=data.categoria_id,
+            idioma_original=data.idioma_original,
             publico=data.publico,
         )
 
@@ -112,6 +119,29 @@ def get_sueno(
     return sueno_service.get_sueno_detalles(id, usuario_actual_id)
 
 
+#Traducir sueno
+@router.get("/{id}/traduccion", response_model=SuenoTraduccionResponse)
+def translate_sueno(
+    id: int,
+    idioma: str = Query(..., pattern="^(es|en)$"),
+    current_user: Usuario | None = Depends(get_current_user),
+):
+    usuario_actual_id = current_user.id if current_user else None
+    
+    try:
+        return sueno_service.translate_sueno(
+            sueno_id=id,
+            idioma_destino=idioma,
+            usuario_actual_id=usuario_actual_id,
+        )
+    
+    except ValueError as e:
+        status_code = 404 if str(e) == "dream_not_found" else 400
+        raise HTTPException(status_code=status_code, detail=str(e))
+    
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="unauthorized")
+
 # Comentarios de sueno
 @router.get("/{id}/comentarios", response_model=list[ComentarioDetalleResponse])
 def get_comentarios(
@@ -163,4 +193,3 @@ def get_liked_suenos(
     return sueno_service.get_liked_suenos(
         id, current_user.id, categorias, ordenar_por, direccion
     )
-

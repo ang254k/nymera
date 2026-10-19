@@ -6,16 +6,25 @@ from app.models.sueno_detalle import SuenoDetalle
 
 class SuenoRepository:
 
-    def create(self, titulo, contenido, usuario_id, categoria_id, publico=True):
+    def create(
+        self, titulo, contenido, usuario_id, categoria_id, idioma_original, publico=True
+    ):
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO sueno (titulo, contenido, usuario_id, categoria_id, publico)
-                    VALUES (%s, %s, %s, %s, %s)
-                    RETURNING id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id
+                    INSERT INTO sueno (titulo, contenido, usuario_id, categoria_id, idioma_original, publico)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    RETURNING id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id, idioma_original
                     """,
-                    (titulo, contenido, usuario_id, categoria_id, publico),
+                    (
+                        titulo,
+                        contenido,
+                        usuario_id,
+                        categoria_id,
+                        idioma_original,
+                        publico,
+                    ),
                 )
                 row = cur.fetchone()
                 return Sueno(*row)
@@ -31,7 +40,7 @@ class SuenoRepository:
                         categoria_id = %s,
                         publico = %s
                     WHERE id = %s
-                    RETURNING id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id
+                    RETURNING id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id, idioma_original
                 """,
                     (titulo, contenido, categoria_id, publico, sueno_id),
                 )
@@ -61,7 +70,7 @@ class SuenoRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id
+                    SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id, idioma_original
                     FROM sueno
                     WHERE id = %s
                     """,
@@ -90,6 +99,7 @@ class SuenoRepository:
                         s.fecha_creacion,
                         s.usuario_id,
                         s.categoria_id,
+                        s.idioma_original,
                         u.nombre AS usuario_nombre,
                         u.avatar_url AS avatar_url,
                         cat.nombre AS categoria_nombre,
@@ -118,7 +128,7 @@ class SuenoRepository:
 
                     WHERE s.id = %s
 
-                    GROUP BY s.id, u.nombre, u.avatar_url, cat.nombre
+                    GROUP BY s.id, u.nombre, u.avatar_url, cat.nombre, s.idioma_original
                     """,
                     (
                         usuario_id,
@@ -136,7 +146,7 @@ class SuenoRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                           SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id
+                           SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id, idioma_original
                            FROM sueno
                            WHERE usuario_id = %s
                            ORDER BY fecha_creacion DESC
@@ -153,7 +163,7 @@ class SuenoRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                           SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id
+                           SELECT id, titulo, contenido, publico, fecha_creacion, usuario_id, categoria_id, idioma_original
                            FROM sueno
                            WHERE usuario_id = %s
                            and publico = TRUE
@@ -200,8 +210,10 @@ class SuenoRepository:
                                 s.publico,
                                 s.fecha_creacion,
                                 s.usuario_id,
+                                s.idioma_original,
                                 COALESCE(u.nombre, 'Usuario eliminado') AS usuario_nombre,
                                 u.avatar_url,
+                                s.categoria_id,
                                 cat.nombre AS categoria_nombre,
                                 COUNT(DISTINCT sl.usuario_id) AS likes_count,
                                 COUNT(DISTINCT c.id) AS comentarios_count,
@@ -232,7 +244,7 @@ class SuenoRepository:
                             
                             {where_extra}
                             
-                            GROUP BY s.id, u.nombre, u.avatar_url, cat.nombre
+                            GROUP BY s.id, u.nombre, u.avatar_url, s.categoria_id, cat.nombre, s.idioma_original
 
                             {order_by}
 
@@ -277,8 +289,10 @@ class SuenoRepository:
                         s.publico,
                         s.fecha_creacion,
                         s.usuario_id,
+                        s.idioma_original,
                         u.nombre AS usuario_nombre,
                         u.avatar_url,
+                        s.categoria_id,
                         cat.nombre AS categoria_nombre,
 
                         COUNT(DISTINCT sl.usuario_id) AS likes_count,
@@ -306,7 +320,7 @@ class SuenoRepository:
                     
                     {where_extra}
 
-                    GROUP BY s.id, u.nombre, u.avatar_url, cat.nombre
+                    GROUP BY s.id, u.nombre, u.avatar_url, s.categoria_id, cat.nombre, s.idioma_original
                     {order_by}
                 """,
                     (
@@ -344,6 +358,7 @@ class SuenoRepository:
                         s.publico,
                         s.fecha_creacion,
                         s.usuario_id,
+                        s.idioma_original,
 
                         COALESCE(
                             u.nombre,
@@ -352,6 +367,8 @@ class SuenoRepository:
                         
                         u.avatar_url,
 
+                        s.categoria_id,
+                        
                         cat.nombre AS categoria_nombre,
 
                         COUNT(DISTINCT sl.usuario_id) AS likes_count,
@@ -397,7 +414,9 @@ class SuenoRepository:
                         s.id,
                         u.nombre,
                         u.avatar_url,
+                        s.categoria_id,
                         cat.nombre,
+                        s.idioma_original,
                         liked.fecha
 
                     {order_by}
@@ -426,8 +445,10 @@ class SuenoRepository:
                         s.publico,
                         s.fecha_creacion,
                         s.usuario_id,
+                        s.idioma_original,
                         COALESCE(u.nombre, 'Usuario eliminado') AS usuario_nombre,
                         u.avatar_url,
+                        s.categoria_id,
                         cat.nombre AS categoria_nombre,
                         COUNT(DISTINCT sl.usuario_id) AS likes_count,
                         COUNT(DISTINCT c.id) AS comentarios_count,
@@ -457,7 +478,7 @@ class SuenoRepository:
 
                     WHERE s.id = %s
 
-                    GROUP BY s.id, u.nombre, u.avatar_url, cat.nombre
+                    GROUP BY s.id, u.nombre, u.avatar_url, s.categoria_id, cat.nombre, s.idioma_original
                     """,
                     (usuario_id, sueno_id),
                 )
@@ -468,6 +489,51 @@ class SuenoRepository:
                     return None
 
                 return SuenoFeedDetalle(*row)
+
+    def get_traduccion(self, sueno_id, idioma):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT idioma, titulo, contenido
+                    FROM sueno_traduccion
+                    WHERE sueno_id = %s
+                    AND idioma = %s
+                    """,
+                    (sueno_id, idioma),
+                )
+
+                return cur.fetchone()
+
+    def save_traduccion(self, sueno_id, idioma, titulo, contenido):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO sueno_traduccion (
+                        sueno_id,
+                        idioma,
+                        titulo,
+                        contenido
+                    )
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING idioma, titulo, contenido
+                    """,
+                    (sueno_id, idioma, titulo, contenido),
+                )
+
+                return cur.fetchone()
+    
+    def delete_traducciones(self, sueno_id):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM sueno_traduccion
+                    WHERE sueno_id = %s
+                    """,
+                    (sueno_id,),
+                )
 
     def construir_filtros_y_orden(
         self,
@@ -513,3 +579,6 @@ class SuenoRepository:
         preview = preview.rsplit(" ", 1)[0]
 
         return preview.rstrip() + "..."
+
+    def crear_preview(self, contenido: str, limite: int = 200) -> str:
+        return self._crear_preview(contenido, limite)
