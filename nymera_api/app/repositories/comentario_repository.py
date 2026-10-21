@@ -5,16 +5,18 @@ from app.db import get_connection
 
 class ComentarioRepository:
 
-    def create(self, contenido, usuario_id, sueno_id):
+    def create(self, contenido, usuario_id, sueno_id, idioma_original="es"):
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                            INSERT INTO comentario(contenido, usuario_id, sueno_id)
-                            VALUES(%s, %s, %s)
-                            RETURNING id, contenido, fecha_creacion, usuario_id, sueno_id
+                            INSERT INTO comentario(
+                                contenido, usuario_id, sueno_id, idioma_original
+                            )
+                            VALUES(%s, %s, %s, %s)
+                            RETURNING id, contenido, fecha_creacion, usuario_id, sueno_id, idioma_original
                             """,
-                    (contenido, usuario_id, sueno_id),
+                    (contenido, usuario_id, sueno_id, idioma_original),
                 )
                 row = cur.fetchone()
                 return Comentario(*row)
@@ -24,10 +26,10 @@ class ComentarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                            UPDATE comentario SET contenido= %s
-                            WHERE id = %s
-                            RETURNING id, contenido, fecha_creacion, usuario_id, sueno_id
-                            """,
+                    UPDATE comentario SET contenido= %s
+                    WHERE id = %s
+                    RETURNING id, contenido, fecha_creacion, usuario_id, sueno_id, idioma_original
+                    """,
                     (contenido_nuevo, comentario_id),
                 )
                 row = cur.fetchone()
@@ -52,10 +54,11 @@ class ComentarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                            SELECT id, contenido, fecha_creacion, usuario_id, sueno_id
-                            FROM comentario
-                            WHERE id = %s
-                            """,
+                    SELECT id, contenido, fecha_creacion, usuario_id, 
+                            sueno_id, idioma_original
+                    FROM comentario
+                    WHERE id = %s
+                    """,
                     (comentario_id,),
                 )
 
@@ -71,11 +74,11 @@ class ComentarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                            SELECT id, contenido, fecha_creacion, usuario_id, sueno_id
-                            FROM comentario
-                            WHERE sueno_id = %s
-                            ORDER BY fecha_creacion DESC
-                            """,
+                    SELECT id, contenido, fecha_creacion, usuario_id, sueno_id, idioma_original
+                    FROM comentario
+                    WHERE sueno_id = %s
+                    ORDER BY fecha_creacion DESC
+                    """,
                     (sueno_id,),
                 )
                 rows = cur.fetchall()
@@ -86,17 +89,17 @@ class ComentarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                            SELECT id, contenido, fecha_creacion, usuario_id, sueno_id
-                            FROM comentario
-                            WHERE usuario_id = %s
-                            ORDER BY fecha_creacion DESC
-                            """,
+                    SELECT id, contenido, fecha_creacion, usuario_id, sueno_id, idioma_original
+                    FROM comentario
+                    WHERE usuario_id = %s
+                    ORDER BY fecha_creacion DESC
+                    """,
                     (usuario_id,),
                 )
                 rows = cur.fetchall()
                 return [Comentario(*row) for row in rows]
 
-    # Usaremos esta funcion para obtener los comentarios con el nombre de usuarios
+    # Obtener los comentarios con el nombre de usuarios
     def get_detalle_by_sueno(self, sueno_id):
         with get_connection() as conn:
             with conn.cursor() as cur:
@@ -107,12 +110,13 @@ class ComentarioRepository:
                         c.fecha_creacion,
                         c.usuario_id,
                         u.nombre,
-                        u.avatar_url
+                        u.avatar_url,
+                        c.idioma_original
                     FROM comentario c
                     JOIN usuario u ON u.id = c.usuario_id
                     WHERE c.sueno_id = %s
                     ORDER BY c.fecha_creacion DESC
-                """,
+                    """,
                     (sueno_id,),
                 )
 
@@ -129,7 +133,8 @@ class ComentarioRepository:
                         c.fecha_creacion,
                         c.usuario_id,
                         u.nombre,
-                        u.avatar_url
+                        u.avatar_url,
+                        c.idioma_original
                     FROM comentario c
                     JOIN usuario u ON u.id = c.usuario_id
                     WHERE c.id = %s
@@ -144,3 +149,47 @@ class ComentarioRepository:
                     return None
 
                 return ComentarioDetalle(*row)
+
+    def get_traduccion(self, comentario_id, idioma):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT contenido
+                    FROM comentario_traduccion
+                    WHERE comentario_id = %s AND idioma = %s
+                    """,
+                    (comentario_id, idioma),
+                )
+                row = cur.fetchone()
+                if row is None:
+                    return None
+
+                return row[0]
+
+    def save_traduccion(self, comentario_id, idioma, contenido):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO comentario_traduccion (
+                        comentario_id, idioma, contenido
+                    )
+                    VALUES (%s, %s, %s)
+                    RETURNING contenido
+                    """,
+                    (comentario_id, idioma, contenido),
+                )
+                row = cur.fetchone()
+                return row[0]
+
+    def delete_traducciones(self, comentario_id):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM comentario_traduccion
+                    WHERE comentario_id = %s
+                    """,
+                    (comentario_id,),
+                )

@@ -33,7 +33,10 @@ notificacion_repository = NotificacionRepository()
 notificacion_service = NotificacionService(notificacion_repository)
 
 comentario_service = ComentarioService(
-    ComentarioRepository(), sueno_service, notificacion_service
+    ComentarioRepository(),
+    sueno_service,
+    notificacion_service,
+    TranslationService()
 )
 
 
@@ -72,3 +75,30 @@ def delete_comentario(id: int, current_user: Usuario = Depends(get_current_user)
 
     except PermissionError as e:
         raise HTTPException(status_code=403, detail=str(e))
+
+
+# Traducir comentario
+@router.get("/{id}/traduccion")
+def translate_comentario(
+    id: int,
+    idioma: str,
+    current_user: Usuario | None = Depends(get_current_user),
+):
+    try:
+        traduccion = comentario_service.translate_comentario(
+            comentario_id=id,
+            idioma_destino=idioma,
+            usuario_actual_id=current_user.id,
+        )
+        return traduccion
+
+    except ValueError as e:
+        mensaje = str(e)
+
+        if mensaje == "comment_not_found":
+            raise HTTPException(status_code=404, detail=mensaje)
+
+        raise HTTPException(status_code=400, detail=mensaje)
+
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="unauthorized")

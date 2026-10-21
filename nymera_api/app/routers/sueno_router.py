@@ -46,7 +46,10 @@ notificacion_repository = NotificacionRepository()
 notificacion_service = NotificacionService(notificacion_repository)
 
 comentario_service = ComentarioService(
-    ComentarioRepository(), sueno_service, notificacion_service
+    ComentarioRepository(),
+    sueno_service,
+    notificacion_service,
+    TranslationService()
 )
 
 like_service = LikeService(LikeRepository(), sueno_service, notificacion_service)
@@ -119,7 +122,7 @@ def get_sueno(
     return sueno_service.get_sueno_detalles(id, usuario_actual_id)
 
 
-#Traducir sueno
+# Traducir sueno
 @router.get("/{id}/traduccion", response_model=SuenoTraduccionResponse)
 def translate_sueno(
     id: int,
@@ -127,20 +130,21 @@ def translate_sueno(
     current_user: Usuario | None = Depends(get_current_user),
 ):
     usuario_actual_id = current_user.id if current_user else None
-    
+
     try:
         return sueno_service.translate_sueno(
             sueno_id=id,
             idioma_destino=idioma,
             usuario_actual_id=usuario_actual_id,
         )
-    
+
     except ValueError as e:
         status_code = 404 if str(e) == "dream_not_found" else 400
         raise HTTPException(status_code=status_code, detail=str(e))
-    
+
     except PermissionError:
         raise HTTPException(status_code=403, detail="unauthorized")
+
 
 # Comentarios de sueno
 @router.get("/{id}/comentarios", response_model=list[ComentarioDetalleResponse])
@@ -167,7 +171,10 @@ def create_comentario(
 ):
     try:
         comentario = comentario_service.create_comentario(
-            contenido=data.contenido, usuario_id=current_user.id, sueno_id=id
+            contenido=data.contenido,
+            usuario_id=current_user.id,
+            sueno_id=id,
+            idioma_original=data.idioma_original,
         )
         return comentario
 

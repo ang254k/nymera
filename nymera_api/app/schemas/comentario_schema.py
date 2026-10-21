@@ -5,6 +5,7 @@ from datetime import datetime
 #Peticiones
 class ComentarioCreateRequest(BaseModel):
     contenido: str
+    idioma_original: str = "es"
 
 class ComentarioUpdateRequest(BaseModel):
     contenido: str

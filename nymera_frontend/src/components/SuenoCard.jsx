@@ -100,6 +100,13 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
     async function handleTranslate(e) {
         e.stopPropagation()
 
+        if (!user) {
+            showToast(t("dreamCard.loginRequired"), "error")
+            return
+        }
+
+        if (loadingTraduccion) return
+        
         if (mostrarTraduccion) {
             setMostrarTraduccion(false)
             return
@@ -109,13 +116,6 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
             setMostrarTraduccion(true)
             return
         }
-
-        if (!user) {
-            showToast(t("dreamCard.loginRequired"), "error")
-            return
-        }
-
-        if (loadingTraduccion) return
 
         setLoadingTraduccion(true)
 

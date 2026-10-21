@@ -4,10 +4,13 @@ export function getComentarios(suenoId) {
     return apiRequest(`/suenos/${suenoId}/comentarios`)
 }
 
-export function createComentario(suenoId, contenido) {
+export function createComentario(suenoId, contenido, idiomaOriginal = "es") {
     return apiRequest(`/suenos/${suenoId}/comentarios`, {
         method: "POST",
-        body: JSON.stringify({ contenido })
+        body: JSON.stringify({
+            contenido,
+            idioma_original: idiomaOriginal
+        })
     })
 }
 
@@ -26,4 +29,10 @@ export async function updateComentario(comentarioId, contenido) {
             contenido
         })
     })
+}
+
+export function translateComentario(comentarioId, idioma) {
+    return apiRequest(
+        `/comentarios/${comentarioId}/traduccion?idioma=${idioma}`
+    )
 }

@@ -7,7 +7,8 @@ import {
     getComentarios,
     createComentario,
     deleteComentario,
-    updateComentario
+    updateComentario,
+    translateComentario
 } from "../api/comentarios"
 import { getCategorias } from "../api/categorias"
 
@@ -49,6 +50,10 @@ function SuenoDetallePage() {
     const [comentarios, setComentarios] = useState([])
     const [nuevoComentario, setNuevoComentario] = useState("")
     const [nuevoId, setNuevoId] = useState(null)
+
+    const [comentariosTraducidos, setComentariosTraducidos] = useState({})
+    const [comentariosMostrandoTraduccion, setComentariosMostrandoTraduccion] = useState({})
+    const [comentariosTraduciendo, setComentariosTraduciendo] = useState({})
 
     const [tituloEdit, setTituloEdit] = useState("")
     const [contenidoEdit, setContenidoEdit] = useState("")
@@ -126,6 +131,11 @@ function SuenoDetallePage() {
     async function handleTranslate() {
         if (loadingTraduccion) return
 
+        if (!user) {
+            showToast(t("dreamCard.loginRequired"), "error")
+            return
+        }
+
         if (mostrarTraduccion) {
             setMostrarTraduccion(false)
             return
@@ -153,6 +163,65 @@ function SuenoDetallePage() {
             setLoadingTraduccion(false)
         }
     }
+
+
+    async function handleTranslateComentario(comentario) {
+        const comentarioId = comentario.id
+
+        if (!user) {
+            showToast(t("dreamCard.loginRequired"), "error")
+            return
+        }
+
+        if (comentariosTraduciendo[comentarioId]) return
+
+        // Si ya mostramos la traducción, volvemos al original.
+        if (comentariosMostrandoTraduccion[comentarioId]) {
+            setComentariosMostrandoTraduccion(prev => ({
+                ...prev,
+                [comentarioId]: false
+            }))
+            return
+        }
+
+        // Si ya tenemos la traducción, la mostramos sin otra petición.
+        if (comentariosTraducidos[comentarioId]) {
+            setComentariosMostrandoTraduccion(prev => ({
+                ...prev,
+                [comentarioId]: true
+            }))
+            return
+        }
+
+        const idiomaActual = i18n.language.startsWith("en") ? "en" : "es"
+
+        setComentariosTraduciendo(prev => ({
+            ...prev,
+            [comentarioId]: true
+        }))
+
+        try {
+            const data = await translateComentario(comentarioId, idiomaActual)
+
+            setComentariosTraducidos(prev => ({
+                ...prev,
+                [comentarioId]: data.contenido
+            }))
+
+            setComentariosMostrandoTraduccion(prev => ({
+                ...prev,
+                [comentarioId]: true
+            }))
+        } catch (err) {
+            showToast(t("dreamCard.translationError"), "error")
+        } finally {
+            setComentariosTraduciendo(prev => ({
+                ...prev,
+                [comentarioId]: false
+            }))
+        }
+    }
+
 
 
     // Manejo del like
@@ -211,7 +280,8 @@ function SuenoDetallePage() {
         setCommenting(true)
 
         try {
-            const nuevo = await createComentario(id, nuevoComentario)
+            const idiomaActual = i18n.language.startsWith("en") ? "en" : "es"
+            const nuevo = await createComentario(id, nuevoComentario, idiomaActual)
 
             showToast(t("dreamDetail.comments.added"), "success")
 
@@ -704,9 +774,28 @@ function SuenoDetallePage() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className="comentario-text">
-                                        {c.contenido}
-                                    </p>
+                                    <>
+                                        <p className="comentario-text">
+                                            {comentariosMostrandoTraduccion[c.id]
+                                                ? comentariosTraducidos[c.id]
+                                                : c.contenido}
+                                        </p>
+
+                                        {c.idioma_original !==
+                                            (i18n.language.startsWith("en") ? "en" : "es") && (
+                                                <button
+                                                    className="comentario-action"
+                                                    onClick={() => handleTranslateComentario(c)}
+                                                    disabled={comentariosTraduciendo[c.id]}
+                                                >
+                                                    {comentariosTraduciendo[c.id]
+                                                        ? t("dreamCard.translating")
+                                                        : comentariosMostrandoTraduccion[c.id]
+                                                            ? t("dreamCard.showOriginal")
+                                                            : t("dreamCard.translate")}
+                                                </button>
+                                            )}
+                                    </>
                                 )}
                             </div>
                         </div>
