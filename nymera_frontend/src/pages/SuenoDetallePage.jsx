@@ -689,6 +689,7 @@ function SuenoDetallePage() {
                 </div>
                 <div className="sueno-detalle-comments-list">
                     {comentarios.map((c) => (
+
                         <div
                             key={c.id}
                             className={`comentario ${c.id === nuevoId ? "is-new" : ""}`}
@@ -781,7 +782,8 @@ function SuenoDetallePage() {
                                                 : c.contenido}
                                         </p>
 
-                                        {c.idioma_original !==
+                                        {c.idioma_original &&
+                                            c.idioma_original !==
                                             (i18n.language.startsWith("en") ? "en" : "es") && (
                                                 <button
                                                     className="comentario-action"

@@ -18,6 +18,7 @@ class ComentarioDetalleResponse(BaseModel):
     usuario_id: int
     usuario_nombre: str
     avatar_url: str | None = None
+    idioma_original: str
     
     model_config = ConfigDict(from_attributes=True)
 
