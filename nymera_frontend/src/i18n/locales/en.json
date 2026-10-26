@@ -301,7 +301,8 @@
         "validation_error": "Please complete all fields correctly",
         "title_too_short": "The title is too short",
         "title_too_long": "The title is too long",
-        "content_too_long": "The content is too long"
+        "content_too_long": "The content is too long",
+        "wait_a_moment": "Please wait a moment."
     },
     "success": {
         "profile_updated": "Profile updated successfully",

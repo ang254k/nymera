@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app.services.busqueda_service import BusquedaService
 from app.dependencies.auth import get_current_user_optional
+from app.limiter import limiter
 
 router = APIRouter(
     prefix="/search",
@@ -12,7 +13,9 @@ busqueda_service = BusquedaService()
 
 
 @router.get("")
+@limiter.limit("30/minute")
 def search(
+    request: Request,
     q: str,
     categorias: list[int] | None = Query(None),
     ordenar_por: str | None = None,

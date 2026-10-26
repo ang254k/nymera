@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from app.repositories.categoria_repository import CategoriaRepository
 from app.repositories.sueno_repository import SuenoRepository
@@ -17,6 +17,8 @@ from app.models.usuario import Usuario
 from fastapi import UploadFile, File
 
 from app.dependencies.auth import get_current_user_optional, get_current_user
+
+from app.limiter import limiter
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
@@ -53,7 +55,9 @@ def get_user_suenos(
 
 # Editar perfil
 @router.put("/me")
-def update_me(data: UsuarioUpdate, current_user: Usuario = Depends(get_current_user)):
+@limiter.limit("5/minute")
+
+def update_me(request: Request, data: UsuarioUpdate, current_user: Usuario = Depends(get_current_user)):
     try:
         actualizado = usuario_service.update_user(
             current_user.id, nombre=data.nombre, current_password=data.current_password
@@ -69,8 +73,9 @@ def update_me(data: UsuarioUpdate, current_user: Usuario = Depends(get_current_u
 
 
 @router.post("/me/avatar", response_model=UsuarioResponse)
+@limiter.limit("5/minute")
 def upload_avatar(
-    avatar: UploadFile = File(...), current_user: Usuario = Depends(get_current_user)
+    request: Request, avatar: UploadFile = File(...), current_user: Usuario = Depends(get_current_user)
 ):
     try:
         return usuario_service.update_avatar(current_user.id, avatar)
@@ -79,8 +84,9 @@ def upload_avatar(
 
 
 @router.put("/me/password")
+@limiter.limit("3/minute")
 def change_password(
-    data: PasswordUpdate, current_user: Usuario = Depends(get_current_user)
+    request: Request, data: PasswordUpdate, current_user: Usuario = Depends(get_current_user)
 ):
     try:
         actualizado = usuario_service.change_password(

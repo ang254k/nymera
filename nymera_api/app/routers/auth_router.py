@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 
 from app.schemas.auth_schema import (
     ForgotPasswordRequest,
@@ -17,6 +17,8 @@ from app.utils.jwt_handler import create_access_token
 from app.dependencies.auth import get_current_user
 from app.models.usuario import Usuario
 
+from app.limiter import limiter
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 usuario_service = UsuarioService(UsuarioRepository())
@@ -24,7 +26,8 @@ auth_service = AuthService()
 
 
 @router.post("/register", response_model=UsuarioResponse)
-def register(data: RegisterRequest):
+@limiter.limit("4/minute")
+def register(request: Request, data: RegisterRequest):
 
     try:
         usuario = usuario_service.register(data.nombre, data.email, data.password)
@@ -39,8 +42,8 @@ def register(data: RegisterRequest):
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(data: LoginRequest):
-
+@limiter.limit("5/minute")
+def login(request: Request, data: LoginRequest):
     usuario = usuario_service.login(data.email, data.password)
 
     if usuario is None:
@@ -56,12 +59,14 @@ def me(current_user: Usuario = Depends(get_current_user)):
 
 
 @router.post("/forgot-password")
-def forgot_password(data: ForgotPasswordRequest):
+@limiter.limit("4/minute")
+def forgot_password(request: Request, data: ForgotPasswordRequest):
     return auth_service.forgot_password(data.email)
 
 
 @router.post("/reset-password")
-def reset_password(data: ResetPasswordRequest):
+@limiter.limit("3/minute")
+def reset_password(request: Request, data: ResetPasswordRequest):
     try:
         return auth_service.reset_password(data.token, data.new_password)
 

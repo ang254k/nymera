@@ -1,11 +1,21 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+
 from app.routers import auth_router, sueno_router, comentario_router, home_router, categoria_router, notificacion_router, usuario_router, busqueda_router, hashtag_router
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+from app.limiter import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
 from app.config import settings
 
 app = FastAPI(title="Nymera API")
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.mount(
     "/uploads",
@@ -28,6 +38,12 @@ async def value_error_handler(request: Request, exc: ValueError):
         content={"detail": str(exc)}
     )
 
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "wait_a_moment"}
+    )
 
 @app.exception_handler(PermissionError)
 async def permission_error_handler(request: Request, exc: PermissionError):

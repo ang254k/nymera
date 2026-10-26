@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from app.schemas.sueno_schema import (
     SuenoCreateRequest,
@@ -32,6 +32,8 @@ from app.repositories.notificacion_repository import NotificacionRepository
 from app.dependencies.auth import get_current_user, get_current_user_optional
 from app.models.usuario import Usuario
 
+from app.limiter import limiter
+
 router = APIRouter(prefix="/suenos", tags=["suenos"])
 
 sueno_service = SuenoService(
@@ -57,8 +59,9 @@ like_service = LikeService(LikeRepository(), sueno_service, notificacion_service
 
 # Crear Sueno
 @router.post("", response_model=SuenoFeedItem)
+@limiter.limit("10/minute")
 def create_sueno(
-    data: SuenoCreateRequest, current_user: Usuario = Depends(get_current_user)
+    request: Request, data: SuenoCreateRequest, current_user: Usuario = Depends(get_current_user)
 ):
     try:
         sueno = sueno_service.create_sueno(
@@ -164,7 +167,9 @@ def toggle_like(id: int, current_user: Usuario = Depends(get_current_user)):
 
 # Crear comentario
 @router.post("/{id}/comentarios", response_model=ComentarioDetalleResponse)
+@limiter.limit("15/minute")
 def create_comentario(
+    request: Request,
     id: int,
     data: ComentarioCreateRequest,
     current_user: Usuario = Depends(get_current_user),
