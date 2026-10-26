@@ -44,10 +44,19 @@ def register(request: Request, data: RegisterRequest):
 @router.post("/login", response_model=TokenResponse)
 @limiter.limit("5/minute")
 def login(request: Request, data: LoginRequest):
-    usuario = usuario_service.login(data.email, data.password)
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    
+    usuario = usuario_service.login(
+        email = data.email, 
+        password = data.password, 
+        ip_address = client_ip, 
+        user_agent=user_agent
+    )
 
     if usuario is None:
         raise HTTPException(status_code=401, detail="invalid_credentials")
+    
     token = create_access_token({"sub": str(usuario.id)})
 
     return {"access_token": token, "token_type": "bearer"}
@@ -67,8 +76,17 @@ def forgot_password(request: Request, data: ForgotPasswordRequest):
 @router.post("/reset-password")
 @limiter.limit("3/minute")
 def reset_password(request: Request, data: ResetPasswordRequest):
+    
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    
     try:
-        return auth_service.reset_password(data.token, data.new_password)
+        return auth_service.reset_password(
+            token=data.token, 
+            new_password=data.new_password,
+            ip_address=client_ip,
+            user_agent=user_agent
+        )
 
     except ValueError as e:
         raise HTTPException(

@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 
 from app.routers import auth_router, sueno_router, comentario_router, home_router, categoria_router, notificacion_router, usuario_router, busqueda_router, hashtag_router
 
+from app.repositories.security_log_repository import SecurityLogRepository
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -16,6 +18,8 @@ app = FastAPI(title="Nymera API")
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+security_log_repo = SecurityLogRepository()
 
 app.mount(
     "/uploads",
@@ -40,6 +44,17 @@ async def value_error_handler(request: Request, exc: ValueError):
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    
+    # Ante actividad sospechosa, registramos datos
+    security_log_repo.create_log(
+        evento="RATE_LIMIT_EXCEEDED",
+        ip_address=client_ip,
+        user_agent=user_agent,
+        exito=False
+    )
+    
     return JSONResponse(
         status_code=429,
         content={"detail": "wait_a_moment"}

@@ -7,12 +7,13 @@ from fastapi import UploadFile
 from passlib.hash import bcrypt
 from app.models.usuario import Usuario
 from app.repositories.usuario_repository import UsuarioRepository
-
+from app.repositories.security_log_repository import SecurityLogRepository
 
 class UsuarioService:
 
     def __init__(self, repo: UsuarioRepository):
         self.repo = repo
+        self.security_log_repo = SecurityLogRepository()
 
     def _hash_password(self, password: str) -> str:
         return bcrypt.hash(password)
@@ -22,17 +23,32 @@ class UsuarioService:
         if not re.match(email_regex, email):
             raise ValueError("email_invalid")
 
-    def login(self, email: str, password: str) -> Usuario | None:
+    def login(self, email: str, password: str, ip_address: str = "unknown", user_agent: str = "unknown") -> Usuario | None:
         email = email.strip().lower()
 
         usuario = self.repo.get_by_email(email)
 
         if usuario is None:
+            self.security_log_repo.create_log(
+                evento="LOGIN_FAILED",
+                email_intentado=email,
+                ip_address=ip_address,
+                user_agent=user_agent,
+                exito=False
+            )
             return None
 
         if bcrypt.verify(password, usuario.password):
             return usuario
-
+        
+        #Si la contraseña es incorrecta, registramos
+        self.security_log_repo.create_log(
+            evento="LOGIN_FAILED",
+            email_intentado=email,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            exito=False
+        )
         return None
 
     def register(self, nombre: str, email: str, password: str) -> Usuario:

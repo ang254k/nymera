@@ -3,6 +3,7 @@ from app.config import settings
 
 from app.repositories.usuario_repository import UsuarioRepository
 from app.repositories.password_reset_repository import PasswordResetRepository
+from app.repositories.security_log_repository import SecurityLogRepository
 from app.services.email_service import EmailService
 
 from datetime import datetime, timedelta
@@ -14,6 +15,7 @@ class AuthService:
         self.usuario_repo = UsuarioRepository()
         self.reset_repo = PasswordResetRepository()
         self.email_service = EmailService()
+        self.security_log_repo = SecurityLogRepository()
 
     def forgot_password(self, email):
         # Validacion
@@ -41,17 +43,35 @@ class AuthService:
             "message": "password_reset_email_sent"
         }
 
-    def reset_password(self, token, new_password):
+    def reset_password(self, token: str, new_password: str, ip_address: str = "unknown", user_agent: str = "unknown"):
         token_obj = self.reset_repo.get_by_token(token)
         #Validaciones
         #Existe?
         if token_obj is None:
+            self.security_log_repo.create_log(
+                evento="PASSWORD_RESET_INVALID",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                exito=False
+            )
             raise ValueError("token_invalid")
         #Usado?
         if token_obj.usado:
+            self.security_log_repo.create_log(
+                evento="PASSWORD_RESET_USED",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                exito=False
+            )
             raise ValueError("reset_link_used")
         #Fecha ok?
         if datetime.now() > token_obj.fecha_expiracion:
+            self.security_log_repo.create_log(
+                evento="PASSWORD_RESET_EXPIRED",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                exito=False
+            )
             raise ValueError("reset_link_expired")
 
         #Se busca usuario
@@ -68,6 +88,7 @@ class AuthService:
 
         #Hash pw
         nuevo_hash = bcrypt.hash(new_password)
+        
         #Actualiza usuario(pw)
         actualizado = self.usuario_repo.update_password(
             usuario.id,
