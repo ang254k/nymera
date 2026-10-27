@@ -1,3 +1,8 @@
+import os
+import requests
+
+from app.config import settings
+
 from fastapi import APIRouter, HTTPException, Depends, Request
 
 from app.schemas.auth_schema import (
@@ -28,7 +33,32 @@ auth_service = AuthService()
 @router.post("/register", response_model=UsuarioResponse)
 @limiter.limit("4/minute")
 def register(request: Request, data: RegisterRequest):
-
+    #Validar token con Turnstile
+    turnstile_secret = settings.TURNSTILE_SECRET_KEY
+    
+    if turnstile_secret:
+        verify_url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+        
+        payload = {
+            "secret": turnstile_secret,
+            "response": data.turnstile_token,
+            "remoteip": request.client.host if request.client else None
+        }
+        try:
+            cf_response = requests.post(verify_url, data=payload, timeout=5)
+            result = cf_response.json()
+            
+            if not result.get("success"):
+                raise HTTPException(
+                    status_code=400, 
+                    detail="invalid_turnstile_token"
+                )
+        except requests.RequestException:
+            raise HTTPException(
+                status_code=503, 
+                detail="turnstile_verification_service_unavailable"
+            )
+    
     try:
         usuario = usuario_service.register(data.nombre, data.email, data.password)
 

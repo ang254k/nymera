@@ -302,7 +302,9 @@
         "title_too_short": "El título es demasiado corto",
         "title_too_long": "El título es demasiado largo",
         "content_too_long": "El contenido es demasiado largo",
-        "wait_a_moment": "Por favor, espera un momento."
+        "wait_a_moment": "Por favor, espera un momento.",
+        "invalid_turnstile_token": "La verificación de seguridad ha fallado. Por favor, inténtalo de nuevo.",
+        "turnstile_verification_service_unavailable": "No se pudo verificar la seguridad en este momento. Inténtalo más tarde."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",

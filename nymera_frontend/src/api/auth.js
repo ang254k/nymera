@@ -1,9 +1,9 @@
 import { apiRequest } from "./client"
 
-export function register({ nombre, email, password }) {
+export function register({ nombre, email, password, turnstile_token }) {
     return apiRequest("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ nombre, email, password }),
+        body: JSON.stringify({ nombre, email, password, turnstile_token }),
     })
 }
 

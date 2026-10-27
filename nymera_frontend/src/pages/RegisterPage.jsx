@@ -8,6 +8,7 @@ import { register } from "../api/auth"
 
 import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
+import { Turnstile } from '@marsidev/react-turnstile'
 
 function RegisterPage() {
     const { t } = useTranslation()
@@ -22,6 +23,8 @@ function RegisterPage() {
     const { showToast } = useToast()
     const navigate = useNavigate()
 
+    const [turnstileToken, setTurnstileToken] = useState('')
+
     async function handleRegister(e) {
         e.preventDefault()
 
@@ -31,12 +34,18 @@ function RegisterPage() {
             return
         }
 
+        // Validación Turnstile
+        if (!turnstileToken) {
+            showToast("Por favor, completa la verificación de seguridad.", "error")
+            return
+        }
+
         if (loading) return
 
         setLoading(true)
 
         try {
-            await register({ nombre, email, password })
+            await register({ nombre, email, password, turnstile_token: turnstileToken })
 
             showToast(t("auth.registerSuccess"), "success")
 
@@ -134,6 +143,17 @@ function RegisterPage() {
                             />
 
                         </label>
+                        <div className="turnstile-wrapper">
+                            <Turnstile
+                                siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                                options={{
+                                    theme: "dark"
+                                }}
+                                onSuccess={(token) => setTurnstileToken(token)}
+                                onError={() => setTurnstileToken('')}
+                                onExpire={() => setTurnstileToken('')}
+                            />
+                        </div>
 
                         <button
                             className="btn btn-primary btn-full"

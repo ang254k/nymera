@@ -7,6 +7,7 @@ from app.repositories.security_log_repository import SecurityLogRepository
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
@@ -42,12 +43,25 @@ async def value_error_handler(request: Request, exc: ValueError):
         content={"detail": str(exc)}
     )
 
+# ==========================
+# Security Headers Middleware
+# ==========================
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-Frame-Options"] = "DENY"    # Evita ataques de Clickjacking (iframes)
+        response.headers["X-Content-Type-Options"] = "nosniff"  # Bloquea la suplantación de tipos MIME
+        response.headers["X-XSS-Protection"] = "1; mode=block"  # Protección extra contra XSS básico
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" # Controla la privacidad de la URL de origen
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
     
-    # Ante actividad sospechosa, registramos datos
     security_log_repo.create_log(
         evento="RATE_LIMIT_EXCEEDED",
         ip_address=client_ip,

@@ -302,7 +302,9 @@
         "title_too_short": "The title is too short",
         "title_too_long": "The title is too long",
         "content_too_long": "The content is too long",
-        "wait_a_moment": "Please wait a moment."
+        "wait_a_moment": "Please wait a moment.",
+        "invalid_turnstile_token": "Security verification failed. Please try again.",
+        "turnstile_verification_service_unavailable": "Security verification service is temporarily unavailable."
     },
     "success": {
         "profile_updated": "Profile updated successfully",

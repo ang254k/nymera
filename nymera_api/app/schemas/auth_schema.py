@@ -8,6 +8,7 @@ class RegisterRequest(BaseModel):
     nombre: str
     email: EmailStr
     password: str
+    turnstile_token: str
     
 class TokenResponse(BaseModel):
     access_token: str

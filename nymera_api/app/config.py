@@ -26,4 +26,8 @@ class Settings:
 
         # Traducción
         self.LIBRETRANSLATE_URL = os.getenv("LIBRETRANSLATE_URL")
+        
+        # Cloudflare Turnstile
+        self.TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY")
+        
 settings = Settings()
