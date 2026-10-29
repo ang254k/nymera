@@ -12,21 +12,24 @@ import "./styles/cards.css";
 import "./styles/components.css";
 import "./styles/animation.css";
 import "./styles/layouts.css";
- 
+
 import App from './App.jsx'
 
 import { AuthProvider } from './context/AuthContext'
 import { ToastProvider } from './context/ToastContext.jsx'
 import { DreamFilterProvider } from './context/DreamFilterContext.jsx'
+import { HelmetProvider } from 'react-helmet-async'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <ToastProvider>
-        <DreamFilterProvider>
-          <App />
-        </DreamFilterProvider>
-      </ToastProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <DreamFilterProvider>
+            <App />
+          </DreamFilterProvider>
+        </ToastProvider>
+      </AuthProvider>
+    </HelmetProvider>
   </StrictMode>,
 )

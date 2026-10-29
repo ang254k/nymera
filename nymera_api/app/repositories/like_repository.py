@@ -15,6 +15,7 @@ class LikeRepository:
                             )
                 row = cur.fetchone()
                 return Like(*row)
+            
     def remove_like(self, usuario_id, sueno_id):
         with get_connection() as conn:
             with conn.cursor() as cur:

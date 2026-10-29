@@ -3,7 +3,9 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { getSuenosByHashtag } from "../api/hashtag"
+
 import SuenoCard from "../components/SuenoCard"
+import SEO from "../components/SEO"
 
 import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
@@ -39,17 +41,19 @@ export default function HashtagPage() {
         loadHashtag()
     }, [nombre, categoriasSeleccionadas, orden.field, orden.direction])
 
-    if (loadingInicial) {
-        return <p className="hashtag-loading">{t("hashtag.loading")}</p>
-    }
-
     return (
         <div className="hashtag-page">
+            <SEO
+                title={t('seo.hashtag.title')}
+                description={t('seo.hashtag.description')}
+            />
             <h2 className="hashtag-title">
                 #{nombre}
             </h2>
 
-            {loadingSuenos ? (
+            {loadingInicial ? (
+                <p className="hashtag-loading">{t("hashtag.loading")}</p>
+            ) : loadingSuenos ? (
                 <p className="hashtag-loading">
                     {t("hashtag.loadingDreams")}
                 </p>

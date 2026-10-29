@@ -4,6 +4,8 @@ import { getNotificaciones, marcarNotificacionLeida } from "../api/notificacione
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../context/ToastContext"
 
+import SEO from "../components/SEO"
+
 import { formatDate } from "../utils/formatDate"
 
 import { Heart, MessageCircle } from "../lib/icons"
@@ -31,22 +33,22 @@ function NotificacionesPage() {
         load()
     }, [])
 
-    if (loading) {
-        return (
-            <p className="notificaciones-loading">
-                {t("notifications.loading")}
-            </p>
-        )
-    }
-
-
     return (
         <div className="notificaciones-page">
+            <SEO
+                title={t('seo.notificaciones.title')}
+                description={t('seo.notificaciones.description')}
+            />
+
             <h1 className="notificaciones-title">
                 {t("notifications.title")}
             </h1>
 
-            {notificaciones.length === 0 ? (
+            {loading ? (
+                <p className="notificaciones-loading" >
+                    {t("notifications.loading")}
+                </p>
+            ) : notificaciones.length === 0 ? (
                 <p className="notificaciones-empty">
                     {t("notifications.empty")}
                 </p>
@@ -97,8 +99,9 @@ function NotificacionesPage() {
                         </div>
                     ))}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }
 

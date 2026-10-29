@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+
+import SEO from "../components/SEO"
+
 import error404Image from "../assets/404-dream.png"
 
 function ErrorPage() {
     const { t } = useTranslation()
-
     const navigate = useNavigate()
 
     return (
         <main className="page-center error-page">
+            <SEO
+                title={t('seo.error.title')}
+                description={t('seo.error.description')}
+            />
+            
             <div className="container-sm error-content">
 
                 <img

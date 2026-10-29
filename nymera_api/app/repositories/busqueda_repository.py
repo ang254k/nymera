@@ -12,6 +12,7 @@ class BusquedaRepository(FiltroRepository):
             s.publico,
             s.fecha_creacion,
             s.usuario_id,
+            s.idioma_original,
 
             COALESCE(
                 u.nombre,
@@ -20,6 +21,7 @@ class BusquedaRepository(FiltroRepository):
 
             u.avatar_url,
 
+            s.categoria_id,
             cat.nombre AS categoria_nombre,
 
             COUNT(DISTINCT sl.usuario_id) AS likes_count,
@@ -101,8 +103,10 @@ class BusquedaRepository(FiltroRepository):
                     
                     GROUP BY
                         s.id,
+                        s.idioma_original,
                         u.nombre,
                         u.avatar_url,
+                        s.categoria_id,
                         cat.nombre
 
                     {order_by}
@@ -154,8 +158,10 @@ class BusquedaRepository(FiltroRepository):
                 
                 GROUP BY
                     s.id,
+                    s.idioma_original,
                     u.nombre,
                     u.avatar_url,
+                    s.categoria_id,
                     cat.nombre
                 
                 {order_by}
@@ -202,8 +208,10 @@ class BusquedaRepository(FiltroRepository):
             
             GROUP BY 
                 s.id,
+                s.idioma_original,
                 u.nombre,
                 u.avatar_url,
+                s.categoria_id,
                 cat.nombre
 
             HAVING COUNT(DISTINCT h.nombre) = %s

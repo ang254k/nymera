@@ -322,5 +322,55 @@
         "8": "Strange",
         "9": "Adventure",
         "10": "Sadness"
+    },
+    "seo": {
+        "feed": {
+            "title": "Explore Dreams",
+            "description": "Step into Nymera's nightly stream. Discover dream stories, connect with fellow dreamers, and explore their mysteries."
+        },
+        "busqueda": {
+            "title": "Search Dreams",
+            "description": "Find stories, dreamers, and tags across the Nymera universe."
+        },
+        "perfil": {
+            "title": "My Profile",
+            "description": "Your personal dream journal. Manage your posts, dream experiences, and activity."
+        },
+        "suenoDetalle": {
+            "title": "Dream Details",
+            "description": "Immerse yourself in this dream story, explore its interpretations, and share your thoughts."
+        },
+        "login": {
+            "title": "Log In",
+            "description": "Sign in to your Nymera account and reconnect with the world of dreams."
+        },
+        "register": {
+            "title": "Join Nymera",
+            "description": "Create your Nymera account and start sharing your nightly journeys with the community."
+        },
+        "notificaciones": {
+            "title": "Notifications",
+            "description": "Stay updated on reactions and interpretations to your dream stories."
+        },
+        "hashtag": {
+            "title": "Explore Tag",
+            "description": "Discover all dreams grouped under this tag on Nymera."
+        },
+        "usuario": {
+            "title": "Dreamer Profile",
+            "description": "Explore this dreamer's universe of stories and posts on Nymera."
+        },
+        "forgotPassword": {
+            "title": "Recover Password",
+            "description": "Reset access to your account and dream journal on Nymera."
+        },
+        "resetPassword": {
+            "title": "Reset Password",
+            "description": "Set your new password to step back into Nymera."
+        },
+        "error": {
+            "title": "Page Not Found",
+            "description": "It seems this dream has faded away. The page you are looking for does not exist."
+        }
     }
 }

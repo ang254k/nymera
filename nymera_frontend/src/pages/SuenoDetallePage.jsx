@@ -19,8 +19,12 @@ import { useToast } from "../context/ToastContext"
 
 import { formatDate } from "../utils/formatDate"
 
+import SEO from "../components/SEO"
 import ConfirmModal from "../components/ConfirmModal"
 import HashtagText from "../components/HashtagText"
+import Avatar from "../components/Avatar"
+
+
 import {
     Globe,
     Heart,
@@ -30,7 +34,6 @@ import {
     Lock,
     Tag
 } from "../lib/icons"
-import Avatar from "../components/Avatar"
 
 function SuenoDetallePage() {
     const { t, i18n } = useTranslation()
@@ -429,410 +432,406 @@ function SuenoDetallePage() {
         }
     }
 
-    if (loading) {
-        return (
-            <p className="sueno-detalle-loading">
-                {t("dreamDetail.loading")}
-            </p>
-        )
-    }
-
-    if (!sueno) {
-        return (
-            <p className="sueno-detalle-empty">
-                {t("dreamDetail.notFound")}
-            </p>
-        )
-    }
-
-    const fechaFormateada = formatDate(
+    const fechaFormateada = sueno ? formatDate(
         sueno.fecha_creacion,
         i18n.language
-    )
+    ) : ""
 
     return (
-
         <div className="sueno-detalle-page">
+            <SEO
+                title={t('seo.suenoDetalle.title')}
+                description={t('seo.suenoDetalle.description')}
+            />
 
-            {error && (
-                <p className="sueno-detalle-error">
-                    {error}
+            {loading ? (
+                <p className="sueno-detalle-loading">
+                    {t("dreamDetail.loading")}
                 </p>
-            )}
-            <div className="sueno-detalle-card">
+            ) : !sueno ? (
+                <p className="sueno-detalle-empty">
+                    {t("dreamDetail.notFound")}
+                </p>
+            ) : (
+                <>
+                    {error && (
+                        <p className="sueno-detalle-error">
+                            {error}
+                        </p>
+                    )}
+                    <div className="sueno-detalle-card">
 
-                {editando ? (
-                    <div className="sueno-edit-card">
-                        <input
-                            className="input sueno-edit-input"
-                            value={tituloEdit}
-                            onChange={(e) => {
-                                setTituloEdit(e.target.value)
-                                setError("")
-                            }
-                            }
-                        />
-
-                        <select
-                            className="select sueno-edit-select"
-                            value={categoriaId}
-                            onChange={(e) => setCategoriaId(Number(e.target.value))}
-                        >
-                            {!categoriaId && <option value="">{t("dreamDetail.edit.selectCategory")}</option>}
-                            {categorias.map(c => (
-                                <option key={c.id} value={c.id}>
-                                    {t(`categories.${c.id}`, c.nombre)}
-                                </option>
-                            ))}
-                        </select>
-
-                        <textarea
-                            className="textarea sueno-edit-textarea"
-                            value={contenidoEdit}
-                            onChange={(e) => {
-                                setContenidoEdit(e.target.value)
-                                setError("")
-                            }}
-                        />
-
-                        <div className="sueno-edit-visibility">
-                            <label>
+                        {editando ? (
+                            <div className="sueno-edit-card">
                                 <input
-                                    type="checkbox"
-                                    checked={publicoEdit}
-                                    onChange={(e) => setPublicoEdit(e.target.checked)}
+                                    className="input sueno-edit-input"
+                                    value={tituloEdit}
+                                    onChange={(e) => {
+                                        setTituloEdit(e.target.value)
+                                        setError("")
+                                    }
+                                    }
                                 />
 
-                                {" "}
-                                {t("dreamDetail.edit.makePublic")}
-                            </label>
-                        </div>
+                                <select
+                                    className="select sueno-edit-select"
+                                    value={categoriaId}
+                                    onChange={(e) => setCategoriaId(Number(e.target.value))}
+                                >
+                                    {!categoriaId && <option value="">{t("dreamDetail.edit.selectCategory")}</option>}
+                                    {categorias.map(c => (
+                                        <option key={c.id} value={c.id}>
+                                            {t(`categories.${c.id}`, c.nombre)}
+                                        </option>
+                                    ))}
+                                </select>
 
-                        <div className="sueno-edit-actions">
-                            <button
-                                className="btn btn-primary"
-                                onClick={handleGuardar}
-                                disabled={savingEdit}>
-                                {savingEdit
-                                    ? t("dreamDetail.edit.saving")
-                                    : t("dreamDetail.edit.save")}
-                            </button>
+                                <textarea
+                                    className="textarea sueno-edit-textarea"
+                                    value={contenidoEdit}
+                                    onChange={(e) => {
+                                        setContenidoEdit(e.target.value)
+                                        setError("")
+                                    }}
+                                />
 
-                            <button
-                                className="btn btn-secondary"
-                                onClick={() => setEditando(false)}>
-                                {t("dreamDetail.edit.cancel")}
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="sueno-detalle-content">
-                        {/* Avatar + usuario */}
-                        <div className="sueno-detalle-author-section">
-                            <Avatar
-                                avatarUrl={sueno.avatar_url}
-                                nombre={sueno.usuario_nombre}
-                                usuarioId={sueno.usuario_id}
-                            />
+                                <div className="sueno-edit-visibility">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={publicoEdit}
+                                            onChange={(e) => setPublicoEdit(e.target.checked)}
+                                        />
 
-                            <span className="sueno-detalle-author">
-                                {sueno.usuario_nombre}
-                            </span>
+                                        {" "}
+                                        {t("dreamDetail.edit.makePublic")}
+                                    </label>
+                                </div>
 
-                        </div>
-
-                        {/* Botón traducir */}
-                        <div className="sueno-detalle-translation">
-                            {sueno.idioma_original &&
-                                sueno.idioma_original !==
-                                (i18n.language.startsWith("en") ? "en" : "es") && (
+                                <div className="sueno-edit-actions">
                                     <button
-                                        className="sueno-owner-button"
-                                        onClick={handleTranslate}
-                                        disabled={loadingTraduccion}
-                                    >
-                                        {loadingTraduccion
-                                            ? t("dreamCard.translating")
-                                            : mostrarTraduccion
-                                                ? t("dreamCard.showOriginal")
-                                                : t("dreamCard.translate")}
+                                        className="btn btn-primary"
+                                        onClick={handleGuardar}
+                                        disabled={savingEdit}>
+                                        {savingEdit
+                                            ? t("dreamDetail.edit.saving")
+                                            : t("dreamDetail.edit.save")}
                                     </button>
-                                )}
-                        </div>
 
-                        <h2 className="sueno-detalle-title">
-                            <HashtagText texto={sueno.titulo} />
-                        </h2>
+                                    <button
+                                        className="btn btn-secondary"
+                                        onClick={() => setEditando(false)}>
+                                        {t("dreamDetail.edit.cancel")}
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="sueno-detalle-content">
+                                {/* Avatar + usuario */}
+                                <div className="sueno-detalle-author-section">
+                                    <Avatar
+                                        avatarUrl={sueno.avatar_url}
+                                        nombre={sueno.usuario_nombre}
+                                        usuarioId={sueno.usuario_id}
+                                    />
 
-                        <div className="sueno-detalle-details">
-
-                            <p className="sueno-detalle-category">
-                                <Tag size={14} />
-                                <span>
-                                    {t(`categories.${sueno.categoria_id}`, sueno.categoria_nombre)}
-                                </span>
-                            </p>
-
-                            {user?.id === sueno.usuario_id && (
-                                <span className={`sueno-detalle-visibility ${sueno.publico ? "is-public" : "is-private"}`}>
-                                    {sueno.publico ? (
-                                        <>
-                                            <Globe size={14} />
-                                            <span>{t("dreamDetail.visibility.public")}</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Lock size={14} />
-                                            <span>{t("dreamDetail.visibility.private")}</span>
-                                        </>
-                                    )}
-                                </span>
-                            )}
-                        </div>
-
-                        <p className="sueno-detalle-text">
-                            <HashtagText texto={
-                                mostrarTraduccion ? traduccion.contenido : sueno.contenido
-                            } />
-                        </p>
-                    </div>
-
-                )}
-
-                <div className="sueno-detalle-meta">
-                    {/* Izquierda: likes, comentarios */}
-                    <div className="sueno-detalle-stats">
-                        <button
-                            className={`sueno-like-button ${liked ? "is-liked" : ""} ${likeAnimating ? "is-animating" : ""}`} onClick={handleLike}
-                            disabled={loadingLike}
-                        >
-                            <Heart size={18} />
-                            <span>
-                                {loadingLike ? "..." : sueno.likes_count}
-                            </span>
-                        </button>
-
-                        <span>
-                            <MessageCircle size={18} />
-                            {sueno.comentarios_count}
-                        </span>
-                    </div>
-
-                    {/* Centro: Acciones propietario */}
-                    {!editando && user?.id === sueno.usuario_id && (
-                        <div className="sueno-detalle-owner-actions">
-
-                            {/* Botón Editar */}
-                            <button
-                                className="sueno-owner-button"
-                                onClick={() => {
-                                    setEditando(true)
-                                    setTituloEdit(sueno.titulo)
-                                    setCategoriaId(sueno.categoria_id)
-                                    setContenidoEdit(sueno.contenido)
-                                    setPublicoEdit(sueno.publico)
-                                }}
-                            >
-                                <Pencil size={14} />
-                                {t("dreamDetail.edit.edit")}
-                            </button>
-
-
-                            {/* Botón eliminar */}
-                            <button
-                                className="sueno-owner-button"
-                                onClick={() => setConfirmandoBorrado(true)}
-                                disabled={deleting}
-                            >
-                                <Trash2 size={14} />
-                                {deleting
-                                    ? t("dreamDetail.delete.deleting")
-                                    : t("dreamDetail.delete.delete")
-                                }
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Derecha: fecha */}
-                    <div className="sueno-detalle-date">
-                        {fechaFormateada}
-                    </div>
-                </div>
-
-            </div>
-
-            {/* Comentarios */}
-
-            <section className="sueno-detalle-comments">
-
-
-                <h3 className="sueno-detalle-comments-title">
-                    {t("dreamDetail.comments.title")}
-                </h3>
-
-                <div className="sueno-detalle-comment-form">
-                    <textarea
-                        className=" textarea sueno-detalle-comment-input"
-                        value={nuevoComentario}
-                        onChange={(e) => setNuevoComentario(e.target.value)}
-                        placeholder={t("dreamDetail.comments.placeholder")}
-                        disabled={commenting}
-                    />
-
-                    <button
-                        className="btn btn-primary"
-                        onClick={handleCrearComentario}
-                        disabled={commenting || !nuevoComentario.trim()}
-                    >
-                        {commenting ? t("dreamDetail.comments.commenting") : t("dreamDetail.comments.comment")}
-                    </button>
-                </div>
-                <div className="sueno-detalle-comments-list">
-                    {comentarios.map((c) => (
-
-                        <div
-                            key={c.id}
-                            className={`comentario ${c.id === nuevoId ? "is-new" : ""}`}
-                        >
-                            {/* Avatar */}
-                            <Avatar
-                                avatarUrl={c.avatar_url}
-                                nombre={c.usuario_nombre}
-                                usuarioId={c.usuario_id}
-                                size={36}
-                            />
-
-                            {/* Texto */}
-                            <div className="comentario-content">
-
-                                <div className="comentario-header">
-                                    <strong>{c.usuario_nombre}</strong>
-
-                                    {/* Editar comentario */}
-                                    {user?.id === c.usuario_id && (
-                                        <button
-                                            className="comentario-action"
-                                            onClick={() => {
-                                                setComentarioEditandoId(c.id)
-                                                setContenidoEditComentario(c.contenido)
-                                            }}
-                                        >
-                                            {t("dreamDetail.comments.edit")}
-                                        </button>
-                                    )}
-
-                                    {/* Eliminar comentario */}
-                                    {(user?.id === c.usuario_id ||
-                                        user?.id === sueno.usuario_id) && (
-                                            <button
-                                                className="comentario-action"
-                                                onClick={() =>
-                                                    setComentarioAEliminar(c.id)
-                                                }
-                                            >
-                                                {t("dreamDetail.comments.delete")}
-                                            </button>
-                                        )}
-
-                                    <span className="comentario-date">
-                                        {formatDate(c.fecha_creacion, i18n.language)}
+                                    <span className="sueno-detalle-author">
+                                        {sueno.usuario_nombre}
                                     </span>
 
                                 </div>
 
-                                {comentarioEditandoId === c.id ? (
-                                    <>
-                                        <textarea
-                                            className="textarea comentario-edit-input"
-                                            value={contenidoEditComentario}
-                                            onChange={(e) =>
-                                                setContenidoEditComentario(
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-
-                                        <div className="comentario-edit-actions">
+                                {/* Botón traducir */}
+                                <div className="sueno-detalle-translation">
+                                    {sueno.idioma_original &&
+                                        sueno.idioma_original !==
+                                        (i18n.language.startsWith("en") ? "en" : "es") && (
                                             <button
-                                                className="btn btn-primary"
-                                                onClick={() => handleEditarComentario(c.id)}
-                                                disabled={savingComentario}
+                                                className="sueno-owner-button"
+                                                onClick={handleTranslate}
+                                                disabled={loadingTraduccion}
                                             >
-                                                {savingComentario
-                                                    ? t("dreamDetail.comments.saving")
-                                                    : t("dreamDetail.comments.save")}
+                                                {loadingTraduccion
+                                                    ? t("dreamCard.translating")
+                                                    : mostrarTraduccion
+                                                        ? t("dreamCard.showOriginal")
+                                                        : t("dreamCard.translate")}
                                             </button>
+                                        )}
+                                </div>
 
-                                            <button
-                                                className="btn btn-secondary"
-                                                onClick={() => {
-                                                    setComentarioEditandoId(null)
-                                                    setContenidoEditComentario("")
-                                                }}
-                                            >
-                                                {t("dreamDetail.comments.cancel")}
-                                            </button>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p className="comentario-text">
-                                            {comentariosMostrandoTraduccion[c.id]
-                                                ? comentariosTraducidos[c.id]
-                                                : c.contenido}
-                                        </p>
+                                <h2 className="sueno-detalle-title">
+                                    <HashtagText texto={sueno.titulo} />
+                                </h2>
 
-                                        {c.idioma_original &&
-                                            c.idioma_original !==
-                                            (i18n.language.startsWith("en") ? "en" : "es") && (
-                                                <button
-                                                    className="comentario-action"
-                                                    onClick={() => handleTranslateComentario(c)}
-                                                    disabled={comentariosTraduciendo[c.id]}
-                                                >
-                                                    {comentariosTraduciendo[c.id]
-                                                        ? t("dreamCard.translating")
-                                                        : comentariosMostrandoTraduccion[c.id]
-                                                            ? t("dreamCard.showOriginal")
-                                                            : t("dreamCard.translate")}
-                                                </button>
+                                <div className="sueno-detalle-details">
+
+                                    <p className="sueno-detalle-category">
+                                        <Tag size={14} />
+                                        <span>
+                                            {t(`categories.${sueno.categoria_id}`, sueno.categoria_nombre)}
+                                        </span>
+                                    </p>
+
+                                    {user?.id === sueno.usuario_id && (
+                                        <span className={`sueno-detalle-visibility ${sueno.publico ? "is-public" : "is-private"}`}>
+                                            {sueno.publico ? (
+                                                <>
+                                                    <Globe size={14} />
+                                                    <span>{t("dreamDetail.visibility.public")}</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Lock size={14} />
+                                                    <span>{t("dreamDetail.visibility.private")}</span>
+                                                </>
                                             )}
-                                    </>
-                                )}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <p className="sueno-detalle-text">
+                                    <HashtagText texto={
+                                        mostrarTraduccion ? traduccion.contenido : sueno.contenido
+                                    } />
+                                </p>
+                            </div>
+
+                        )}
+
+                        <div className="sueno-detalle-meta">
+                            {/* Izquierda: likes, comentarios */}
+                            <div className="sueno-detalle-stats">
+                                <button
+                                    className={`sueno-like-button ${liked ? "is-liked" : ""} ${likeAnimating ? "is-animating" : ""}`} onClick={handleLike}
+                                    disabled={loadingLike}
+                                >
+                                    <Heart size={18} />
+                                    <span>
+                                        {loadingLike ? "..." : sueno.likes_count}
+                                    </span>
+                                </button>
+
+                                <span>
+                                    <MessageCircle size={18} />
+                                    {sueno.comentarios_count}
+                                </span>
+                            </div>
+
+                            {/* Centro: Acciones propietario */}
+                            {!editando && user?.id === sueno.usuario_id && (
+                                <div className="sueno-detalle-owner-actions">
+
+                                    {/* Botón Editar */}
+                                    <button
+                                        className="sueno-owner-button"
+                                        onClick={() => {
+                                            setEditando(true)
+                                            setTituloEdit(sueno.titulo)
+                                            setCategoriaId(sueno.categoria_id)
+                                            setContenidoEdit(sueno.contenido)
+                                            setPublicoEdit(sueno.publico)
+                                        }}
+                                    >
+                                        <Pencil size={14} />
+                                        {t("dreamDetail.edit.edit")}
+                                    </button>
+
+
+                                    {/* Botón eliminar */}
+                                    <button
+                                        className="sueno-owner-button"
+                                        onClick={() => setConfirmandoBorrado(true)}
+                                        disabled={deleting}
+                                    >
+                                        <Trash2 size={14} />
+                                        {deleting
+                                            ? t("dreamDetail.delete.deleting")
+                                            : t("dreamDetail.delete.delete")
+                                        }
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Derecha: fecha */}
+                            <div className="sueno-detalle-date">
+                                {fechaFormateada}
                             </div>
                         </div>
-                    ))}
-                    {/* Comentario */}
+
+                    </div>
+
+                    {/* Comentarios */}
+
+                    <section className="sueno-detalle-comments">
+
+
+                        <h3 className="sueno-detalle-comments-title">
+                            {t("dreamDetail.comments.title")}
+                        </h3>
+
+                        <div className="sueno-detalle-comment-form">
+                            <textarea
+                                className=" textarea sueno-detalle-comment-input"
+                                value={nuevoComentario}
+                                onChange={(e) => setNuevoComentario(e.target.value)}
+                                placeholder={t("dreamDetail.comments.placeholder")}
+                                disabled={commenting}
+                            />
+
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleCrearComentario}
+                                disabled={commenting || !nuevoComentario.trim()}
+                            >
+                                {commenting ? t("dreamDetail.comments.commenting") : t("dreamDetail.comments.comment")}
+                            </button>
+                        </div>
+                        <div className="sueno-detalle-comments-list">
+                            {comentarios.map((c) => (
+
+                                <div
+                                    key={c.id}
+                                    className={`comentario ${c.id === nuevoId ? "is-new" : ""}`}
+                                >
+                                    {/* Avatar */}
+                                    <Avatar
+                                        avatarUrl={c.avatar_url}
+                                        nombre={c.usuario_nombre}
+                                        usuarioId={c.usuario_id}
+                                        size={36}
+                                    />
+
+                                    {/* Texto */}
+                                    <div className="comentario-content">
+
+                                        <div className="comentario-header">
+                                            <strong>{c.usuario_nombre}</strong>
+
+                                            {/* Editar comentario */}
+                                            {user?.id === c.usuario_id && (
+                                                <button
+                                                    className="comentario-action"
+                                                    onClick={() => {
+                                                        setComentarioEditandoId(c.id)
+                                                        setContenidoEditComentario(c.contenido)
+                                                    }}
+                                                >
+                                                    {t("dreamDetail.comments.edit")}
+                                                </button>
+                                            )}
+
+                                            {/* Eliminar comentario */}
+                                            {(user?.id === c.usuario_id ||
+                                                user?.id === sueno.usuario_id) && (
+                                                    <button
+                                                        className="comentario-action"
+                                                        onClick={() =>
+                                                            setComentarioAEliminar(c.id)
+                                                        }
+                                                    >
+                                                        {t("dreamDetail.comments.delete")}
+                                                    </button>
+                                                )}
+
+                                            <span className="comentario-date">
+                                                {formatDate(c.fecha_creacion, i18n.language)}
+                                            </span>
+
+                                        </div>
+
+                                        {comentarioEditandoId === c.id ? (
+                                            <>
+                                                <textarea
+                                                    className="textarea comentario-edit-input"
+                                                    value={contenidoEditComentario}
+                                                    onChange={(e) =>
+                                                        setContenidoEditComentario(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+
+                                                <div className="comentario-edit-actions">
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={() => handleEditarComentario(c.id)}
+                                                        disabled={savingComentario}
+                                                    >
+                                                        {savingComentario
+                                                            ? t("dreamDetail.comments.saving")
+                                                            : t("dreamDetail.comments.save")}
+                                                    </button>
+
+                                                    <button
+                                                        className="btn btn-secondary"
+                                                        onClick={() => {
+                                                            setComentarioEditandoId(null)
+                                                            setContenidoEditComentario("")
+                                                        }}
+                                                    >
+                                                        {t("dreamDetail.comments.cancel")}
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="comentario-text">
+                                                    {comentariosMostrandoTraduccion[c.id]
+                                                        ? comentariosTraducidos[c.id]
+                                                        : c.contenido}
+                                                </p>
+
+                                                {c.idioma_original &&
+                                                    c.idioma_original !==
+                                                    (i18n.language.startsWith("en") ? "en" : "es") && (
+                                                        <button
+                                                            className="comentario-action"
+                                                            onClick={() => handleTranslateComentario(c)}
+                                                            disabled={comentariosTraduciendo[c.id]}
+                                                        >
+                                                            {comentariosTraduciendo[c.id]
+                                                                ? t("dreamCard.translating")
+                                                                : comentariosMostrandoTraduccion[c.id]
+                                                                    ? t("dreamCard.showOriginal")
+                                                                    : t("dreamCard.translate")}
+                                                        </button>
+                                                    )}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            {/* Comentario */}
+                            <ConfirmModal
+                                open={comentarioAEliminar !== null}
+                                title={t("dreamDetail.comments.confirmTitle")}
+                                message={t("dreamDetail.comments.confirmMessage")}
+                                confirmText={t("dreamDetail.comments.confirm")}
+                                loadingText={t("dreamDetail.comments.deleting")}
+                                cancelText={t("dreamDetail.comments.cancel")}
+                                loading={deletingComentario}
+                                onConfirm={handleDeleteComentario}
+                                onCancel={() => setComentarioAEliminar(null)}
+                            />
+                        </div>
+                    </section>
+                    {/* Sueño */}
                     <ConfirmModal
-                        open={comentarioAEliminar !== null}
-                        title={t("dreamDetail.comments.confirmTitle")}
-                        message={t("dreamDetail.comments.confirmMessage")}
-                        confirmText={t("dreamDetail.comments.confirm")}
-                        loadingText={t("dreamDetail.comments.deleting")}
-                        cancelText={t("dreamDetail.comments.cancel")}
-                        loading={deletingComentario}
-                        onConfirm={handleDeleteComentario}
-                        onCancel={() => setComentarioAEliminar(null)}
+                        open={confirmandoBorrado}
+                        title={t("dreamDetail.delete.title")}
+                        message={t("dreamDetail.delete.message")}
+                        confirmText={t("dreamDetail.delete.confirm")}
+                        loadingText={t("dreamDetail.delete.deleting")}
+                        cancelText={t("dreamDetail.delete.cancel")}
+                        loading={deleting}
+                        onConfirm={handleDelete}
+                        onCancel={() => setConfirmandoBorrado(false)}
                     />
-                </div>
-            </section>
-            {/* Sueño */}
-            <ConfirmModal
-                open={confirmandoBorrado}
-                title={t("dreamDetail.delete.title")}
-                message={t("dreamDetail.delete.message")}
-                confirmText={t("dreamDetail.delete.confirm")}
-                loadingText={t("dreamDetail.delete.deleting")}
-                cancelText={t("dreamDetail.delete.cancel")}
-                loading={deleting}
-                onConfirm={handleDelete}
-                onCancel={() => setConfirmandoBorrado(false)}
-            />
-
+                </>
+            )}
         </div>
-
     )
-
 }
 
 export default SuenoDetallePage

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /perfil
+Disallow: /notificaciones
+Disallow: /usuarios/
+Disallow: /forgot-password
+Disallow: /reset-password/
+
+Sitemap: https://tusitio.com/sitemap.xml

@@ -6,10 +6,10 @@ import { search } from "../api/busqueda"
 
 import SuenoCard from "../components/SuenoCard"
 import Avatar from "../components/Avatar"
+import SEO from '../components/SEO'
 
 import { useDreamFilter } from "../context/DreamFilterContext"
 import { useToast } from "../context/ToastContext"
-
 
 export default function BusquedaPage() {
     const { t } = useTranslation()
@@ -60,6 +60,11 @@ export default function BusquedaPage() {
     return (
 
         <div className="search-page">
+            <SEO
+                title={t('seo.busqueda.title')}
+                description={t('seo.busqueda.description')}
+            />
+
             <h2 className="search-title">
                 {t("searchResults.title")} {q}
             </h2>

@@ -5,6 +5,7 @@ import { getFeed } from "../api/suenos"
 
 import SuenoCard from "../components/SuenoCard"
 import CrearSueno from "../components/CrearSueno"
+import SEO from "../components/SEO"
 
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
@@ -112,6 +113,10 @@ function FeedPage() {
 
     return (
         <div className="feed-page">
+            <SEO
+                title={t('seo.feed.title')}
+                description={t('seo.feed.description')}
+            />
 
             {/* Componente CrearSueno (Solo si se está logueado)*/}
             {user && (

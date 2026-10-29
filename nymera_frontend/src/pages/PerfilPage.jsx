@@ -10,6 +10,7 @@ import { me } from "../api/auth"
 
 import SuenoCard from "../components/SuenoCard"
 import Avatar from "../components/Avatar"
+import SEO from "../components/SEO"
 
 import { Heart } from "../lib/icons"
 
@@ -156,237 +157,234 @@ function PerfilPage() {
         }
     }
 
-    if (!user) {
-        return (
-            <p className="perfil-message">
-                {t("profile.loginRequired")}
-            </p>
-        )
-    }
-
-    if (loading) {
-        return (
-            <p className="perfil-loading">
-                {t("profile.loading")}
-            </p>
-        )
-    }
-    if (error) {
-        return (
-            <p className="perfil-error">
-                {error}
-            </p>)
-    }
-
     const suenosLikeadosExternos = suenosLikeados.filter(s => s.usuario_id !== user.id)
 
     return (
-
         <div className="perfil-page">
-            <div className="perfil-card">
+            <SEO
+                title={t('seo.perfil.title')}
+                description={t('seo.perfil.description')}
+            />
 
-                {/* Avatar */}
-                <Avatar
-                    avatarUrl={user.avatar_url}
-                    nombre={user.nombre}
-                    size={80}
-                    clickable={false}
-                />
+            {!user ? (
+                <p className="perfil-message">
+                    {t("profile.loginRequired")}
+                </p>
+            ) : loading ? (
+                <p className="perfil-loading">
+                    {t("profile.loading")}
+                </p>
+            ) : error ? (
+                <p className="perfil-error">
+                    {error}
+                </p>
+            ) : (
+                <>
+                    <div className="perfil-card">
 
-                <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleAvatarUpload}
-                    className="perfil-avatar-input"
-                />
-                <button
-                    className="perfil-avatar-button"
-                    onClick={() => fileInputRef.current?.click()}
-                >
-                    {t("profile.avatar.change")}
-                </button>
-
-
-                {/* Info */}
-                <div className="perfil-info">
-
-                    <h1 className="perfil-name">
-                        {user.nombre}
-                    </h1>
-
-                    <p className="perfil-email">
-                        {user.email}
-                    </p>
-
-                    <p className="perfil-member-since">
-                        {t("profile.info.memberSince")}{" "}
-                        {new Date(user.fecha_creacion).toLocaleDateString("es-ES")}
-                    </p>
-
-                    {/* Num sueños y likes */}
-                    <div className="perfil-stats">
-                        <span>
-                            <strong>{suenos.length}</strong> {t("profile.info.dreams")}
-                        </span>
-
-                        <span className="perfil-stats-separator">·</span>
-
-                        <span>
-                            <strong>
-                                {suenosLikeados.length}
-                            </strong> {t("profile.info.likes")}
-                        </span>
-                    </div>
-
-
-                    {/* Editar Perfil */}
-                    <button
-                        className="perfil-edit-button"
-                        onClick={() => setEditando(!editando)}
-                    >
-                        {t("profile.edit.title")}
-                    </button>
-
-
-                    {editando && (
-                        <form
-                            className="perfil-edit-form"
-                            onSubmit={handleUpdatePerfil}
-                        >
-                            <input
-                                className="input"
-                                type="text"
-                                placeholder={t("profile.edit.newName")}
-                                value={nuevoNombre}
-                                onChange={(e) => setNuevoNombre(e.target.value)}
-                            />
-
-                            <input
-                                className="input"
-                                type="password"
-                                placeholder={t("profile.edit.currentPassword")}
-                                value={passwordActualPerfil}
-                                onChange={(e) => setPasswordActualPerfil(e.target.value)}
-                            />
-
-                            <button
-                                className="btn btn-primary"
-                                type="submit"
-                                disabled={savingPerfil}
-                            >
-                                {savingPerfil ? t("profile.edit.saving") : t("profile.edit.save")}
-                            </button>
-                        </form>
-                    )}
-
-                    <hr className="perfil-divider" />
-
-                    <h3 className="perfil-password-title">
-                        {t("profile.password.title")}
-                    </h3>
-
-                    <form
-                        className="perfil-password-form"
-                        onSubmit={handleChangePassword}
-                    >
-                        <input
-                            className="input"
-                            type="password"
-                            placeholder={t("profile.password.current")}
-                            value={passwordActualCambio}
-                            onChange={(e) => setPasswordActualCambio(e.target.value)}
+                        {/* Avatar */}
+                        <Avatar
+                            avatarUrl={user.avatar_url}
+                            nombre={user.nombre}
+                            size={80}
+                            clickable={false}
                         />
 
                         <input
-                            className="input"
-                            type="password"
-                            placeholder={t("profile.password.new")}
-                            value={nuevaPassword}
-                            onChange={(e) => setNuevaPassword(e.target.value)}
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            onChange={handleAvatarUpload}
+                            className="perfil-avatar-input"
                         />
-
-                        <input
-                            className="input"
-                            type="password"
-                            placeholder={t("profile.password.repeat")}
-                            value={confirmarPassword}
-                            onChange={(e) => setConfirmarPassword(e.target.value)}
-                        />
-
                         <button
-                            className="btn btn-primary"
-                            type="submit"
-                            disabled={changingPassword}
+                            className="perfil-avatar-button"
+                            onClick={() => fileInputRef.current?.click()}
                         >
-                            {changingPassword ? t("profile.password.changing") : t("profile.password.change")}
+                            {t("profile.avatar.change")}
                         </button>
-                    </form>
 
-                </div>
-            </div>
 
-            {/* Sueños publicados */}
-            <section className="perfil-dreams">
+                        {/* Info */}
+                        <div className="perfil-info">
 
-                <h2 className="perfil-section-title">
-                    {t("profile.dreams.title")}
-                </h2>
+                            <h1 className="perfil-name">
+                                {user.nombre}
+                            </h1>
 
-                {loadingSuenos ? (
-                    <p className="perfil-loading">
-                        {t("profile.dreams.loading")}
-                    </p>
-                ) : suenos.length === 0 ? (
-                    hayFiltros ? (
-                        <p className="perfil-empty">{t("profile.dreams.emptyWithFilters")}</p>
-                    ) : (
-                        <p className="perfil-empty">{t("profile.dreams.empty")}</p>
-                    )
-                ) : (
-                    suenos.map((sueno) => (
-                        <SuenoCard
-                            key={sueno.id}
-                            sueno={sueno}
-                            onSuenoEliminado={handleDelete}
-                        />
-                    ))
-                )}
-            </section>
+                            <p className="perfil-email">
+                                {user.email}
+                            </p>
 
-            {/* Sueños Likeados */}
-            <section className="perfil-liked">
-                <h2 className="perfil-section-title">
-                    <Heart size={20} />
-                    <span>{t("profile.likedDreams.title")}</span>
-                </h2>
+                            <p className="perfil-member-since">
+                                {t("profile.info.memberSince")}{" "}
+                                {new Date(user.fecha_creacion).toLocaleDateString("es-ES")}
+                            </p>
 
-                {loadingSuenos ? (
-                    <p className="perfil-loading">
-                        {t("profile.likedDreams.loading")}
-                    </p>
-                ) : suenosLikeadosExternos.length === 0 ? (
-                    hayFiltros ? (
-                        <p className="perfil-empty">
-                            {t("profile.likedDreams.emptyWithFilters")}
-                        </p>
-                    ) : (
-                        <p className="perfil-empty">
-                            {t("profile.likedDreams.empty")}
-                        </p>
-                    )
-                ) : (
-                    <div className="perfil-liked-list">
-                        {suenosLikeadosExternos.map((sueno) => (
-                            <SuenoCard
-                                key={sueno.id}
-                                sueno={sueno}
-                            />
-                        ))}
+                            {/* Num sueños y likes */}
+                            <div className="perfil-stats">
+                                <span>
+                                    <strong>{suenos.length}</strong> {t("profile.info.dreams")}
+                                </span>
+
+                                <span className="perfil-stats-separator">·</span>
+
+                                <span>
+                                    <strong>
+                                        {suenosLikeados.length}
+                                    </strong> {t("profile.info.likes")}
+                                </span>
+                            </div>
+
+
+                            {/* Editar Perfil */}
+                            <button
+                                className="perfil-edit-button"
+                                onClick={() => setEditando(!editando)}
+                            >
+                                {t("profile.edit.title")}
+                            </button>
+
+
+                            {editando && (
+                                <form
+                                    className="perfil-edit-form"
+                                    onSubmit={handleUpdatePerfil}
+                                >
+                                    <input
+                                        className="input"
+                                        type="text"
+                                        placeholder={t("profile.edit.newName")}
+                                        value={nuevoNombre}
+                                        onChange={(e) => setNuevoNombre(e.target.value)}
+                                    />
+
+                                    <input
+                                        className="input"
+                                        type="password"
+                                        placeholder={t("profile.edit.currentPassword")}
+                                        value={passwordActualPerfil}
+                                        onChange={(e) => setPasswordActualPerfil(e.target.value)}
+                                    />
+
+                                    <button
+                                        className="btn btn-primary"
+                                        type="submit"
+                                        disabled={savingPerfil}
+                                    >
+                                        {savingPerfil ? t("profile.edit.saving") : t("profile.edit.save")}
+                                    </button>
+                                </form>
+                            )}
+
+                            <hr className="perfil-divider" />
+
+                            <h3 className="perfil-password-title">
+                                {t("profile.password.title")}
+                            </h3>
+
+                            <form
+                                className="perfil-password-form"
+                                onSubmit={handleChangePassword}
+                            >
+                                <input
+                                    className="input"
+                                    type="password"
+                                    placeholder={t("profile.password.current")}
+                                    value={passwordActualCambio}
+                                    onChange={(e) => setPasswordActualCambio(e.target.value)}
+                                />
+
+                                <input
+                                    className="input"
+                                    type="password"
+                                    placeholder={t("profile.password.new")}
+                                    value={nuevaPassword}
+                                    onChange={(e) => setNuevaPassword(e.target.value)}
+                                />
+
+                                <input
+                                    className="input"
+                                    type="password"
+                                    placeholder={t("profile.password.repeat")}
+                                    value={confirmarPassword}
+                                    onChange={(e) => setConfirmarPassword(e.target.value)}
+                                />
+
+                                <button
+                                    className="btn btn-primary"
+                                    type="submit"
+                                    disabled={changingPassword}
+                                >
+                                    {changingPassword ? t("profile.password.changing") : t("profile.password.change")}
+                                </button>
+                            </form>
+
+                        </div>
                     </div>
-                )}
-            </section>
 
+                    {/* Sueños publicados */}
+                    <section className="perfil-dreams">
+
+                        <h2 className="perfil-section-title">
+                            {t("profile.dreams.title")}
+                        </h2>
+
+                        {loadingSuenos ? (
+                            <p className="perfil-loading">
+                                {t("profile.dreams.loading")}
+                            </p>
+                        ) : suenos.length === 0 ? (
+                            hayFiltros ? (
+                                <p className="perfil-empty">{t("profile.dreams.emptyWithFilters")}</p>
+                            ) : (
+                                <p className="perfil-empty">{t("profile.dreams.empty")}</p>
+                            )
+                        ) : (
+                            suenos.map((sueno) => (
+                                <SuenoCard
+                                    key={sueno.id}
+                                    sueno={sueno}
+                                    onSuenoEliminado={handleDelete}
+                                />
+                            ))
+                        )}
+                    </section>
+
+                    {/* Sueños Likeados */}
+                    <section className="perfil-liked">
+                        <h2 className="perfil-section-title">
+                            <Heart size={20} />
+                            <span>{t("profile.likedDreams.title")}</span>
+                        </h2>
+
+                        {loadingSuenos ? (
+                            <p className="perfil-loading">
+                                {t("profile.likedDreams.loading")}
+                            </p>
+                        ) : suenosLikeadosExternos.length === 0 ? (
+                            hayFiltros ? (
+                                <p className="perfil-empty">
+                                    {t("profile.likedDreams.emptyWithFilters")}
+                                </p>
+                            ) : (
+                                <p className="perfil-empty">
+                                    {t("profile.likedDreams.empty")}
+                                </p>
+                            )
+                        ) : (
+                            <div className="perfil-liked-list">
+                                {suenosLikeadosExternos.map((sueno) => (
+                                    <SuenoCard
+                                        key={sueno.id}
+                                        sueno={sueno}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </section>
+                </>
+            )}
         </div>
     )
 }

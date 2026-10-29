@@ -6,6 +6,8 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { register } from "../api/auth"
 
+import SEO from "../components/SEO"
+
 import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 import { Turnstile } from '@marsidev/react-turnstile'
@@ -60,7 +62,11 @@ function RegisterPage() {
 
     return (
         <div className="page-center">
-
+            <SEO
+                title={t('seo.register.title')}
+                description={t('seo.register.description')}
+            />
+            
             <div className="container-sm">
 
                 <div className="card auth-card">

@@ -322,5 +322,55 @@
         "8": "Extraño",
         "9": "Aventura",
         "10": "Tristeza"
+    },
+    "seo": {
+        "feed": {
+            "title": "Explorar Sueños",
+            "description": "Adéntrate en el flujo nocturno de Nymera. Descubre historias de sueños, conecta con otros onironautas y explora sus misterios."
+        },
+        "busqueda": {
+            "title": "Buscar Sueños",
+            "description": "Encuentra historias, soñadores y etiquetas en todo el universo de Nymera."
+        },
+        "perfil": {
+            "title": "Mi Perfil",
+            "description": "Tu diario de sueños personal. Gestiona tus publicaciones, experiencias oníricas y actividad."
+        },
+        "suenoDetalle": {
+            "title": "Detalles del Sueño",
+            "description": "Sumérgete en esta historia onírica, explora sus interpretaciones y comparte tus pensamientos."
+        },
+        "login": {
+            "title": "Iniciar Sesión",
+            "description": "Inicia sesión en tu cuenta de Nymera y reconecta con el mundo de los sueños."
+        },
+        "register": {
+            "title": "Únete a Nymera",
+            "description": "Crea tu cuenta en Nymera y comienza a compartir tus viajes nocturnos con la comunidad."
+        },
+        "notificaciones": {
+            "title": "Notificaciones",
+            "description": "Mantente al día sobre las reacciones e interpretaciones a tus historias de sueños."
+        },
+        "hashtag": {
+            "title": "Explorar Etiqueta",
+            "description": "Descubre todos los sueños agrupados bajo esta etiqueta en Nymera."
+        },
+        "usuario": {
+            "title": "Perfil de Soñador",
+            "description": "Explora el universo de historias y publicaciones de este soñador en Nymera."
+        },
+        "forgotPassword": {
+            "title": "Recuperar Contraseña",
+            "description": "Restablece el acceso a tu cuenta y diario de sueños en Nymera."
+        },
+        "resetPassword": {
+            "title": "Restablecer Contraseña",
+            "description": "Establece tu nueva contraseña para volver a adentrarte en Nymera."
+        },
+        "error": {
+            "title": "Página No Encontrada",
+            "description": "Parece que este sueño se ha desvanecido. La página que buscas no existe."
+        }
     }
 }

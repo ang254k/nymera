@@ -5,6 +5,8 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { forgotPassword } from "../api/auth"
 
+import SEO from "../components/SEO"
+
 import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
@@ -38,6 +40,11 @@ export default function ForgotPasswordPage() {
 
     return (
         <div className="page-center">
+            <SEO
+                title={t('seo.forgotPassword.title')}
+                description={t('seo.forgotPassword.description')}
+            />
+
             <div className="container-sm">
 
                 <div className="card auth-card">

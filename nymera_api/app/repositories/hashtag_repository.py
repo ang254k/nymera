@@ -14,6 +14,7 @@ class HashtagRepository(FiltroRepository):
             s.publico,
             s.fecha_creacion,
             s.usuario_id,
+            s.idioma_original,
 
             COALESCE(
                 u.nombre,
@@ -22,6 +23,7 @@ class HashtagRepository(FiltroRepository):
 
             u.avatar_url,
 
+            s.categoria_id,
             cat.nombre AS categoria_nombre,
 
             COUNT(DISTINCT sl.usuario_id) AS likes_count,
@@ -138,8 +140,10 @@ class HashtagRepository(FiltroRepository):
             
             GROUP BY 
                 s.id,
+                s.idioma_original,
                 u.nombre,
                 u.avatar_url,
+                s.categoria_id,
                 cat.nombre
 
             {order_by}

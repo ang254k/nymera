@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom"
 
 import { getUsuario } from "../api/usuarios"
 import { getSuenosByUser } from "../api/suenos"
+
+import SEO from "../components/SEO"
 import SuenoCard from "../components/SuenoCard"
-import { useToast } from "../context/ToastContext"
-import { useDreamFilter } from "../context/DreamFilterContext"
 import Avatar from "../components/Avatar"
 
+import { useToast } from "../context/ToastContext"
+import { useDreamFilter } from "../context/DreamFilterContext"
 
 function UsuarioPage() {
     const { t } = useTranslation()
@@ -60,75 +62,81 @@ function UsuarioPage() {
         orden.direction
     ])
 
-    if (loading || !usuario) {
-        return <p className="usuario-page-loading">
-            {t("userProfile.loading")}
-        </p>
-    }
 
     return (
         <div className="usuario-page">
-            <div className="usuario-profile-card">
-                {/* Avatar */}
-                <Avatar
-                    avatarUrl={usuario.avatar_url}
-                    nombre={usuario.nombre}
-                    usuarioId={usuario.id}
-                />
+            <SEO
+                title={t('seo.usuario.title')}
+                description={t('seo.usuario.description')}
+            />
 
-                <h1 className="usuario-profile-name">
-                    {usuario.nombre}
-                </h1>
-
-                <div className="usuario-profile-stats">
-                    <span>
-                        <strong>{suenos.length}</strong> {t("userProfile.dreams")}
-                    </span>
-
-                    <span>.</span>
-
-                    <span>
-                        <strong>
-                            {suenos.reduce((acc, s) => acc + s.likes_count, 0)}
-                        </strong> {t("userProfile.likes")}
-                    </span>
-                </div>
-
-            </div>
-
-
-            {/* Lista Sueños */}
-
-            <h2 className="usuarios-suenos-title">
-                {t("userProfile.publicDreams")}
-            </h2>
-
-            {loadingSuenos ? (
-
-                <p className="usuario-suenos-loading">
-                    {t("userProfile.loadingDreams")}
+            {loading || !usuario ? (
+                <p className="usuario-page-loading">
+                    {t("userProfile.loading")}
                 </p>
-
-            ) : suenos.length === 0 ? (
-                hayFiltros ? (
-                    <p className="usuarios-suenos-empty">{t("userProfile.emptyWithFilters")}</p>
-                ) : (
-                    <p className="usuarios-suenos-empty">{t("userProfile.empty")}</p>
-                )
             ) : (
-                <div className="usuarios-suenos-list">
-                    {suenos.map((sueno) => (
-                        <SuenoCard
-                            key={sueno.id}
-                            sueno={sueno}
+                <>
+                    <div className="usuario-profile-card">
+                        {/* Avatar */}
+                        <Avatar
+                            avatarUrl={usuario.avatar_url}
+                            nombre={usuario.nombre}
+                            usuarioId={usuario.id}
                         />
-                    ))}
-                </div>
+
+                        <h1 className="usuario-profile-name">
+                            {usuario.nombre}
+                        </h1>
+
+                        <div className="usuario-profile-stats">
+                            <span>
+                                <strong>{suenos.length}</strong> {t("userProfile.dreams")}
+                            </span>
+
+                            <span>.</span>
+
+                            <span>
+                                <strong>
+                                    {suenos.reduce((acc, s) => acc + s.likes_count, 0)}
+                                </strong> {t("userProfile.likes")}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    {/* Lista Sueños */}
+
+                    <h2 className="usuarios-suenos-title">
+                        {t("userProfile.publicDreams")}
+                    </h2>
+
+                    {loadingSuenos ? (
+
+                        <p className="usuario-suenos-loading">
+                            {t("userProfile.loadingDreams")}
+                        </p>
+
+                    ) : suenos.length === 0 ? (
+                        hayFiltros ? (
+                            <p className="usuarios-suenos-empty">{t("userProfile.emptyWithFilters")}</p>
+                        ) : (
+                            <p className="usuarios-suenos-empty">{t("userProfile.empty")}</p>
+                        )
+                    ) : (
+                        <div className="usuarios-suenos-list">
+                            {suenos.map((sueno) => (
+                                <SuenoCard
+                                    key={sueno.id}
+                                    sueno={sueno}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     )
-
-
 }
 
 export default UsuarioPage

@@ -6,6 +6,8 @@ import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
 import { login, me } from "../api/auth"
 
+import SEO from "../components/SEO"
+
 import { getErrorMessage } from "../utils/getErrorMessage"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
@@ -54,6 +56,11 @@ function LoginPage() {
 
     return (
         <div className="page-center">
+            <SEO
+                title={t('seo.login.title')}
+                description={t('seo.login.description')}
+            />
+
             <div className="container-sm">
                 <div className="card auth-card">
 
