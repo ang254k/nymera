@@ -35,9 +35,11 @@ function TrendingHashtags() {
             <div className="trending-hashtag-list">
                 {hashtags.map((hashtag) => (
                     <button
+                        type="button"
                         className="trending-hashtag"
                         key={hashtag}
                         onClick={() => navigate(`/hashtags/${hashtag}`)}
+                        aria-label={t("accessibility.filterByHashtag", { hashtag })}
                     >
                         #{hashtag}
                     </button>

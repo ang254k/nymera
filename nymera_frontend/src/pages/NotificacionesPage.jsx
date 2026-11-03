@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { getNotificaciones, marcarNotificacionLeida } from "../api/notificaciones"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useToast } from "../context/ToastContext"
 
 import SEO from "../components/SEO"
@@ -16,8 +16,6 @@ function NotificacionesPage() {
     const [notificaciones, setNotificaciones] = useState([])
     const [loading, setLoading] = useState(true)
     const { showToast } = useToast()
-
-    const navigate = useNavigate()
 
     useEffect(() => {
         async function load() {
@@ -45,7 +43,7 @@ function NotificacionesPage() {
             </h1>
 
             {loading ? (
-                <p className="notificaciones-loading" >
+                <p className="notificaciones-loading" role="status" aria-live="polite" >
                     {t("notifications.loading")}
                 </p>
             ) : notificaciones.length === 0 ? (
@@ -55,14 +53,15 @@ function NotificacionesPage() {
             ) : (
                 <div className="notificaciones-list">
                     {notificaciones.map((n) => (
-                        <div
+                        <Link
                             key={n.id}
+                            to={`/suenos/${n.sueno_id}`}
                             className={`notificacion ${n.leido ? "is-read" : ""}`}
+                            aria-label={t(n.leido ? "accessibility.readNotification" : "accessibility.unreadNotification", { name: n.emisor_nombre })}
                             onClick={async () => {
                                 if (!n.leido) {
                                     try {
                                         await marcarNotificacionLeida(n.id)
-
                                         setNotificaciones(prev =>
                                             prev.map(notif =>
                                                 notif.id === n.id
@@ -74,21 +73,20 @@ function NotificacionesPage() {
                                         showToast(t("notifications.markReadError"), "error")
                                     }
                                 }
-                                navigate(`/suenos/${n.sueno_id}`)
                             }}
                         >
                             <div className="notificacion-content">
                                 {n.tipo === "like" && (
                                     <p>
                                         <strong>{n.emisor_nombre}</strong> {t("notifications.like")}{" "}
-                                        <Heart size={16} />
+                                        <Heart size={16} aria-hidden="true" />
                                     </p>
                                 )}
 
                                 {n.tipo === "comentario" && (
                                     <p>
                                         <strong>{n.emisor_nombre}</strong> {t("notifications.comment")}{" "}
-                                        <MessageCircle size={16} />
+                                        <MessageCircle size={16} aria-hidden="true" />
                                     </p>
                                 )}
 
@@ -96,7 +94,7 @@ function NotificacionesPage() {
                                     {formatDate(n.fecha_creacion, i18n.language)}
                                 </span>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )

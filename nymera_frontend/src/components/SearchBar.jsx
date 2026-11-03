@@ -24,6 +24,7 @@ function SearchBar() {
             className="input search-bar"
             type="text"
             placeholder={t("search.placeholder")}
+            aria-label={t("accessibility.search")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}

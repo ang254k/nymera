@@ -2,6 +2,7 @@
     "navigation": {
         "home": "Inicio",
         "notifications": "Notificaciones",
+        "notificationsCount": "Notificaciones ({{count}} sin leer)",
         "profile": "Perfil",
         "logout": "Salir",
         "login": "Iniciar sesión",
@@ -54,7 +55,23 @@
         "loading": "Cargando..."
     },
     "accessibility": {
-        "goHome": "Ir al inicio"
+        "goHome": "Ir al inicio",
+        "spanishLanguage": "Cambiar idioma a español",
+        "englishLanguage": "Cambiar idioma a inglés",
+        "search": "Buscar sueños",
+        "likeDream": "Dar Me gusta a este sueño",
+        "unlikeDream": "Quitar Me gusta a este sueño",
+        "editDream": "Editar este sueño",
+        "deleteDream": "Eliminar este sueño",
+        "translate": "Traducir este sueño",
+        "showOriginal": "Mostrar texto original",
+        "filterByHashtag": "Filtrar por hashtag {{hashtag}}",
+        "viewUserProfile": "Ver perfil de usuario {{name}}",
+        "securityVerification": "Verificación de seguridad",
+        "changeAvatar": "Cambiar foto de perfil",
+        "unreadNotification": "Notificación no leída de {{name}}",
+        "readNotification": "Notificación de {{name}}",
+        "hashtagAriaLabel": "Hashtag {{nombre}}"
     },
     "search": {
         "placeholder": "Buscar sueños, usuarios o hashtags..."
@@ -65,7 +82,10 @@
         "sort": "Ordenar",
         "date": "Fecha",
         "likes": "Likes",
-        "comments": "Comentarios"
+        "comments": "Comentarios",
+        "sortedAsc": "ascendente",
+        "sortedDesc": "descendente",
+        "notSorted": "sin ordenar"
     },
     "dream": {
         "createTitle": "¿Qué has soñado?",
@@ -128,7 +148,9 @@
         "loginRequired": "Debes iniciar sesión",
         "loading": "Cargando perfil...",
         "avatar": {
-            "change": "Cambiar avatar"
+            "change": "Cambiar avatar",
+            "alt": "Avatar de {{name}}",
+            "defaultAlt": "Avatar de usuario"
         },
         "info": {
             "memberSince": "Miembro desde",
@@ -166,7 +188,8 @@
         "messages": {
             "profileUpdated": "Perfil actualizado",
             "passwordUpdated": "Contraseña actualizada",
-            "avatarUpdated": "Avatar actualizado"
+            "avatarUpdated": "Avatar actualizado",
+            "fillAllFields": "Por favor, completa todos los campos obligatorios."
         }
     },
     "userProfile": {
@@ -178,7 +201,8 @@
         "publicDreams": "Sueños públicos",
         "loadingDreams": "Cargando sueños...",
         "emptyWithFilters": "No hay sueños que coincidan con los filtros seleccionados.",
-        "empty": "Este usuario no tiene sueños públicos"
+        "empty": "Este usuario no tiene sueños públicos",
+        "defaultUser": "usuario"
     },
     "dreamDetail": {
         "loading": "Cargando sueño...",
@@ -304,7 +328,8 @@
         "content_too_long": "El contenido es demasiado largo",
         "wait_a_moment": "Por favor, espera un momento.",
         "invalid_turnstile_token": "La verificación de seguridad ha fallado. Por favor, inténtalo de nuevo.",
-        "turnstile_verification_service_unavailable": "No se pudo verificar la seguridad en este momento. Inténtalo más tarde."
+        "turnstile_verification_service_unavailable": "No se pudo verificar la seguridad en este momento. Inténtalo más tarde.",
+        "fillAllFields": "Por favor, completa todos los campos obligatorios."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",

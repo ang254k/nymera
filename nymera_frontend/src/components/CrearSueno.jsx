@@ -78,12 +78,14 @@ function CrearSueno({ onSuenoCreado }) {
                     className="input"
                     type="text"
                     placeholder={t("dream.titlePlaceholder")}
+                    aria-label={t("dream.titlePlaceholder")}
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                 />
 
                 <select
                     className="select"
+                    aria-label={t("dream.selectCategory")}
                     value={categoriaId}
                     onChange={(e) => {
                         const value = e.target.value
@@ -101,6 +103,7 @@ function CrearSueno({ onSuenoCreado }) {
                 <textarea
                     className="textarea"
                     placeholder={t("dream.contentPlaceholder")}
+                    aria-label={t("dream.contentPlaceholder")}
                     value={contenido}
                     onChange={(e) => setContenido(e.target.value)}
                 />

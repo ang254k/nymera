@@ -88,6 +88,11 @@ function PerfilPage() {
 
         if (savingPerfil) return
 
+        if (!nuevoNombre.trim() || !passwordActualPerfil) {
+            showToast(t("profile.messages.fillAllFields"), "error")
+            return
+        }
+
         setSavingPerfil(true)
 
         try {
@@ -115,6 +120,11 @@ function PerfilPage() {
         e.preventDefault()
 
         if (changingPassword) return
+
+        if (!passwordActualCambio || !nuevaPassword || !confirmarPassword) {
+            showToast(t("profile.messages.fillAllFields"), "error")
+            return
+        }
 
         if (nuevaPassword !== confirmarPassword) {
             showToast(t("profile.password.mismatch"), "error")
@@ -171,11 +181,11 @@ function PerfilPage() {
                     {t("profile.loginRequired")}
                 </p>
             ) : loading ? (
-                <p className="perfil-loading">
+                <p className="perfil-loading" role="status" aria-live="polite">
                     {t("profile.loading")}
                 </p>
             ) : error ? (
-                <p className="perfil-error">
+                <p className="perfil-error" role="alert">
                     {error}
                 </p>
             ) : (
@@ -196,10 +206,14 @@ function PerfilPage() {
                             ref={fileInputRef}
                             onChange={handleAvatarUpload}
                             className="perfil-avatar-input"
+                            aria-hidden="true"
+                            tabIndex={-1}
                         />
                         <button
+                            type="button"
                             className="perfil-avatar-button"
                             onClick={() => fileInputRef.current?.click()}
+                            aria-label={t("accessibility.changeAvatar")}
                         >
                             {t("profile.avatar.change")}
                         </button>
@@ -227,7 +241,7 @@ function PerfilPage() {
                                     <strong>{suenos.length}</strong> {t("profile.info.dreams")}
                                 </span>
 
-                                <span className="perfil-stats-separator">·</span>
+                                <span className="perfil-stats-separator" aria-hidden="true">·</span>
 
                                 <span>
                                     <strong>
@@ -239,8 +253,10 @@ function PerfilPage() {
 
                             {/* Editar Perfil */}
                             <button
+                                type="button"
                                 className="perfil-edit-button"
                                 onClick={() => setEditando(!editando)}
+                                aria-expanded={editando}
                             >
                                 {t("profile.edit.title")}
                             </button>
@@ -250,6 +266,7 @@ function PerfilPage() {
                                 <form
                                     className="perfil-edit-form"
                                     onSubmit={handleUpdatePerfil}
+                                    noValidate
                                 >
                                     <input
                                         className="input"
@@ -257,6 +274,7 @@ function PerfilPage() {
                                         placeholder={t("profile.edit.newName")}
                                         value={nuevoNombre}
                                         onChange={(e) => setNuevoNombre(e.target.value)}
+                                        autoComplete="name"
                                     />
 
                                     <input
@@ -265,12 +283,14 @@ function PerfilPage() {
                                         placeholder={t("profile.edit.currentPassword")}
                                         value={passwordActualPerfil}
                                         onChange={(e) => setPasswordActualPerfil(e.target.value)}
+                                        autoComplete="current-password"
                                     />
 
                                     <button
                                         className="btn btn-primary"
                                         type="submit"
                                         disabled={savingPerfil}
+                                        aria-busy={savingPerfil}
                                     >
                                         {savingPerfil ? t("profile.edit.saving") : t("profile.edit.save")}
                                     </button>
@@ -286,6 +306,7 @@ function PerfilPage() {
                             <form
                                 className="perfil-password-form"
                                 onSubmit={handleChangePassword}
+                                noValidate
                             >
                                 <input
                                     className="input"
@@ -293,6 +314,7 @@ function PerfilPage() {
                                     placeholder={t("profile.password.current")}
                                     value={passwordActualCambio}
                                     onChange={(e) => setPasswordActualCambio(e.target.value)}
+                                    autoComplete="current-password"
                                 />
 
                                 <input
@@ -301,6 +323,7 @@ function PerfilPage() {
                                     placeholder={t("profile.password.new")}
                                     value={nuevaPassword}
                                     onChange={(e) => setNuevaPassword(e.target.value)}
+                                    autoComplete="new-password"
                                 />
 
                                 <input
@@ -309,12 +332,14 @@ function PerfilPage() {
                                     placeholder={t("profile.password.repeat")}
                                     value={confirmarPassword}
                                     onChange={(e) => setConfirmarPassword(e.target.value)}
+                                    autoComplete="new-password"
                                 />
 
                                 <button
                                     className="btn btn-primary"
                                     type="submit"
                                     disabled={changingPassword}
+                                    aria-busy={changingPassword}
                                 >
                                     {changingPassword ? t("profile.password.changing") : t("profile.password.change")}
                                 </button>
@@ -331,7 +356,7 @@ function PerfilPage() {
                         </h2>
 
                         {loadingSuenos ? (
-                            <p className="perfil-loading">
+                            <p className="perfil-loading" role="status" aria-live="polite">
                                 {t("profile.dreams.loading")}
                             </p>
                         ) : suenos.length === 0 ? (
@@ -354,12 +379,12 @@ function PerfilPage() {
                     {/* Sueños Likeados */}
                     <section className="perfil-liked">
                         <h2 className="perfil-section-title">
-                            <Heart size={20} />
+                            <Heart size={20} aria-hidden="true" />
                             <span>{t("profile.likedDreams.title")}</span>
                         </h2>
 
                         {loadingSuenos ? (
-                            <p className="perfil-loading">
+                            <p className="perfil-loading" role="status" aria-live="polite">
                                 {t("profile.likedDreams.loading")}
                             </p>
                         ) : suenosLikeadosExternos.length === 0 ? (

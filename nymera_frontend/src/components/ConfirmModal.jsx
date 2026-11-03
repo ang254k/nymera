@@ -1,3 +1,5 @@
+import { useEffect } from "react"
+
 function ConfirmModal({
     open,
     title,
@@ -9,6 +11,17 @@ function ConfirmModal({
     onConfirm,
     onCancel
 }) {
+    // Para cerrar con la tecla Esc
+    useEffect(() => {
+        function handleKeyDown(e) {
+            if (e.key === "Escape" && open && !loading) {
+                onCancel()
+            }
+        }
+        window.addEventListener("keydown", handleKeyDown)
+        return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [open, loading, onCancel])
+
     if (!open) return null
 
     return (
@@ -21,6 +34,7 @@ function ConfirmModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="confirm-modal-title"
+                aria-describedby="confirm-modal-desc"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2
@@ -30,7 +44,11 @@ function ConfirmModal({
                     {title}
                 </h2>
 
-                <p className="confirm-modal-message">
+                <p
+                    id="confirm-modal-desc"
+                    className="confirm-modal-message"
+                >
+
                     {message}
                 </p>
 

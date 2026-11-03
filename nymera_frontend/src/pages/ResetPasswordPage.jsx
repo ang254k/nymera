@@ -26,13 +26,20 @@ export default function ResetPasswordPage() {
     async function handleSubmit(e) {
         e.preventDefault()
 
+
+        if (loading) return
+
+        if (!newPassword || !confirmPassword) {
+            showToast(t("errors.fillAllFields"), "error")
+            return
+        }
+
+
         if (newPassword !== confirmPassword) {
             showToast(t("auth.passwordMismatch"), "error")
             return
         }
-
-        if (loading) return
-
+        
         setLoading(true)
 
         try {
@@ -54,7 +61,7 @@ export default function ResetPasswordPage() {
                 title={t('seo.resetPassword.title')}
                 description={t('seo.resetPassword.description')}
             />
-            
+
             <div className="container-sm">
 
                 <div className="card auth-card">
@@ -82,6 +89,7 @@ export default function ResetPasswordPage() {
                     <form
                         className="stack"
                         onSubmit={handleSubmit}
+                        noValidate
                     >
                         <div className="stack-sm">
 
@@ -95,6 +103,7 @@ export default function ResetPasswordPage() {
                                     placeholder={t("auth.newPasswordPlaceholder")}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
+                                    autoComplete="new-password"
                                 />
                             </label>
 
@@ -114,6 +123,7 @@ export default function ResetPasswordPage() {
                                 placeholder={t("auth.confirmNewPasswordPlaceholder")}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
+                                autoComplete="new-password"
                             />
 
                         </label>
@@ -122,6 +132,7 @@ export default function ResetPasswordPage() {
                             className="btn btn-primary btn-full"
                             type="submit"
                             disabled={loading}
+                            aria-busy={loading}
                         >
                             {loading ? t("auth.changingPassword") : t("auth.changePassword")}
                         </button>

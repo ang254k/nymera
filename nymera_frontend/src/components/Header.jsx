@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-
 import { Link, useNavigate, useLocation } from "react-router-dom"
 
 import { APP_NAME, APP_ICON } from "../config/app"
@@ -52,6 +51,7 @@ function Header() {
       <Link
         to="/home"
         className="header-brand"
+        aria-label={`${APP_NAME}, ${t("accessibility.goHome")}`}
       >
         <img
           src={APP_ICON}
@@ -80,6 +80,11 @@ function Header() {
             <Link
               className="header-link notification-link"
               to="/notificaciones"
+              aria-label={
+                count > 0
+                  ? t("navigation.notificationsCount", { count })
+                  : t("navigation.notifications")
+              }
             >
               {/* Notificaciones */}
               <Bell size={18} />
@@ -132,7 +137,7 @@ function Header() {
           <button
             type="button"
             onClick={() => i18n.changeLanguage("es")}
-            aria-label="Cambiar idioma a español"
+            aria-label={t("language.spanishLanguage")}
             title="Español"
             aria-pressed={i18n.language.startsWith("es")}
           >
@@ -142,7 +147,7 @@ function Header() {
           <button
             type="button"
             onClick={() => i18n.changeLanguage("en")}
-            aria-label="Change language to English"
+            aria-label={t("language.englishLanguage")}
             title="English"
             aria-pressed={i18n.language.startsWith("en")}
           >

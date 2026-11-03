@@ -49,14 +49,6 @@ export default function BusquedaPage() {
         }
     }, [q, categoriasSeleccionadas, orden.field, orden.direction])
 
-    if (loadingResultados) {
-        return (
-            <p className="search-loading">
-                {t("searchResults.searching")}
-            </p>
-        )
-    }
-
     return (
 
         <div className="search-page">
@@ -69,60 +61,69 @@ export default function BusquedaPage() {
                 {t("searchResults.title")} {q}
             </h2>
 
-            {usuarios.length > 0 && (
-                <section className="search-section">
-                    <h3 className="search-section-title">
-                        {t("searchResults.users")}
-                    </h3>
-                    <div className="search-users">
-                        {usuarios.map((u) => (
-                            <Link
-                                key={u.id}
-                                to={`/usuarios/${u.id}`}
-                                className="search-user"
-                            >
-                                <Avatar
-                                    avatarUrl={u.avatar_url}
-                                    nombre={u.nombre}
-                                    usuarioId={u.id}
-                                    size={40}
-                                    clickable={false}
-                                />
+            {loadingResultados ? (
+                <p className="search-loading" role="status" aria-live="polite">
+                    {t("searchResults.searching")}
+                </p>
+            ) : (
+                <>
+                    {usuarios.length > 0 && (
+                        <section className="search-section">
+                            <h3 className="search-section-title">
+                                {t("searchResults.users")}
+                            </h3>
+                            <div className="search-users">
+                                {usuarios.map((u) => (
+                                    <Link
+                                        key={u.id}
+                                        to={`/usuarios/${u.id}`}
+                                        className="search-user"
+                                        aria-label={t("accessibility.viewUserProfile", { name: u.nombre })}
+                                    >
+                                        <Avatar
+                                            avatarUrl={u.avatar_url}
+                                            nombre={u.nombre}
+                                            usuarioId={u.id}
+                                            size={40}
+                                            clickable={false}
+                                        />
 
-                                <strong>{u.nombre}</strong>
-                            </Link>
-                        ))}
-                    </div>
-                </section>
+                                        <strong>{u.nombre}</strong>
+                                    </Link>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {suenos.length > 0 && (
+                        <section className="search-section">
+                            <h3 className="search-section-title">
+                                {t("searchResults.dreams")}
+                            </h3>
+
+                            <div className="search-dreams">
+                                {suenos.map((sueno) => (
+                                    <SuenoCard
+                                        key={sueno.id}
+                                        sueno={sueno}
+                                        onSuenoEliminado={() => { }}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {usuarios.length === 0 &&
+                        suenos.length === 0 && (
+                            <p className="search-empty" role="alert">
+                                {hayFiltros
+                                    ? t("searchResults.emptyWithFilters")
+                                    : t("searchResults.empty")
+                                }
+                            </p>
+                        )}
+                </>
             )}
-
-            {suenos.length > 0 && (
-                <section className="search-section">
-                    <h3 className="search-section-title">
-                        {t("searchResults.dreams")}
-                    </h3>
-
-                    <div className="search-dreams">
-                        {suenos.map((sueno) => (
-                            <SuenoCard
-                                key={sueno.id}
-                                sueno={sueno}
-                                onSuenoEliminado={() => { }}
-                            />
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {usuarios.length === 0 &&
-                suenos.length === 0 && (
-                    <p className="search-empty">
-                        {hayFiltros
-                            ? t("searchResults.emptyWithFilters")
-                            : t("searchResults.empty")
-                        }
-                    </p>
-                )}
         </div>
     )
 }

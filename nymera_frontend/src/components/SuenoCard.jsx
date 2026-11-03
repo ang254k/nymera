@@ -106,7 +106,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
         }
 
         if (loadingTraduccion) return
-        
+
         if (mostrarTraduccion) {
             setMostrarTraduccion(false)
             return
@@ -185,9 +185,11 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                     {/* Botón traducir */}
                     {mostrarBotonTraduccion && (
                         <button
+                            type="button"
                             className="sueno-owner-button"
                             onClick={handleTranslate}
                             disabled={loadingTraduccion}
+                            aria-label={mostrarTraduccion ? t("accessibility.showOriginal") : t("accessibility.translate")}
                         >
                             {loadingTraduccion
                                 ? t("dreamCard.translating")
@@ -204,7 +206,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
 
                     <div className="sueno-details">
                         <p className="sueno-category">
-                            <Tag size={14} />
+                            <Tag size={14} aria-hidden="true" />
                             <span>
                                 {t(`categories.${sueno.categoria_id}`, sueno.categoria_nombre)}
                             </span>
@@ -216,12 +218,12 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                     }`}>
                                 {sueno.publico ? (
                                     <>
-                                        <Globe size={14} />
+                                        <Globe size={14} aria-hidden="true" />
                                         <span>{t("dreamCard.public")}</span>
                                     </>
                                 ) : (
                                     <>
-                                        <Lock size={14} />
+                                        <Lock size={14} aria-hidden="true" />
                                         <span>{t("dreamCard.private")}</span> </>
                                 )}
                             </span>
@@ -238,15 +240,18 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                     {/* Izquierda: acciones */}
                     <div className="sueno-actions">
                         <button
+                            type="button"
                             className={`sueno-like-button ${liked ? "is-liked" : ""} ${likeAnimating ? "is-animating" : ""}`}
                             onClick={handleLike}
                             disabled={loadingLike}
+                            aria-pressed={liked}
+                            aria-label={liked ? t("accessibility.unlikeDream") : t("accessibility.likeDream")}
                         >
-                            <Heart size={18} />
+                            <Heart size={18} aria-hidden="true" />
                             <span>{loadingLike ? "..." : likesCount}</span>
                         </button>
                         <span className="sueno-comments">
-                            <MessageCircle size={18} />
+                            <MessageCircle size={18} aria-hidden="true" />
                             <span>{sueno.comentarios_count}</span>
                         </span>
                     </div>
@@ -255,6 +260,7 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                     {user && user.id === sueno.usuario_id && (
                         <div className="sueno-owner-actions">
                             <button
+                                type="button"
                                 className="sueno-owner-button"
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -262,20 +268,23 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                         state: { editar: true }
                                     })
                                 }}
+                                aria-label={t("accessibility.editDream")}
                             >
-                                <Pencil size={14} />
+                                <Pencil size={14} aria-hidden="true" />
                                 {t("dreamCard.edit")}
                             </button>
 
                             <button
+                                type="button"
                                 className="sueno-owner-button"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     setShowDeleteModal(true)
                                 }}
                                 disabled={deleting}
+                                aria-label={t("accessibility.deleteDream")}
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={14} aria-hidden="true" />
                                 {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
                             </button>
                         </div>

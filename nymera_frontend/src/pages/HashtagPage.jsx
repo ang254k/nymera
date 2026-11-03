@@ -47,22 +47,22 @@ export default function HashtagPage() {
                 title={t('seo.hashtag.title')}
                 description={t('seo.hashtag.description')}
             />
-            <h2 className="hashtag-title">
-                #{nombre}
+            <h2 className="hashtag-title" aria-label={t("accessibility.hashtagAriaLabel", { nombre })}>
+                <span aria-hidden="true">#</span>{nombre}
             </h2>
 
             {loadingInicial ? (
-                <p className="hashtag-loading">{t("hashtag.loading")}</p>
+                <p className="hashtag-loading" role="status" aria-live="polite">{t("hashtag.loading")}</p>
             ) : loadingSuenos ? (
-                <p className="hashtag-loading">
+                <p className="hashtag-loading" role="status" aria-live="polite">
                     {t("hashtag.loadingDreams")}
                 </p>
             ) :
                 suenos.length === 0 ? (
                     hayFiltros ? (
-                        <p className="hashtag-empty">{t("hashtag.emptyWithFilters")}</p>
+                        <p className="hashtag-empty" role="alert">{t("hashtag.emptyWithFilters")}</p>
                     ) : (
-                        <p className="hashtag-empty">{t("hashtag.empty")}</p>
+                        <p className="hashtag-empty" role="alert">{t("hashtag.empty")}</p>
                     )
                 ) : (
                     <div className="hashtag-dreams">

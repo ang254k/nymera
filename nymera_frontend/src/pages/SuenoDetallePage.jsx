@@ -445,17 +445,17 @@ function SuenoDetallePage() {
             />
 
             {loading ? (
-                <p className="sueno-detalle-loading">
+                <p className="sueno-detalle-loading" role="status" aria-live="polite">
                     {t("dreamDetail.loading")}
                 </p>
             ) : !sueno ? (
-                <p className="sueno-detalle-empty">
+                <p className="sueno-detalle-empty" role="alert">
                     {t("dreamDetail.notFound")}
                 </p>
             ) : (
                 <>
                     {error && (
-                        <p className="sueno-detalle-error">
+                        <p className="sueno-detalle-error" role="alert">
                             {error}
                         </p>
                     )}
@@ -512,6 +512,7 @@ function SuenoDetallePage() {
                                     <button
                                         className="btn btn-primary"
                                         onClick={handleGuardar}
+                                        aria-busy={savingEdit}
                                         disabled={savingEdit}>
                                         {savingEdit
                                             ? t("dreamDetail.edit.saving")
@@ -605,9 +606,11 @@ function SuenoDetallePage() {
                                 <button
                                     className={`sueno-like-button ${liked ? "is-liked" : ""} ${likeAnimating ? "is-animating" : ""}`} onClick={handleLike}
                                     disabled={loadingLike}
+                                    aria-busy={loadingLike}
+                                    aria-label={t("accessibility.likeButton", { count: sueno.likes_count })}
                                 >
                                     <Heart size={18} />
-                                    <span>
+                                    <span aria-hidden="true">
                                         {loadingLike ? "..." : sueno.likes_count}
                                     </span>
                                 </button>
@@ -683,6 +686,7 @@ function SuenoDetallePage() {
                                 className="btn btn-primary"
                                 onClick={handleCrearComentario}
                                 disabled={commenting || !nuevoComentario.trim()}
+                                aria-busy={commenting}
                             >
                                 {commenting ? t("dreamDetail.comments.commenting") : t("dreamDetail.comments.comment")}
                             </button>
@@ -757,6 +761,7 @@ function SuenoDetallePage() {
                                                         className="btn btn-primary"
                                                         onClick={() => handleEditarComentario(c.id)}
                                                         disabled={savingComentario}
+                                                        aria-busy={savingComentario}
                                                     >
                                                         {savingComentario
                                                             ? t("dreamDetail.comments.saving")

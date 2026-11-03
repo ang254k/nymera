@@ -23,6 +23,11 @@ export default function ForgotPasswordPage() {
 
         if (loading) return
 
+        if (!email.trim()) {
+            showToast(t("errors.fillAllFields"), "error")
+            return
+        }
+
         setLoading(true)
 
         try {
@@ -70,10 +75,12 @@ export default function ForgotPasswordPage() {
                         {t("auth.forgotPasswordDescription")}
                     </p>
 
-                    <form className="stack" onSubmit={handleSubmit}>
-
+                    <form
+                        className="stack"
+                        onSubmit={handleSubmit}
+                        noValidate
+                    >
                         <label className="label stack-sm">
-
                             {t("auth.email")}
 
                             <input
@@ -82,14 +89,15 @@ export default function ForgotPasswordPage() {
                                 placeholder={t("auth.emailPlaceholderForgot")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                autoComplete="email"
                             />
-
                         </label>
 
                         <button
                             className="btn btn-primary btn-full"
                             type="submit"
                             disabled={loading}
+                            aria-busy={loading}
                         >
                             {loading ? t("auth.sending") : t("auth.sendLink")}
                         </button>

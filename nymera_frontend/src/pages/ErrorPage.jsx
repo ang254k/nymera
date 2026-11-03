@@ -15,8 +15,8 @@ function ErrorPage() {
                 title={t('seo.error.title')}
                 description={t('seo.error.description')}
             />
-            
-            <div className="container-sm error-content">
+
+            <div className="container-sm error-content" role="alert">
 
                 <img
                     src={error404Image}
@@ -35,6 +35,7 @@ function ErrorPage() {
                 </p>
 
                 <button
+                    type="button"
                     className="btn btn-primary"
                     onClick={() => navigate("/home")}
                 >

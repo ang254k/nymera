@@ -76,6 +76,7 @@ function DreamFilter() {
                             key={cat.id}
                             className={`dream-filter-chip ${seleccionada ? "is-selected" : ""
                                 }`}
+                            aria-pressed={seleccionada}
                             onClick={() => {
                                 if (seleccionada) {
                                     setCategoriasSeleccionadas(
@@ -108,6 +109,7 @@ function DreamFilter() {
                 <button
                     className="dream-filter-order-row"
                     onClick={() => cambiarOrden("fecha")}
+                    aria-label={`${t("filter.date")} - ${orden.field === "fecha" ? (orden.direction === "desc" ? t("filter.sortedDesc") : t("filter.sortedAsc")) : t("filter.notSorted")}`}
                 >
                     <span>
                         <CalendarDays size={16} />
@@ -122,7 +124,8 @@ function DreamFilter() {
                 <button
                     className="dream-filter-order-row"
                     onClick={() => cambiarOrden("likes")}
-
+                    aria-label={`${t("filter.likes")} - ${orden.field === "likes"
+                        ? (orden.direction === "desc" ? t("filter.sortedDesc") : t("filter.sortedAsc")) : t("filter.notSorted")}`}
                 >
                     <span>
                         <Heart size={16} />
@@ -137,6 +140,7 @@ function DreamFilter() {
                 <button
                     className="dream-filter-order-row"
                     onClick={() => cambiarOrden("comentarios")}
+                    aria-label={`${t("filter.comments")} - ${orden.field === "comentarios" ? (orden.direction === "desc" ? t("filter.sortedDesc") : t("filter.sortedAsc")) : t("filter.notSorted")}`}
                 >
                     <span>
                         <MessageCircle size={16} />

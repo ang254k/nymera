@@ -71,7 +71,7 @@ function UsuarioPage() {
             />
 
             {loading || !usuario ? (
-                <p className="usuario-page-loading">
+                <p className="usuario-page-loading" role="status" aria-live="polite">
                     {t("userProfile.loading")}
                 </p>
             ) : (
@@ -93,7 +93,7 @@ function UsuarioPage() {
                                 <strong>{suenos.length}</strong> {t("userProfile.dreams")}
                             </span>
 
-                            <span>.</span>
+                            <span aria-hidden="true">.</span>
 
                             <span>
                                 <strong>
@@ -113,15 +113,15 @@ function UsuarioPage() {
 
                     {loadingSuenos ? (
 
-                        <p className="usuario-suenos-loading">
+                        <p className="usuario-suenos-loading" role="status" aria-live="polite">
                             {t("userProfile.loadingDreams")}
                         </p>
 
                     ) : suenos.length === 0 ? (
                         hayFiltros ? (
-                            <p className="usuarios-suenos-empty">{t("userProfile.emptyWithFilters")}</p>
+                            <p className="usuarios-suenos-empty" role="alert">{t("userProfile.emptyWithFilters")}</p>
                         ) : (
-                            <p className="usuarios-suenos-empty">{t("userProfile.empty")}</p>
+                            <p className="usuarios-suenos-empty" role="alert">{t("userProfile.empty")}</p>
                         )
                     ) : (
                         <div className="usuarios-suenos-list">

@@ -30,6 +30,11 @@ function LoginPage() {
 
         if (loading) return
 
+        if (!email.trim() || !password) {
+            showToast(t("errors.fillAllFields"), "error")
+            return
+        }
+
         setLoading(true)
 
         try {
@@ -83,6 +88,7 @@ function LoginPage() {
                     <form
                         className="stack"
                         onSubmit={handleLogin}
+                        noValidate
                     >
                         <label className="label stack-sm">
                             {t("auth.email")}
@@ -93,6 +99,7 @@ function LoginPage() {
                                 placeholder={t("auth.emailPlaceholder")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                autoComplete="email"
                             />
                         </label>
 
@@ -105,6 +112,7 @@ function LoginPage() {
                                 placeholder={t("auth.passwordPlaceholder")}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="current-password"
                             />
                         </label>
 
@@ -119,6 +127,7 @@ function LoginPage() {
                             className="btn btn-primary btn-full"
                             type="submit"
                             disabled={loading}
+                            aria-busy={loading}
                         >
                             {loading ? t("auth.loggingIn") : t("auth.loginButton")}
                         </button>

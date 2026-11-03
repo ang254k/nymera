@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-
+import { useTranslation } from "react-i18next"
 import { API_URL } from "../config/api"
 
 function Avatar({
@@ -9,13 +9,14 @@ function Avatar({
     size = 40,
     clickable = true
 }) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     function handleClick(e) {
         if (!clickable || !usuarioId) return
 
         e.stopPropagation()
-        
+
         navigate(`/usuarios/${usuarioId}`)
     }
 
@@ -23,6 +24,9 @@ function Avatar({
         <div
             className={`avatar ${clickable ? "avatar-clickable" : ""}`}
             onClick={handleClick}
+            role={clickable && usuarioId ? "button" : undefined}
+            tabIndex={clickable && usuarioId ? 0 : undefined}
+            aria-label={clickable && usuarioId ? t("userProfile.viewProfile", { name: nombre || t("userProfile.defaultUser") }) : undefined}
             style={{
                 width: size,
                 height: size,
@@ -31,7 +35,7 @@ function Avatar({
             {avatarUrl ? (
                 <img
                     src={`${API_URL}${avatarUrl}`}
-                    alt={nombre}
+                    alt={nombre ? t("profile.avatar.alt", { name: nombre }) : t("profile.avatar.defaultAlt")}
                     className="avatar-image"
                 />
             ) : (

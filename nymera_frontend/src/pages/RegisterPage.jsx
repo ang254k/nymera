@@ -44,6 +44,11 @@ function RegisterPage() {
 
         if (loading) return
 
+        if (!nombre.trim() || !email.trim() || !password || !confirmPassword) {
+            showToast(t("errors.fillAllFields"), "error")
+            return
+        }
+
         setLoading(true)
 
         try {
@@ -66,7 +71,7 @@ function RegisterPage() {
                 title={t('seo.register.title')}
                 description={t('seo.register.description')}
             />
-            
+
             <div className="container-sm">
 
                 <div className="card auth-card">
@@ -90,8 +95,8 @@ function RegisterPage() {
                     <form
                         className="stack"
                         onSubmit={handleRegister}
+                        noValidate
                     >
-
                         <label className="label stack-sm">
 
                             {t("auth.name")}
@@ -102,6 +107,7 @@ function RegisterPage() {
                                 placeholder={t("auth.namePlaceholder")}
                                 value={nombre}
                                 onChange={(e) => setNombre(e.target.value)}
+                                autoComplete="name"
                             />
 
                         </label>
@@ -116,6 +122,7 @@ function RegisterPage() {
                                 placeholder={t("auth.emailPlaceholder")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                autoComplete="email"
                             />
 
                         </label>
@@ -130,8 +137,10 @@ function RegisterPage() {
                                 placeholder={t("auth.passwordPlaceholder")}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="new-password"
+                                aria-describedby="password-help"
                             />
-                            <p className="form-help">
+                            <p id="password-help" className="form-help">
                                 {t("auth.passwordHelp")}
                             </p>
                         </label>
@@ -146,10 +155,15 @@ function RegisterPage() {
                                 placeholder={t("auth.confirmPasswordPlaceholder")}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
+                                autoComplete="new-password"
                             />
 
                         </label>
-                        <div className="turnstile-wrapper">
+                        <div
+                            className="turnstile-wrapper"
+                            role="region"
+                            aria-label={t("accessibility.securityVerification")}
+                        >
                             <Turnstile
                                 siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
                                 options={{
@@ -165,6 +179,7 @@ function RegisterPage() {
                             className="btn btn-primary btn-full"
                             type="submit"
                             disabled={loading}
+                            aria-busy={loading}
                         >
                             {loading ? t("auth.registering") : t("auth.registerButton")}
                         </button>
@@ -184,9 +199,9 @@ function RegisterPage() {
 
                 </div>
 
-            </div>
+            </div >
 
-        </div>
+        </div >
 
     )
 }

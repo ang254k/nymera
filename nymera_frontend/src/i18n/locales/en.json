@@ -2,6 +2,7 @@
     "navigation": {
         "home": "Home",
         "notifications": "Notifications",
+        "notificationsCount": "Notifications ({{count}} unread)",
         "profile": "Profile",
         "logout": "Log out",
         "login": "Log in",
@@ -54,7 +55,23 @@
         "loading": "Loading..."
     },
     "accessibility": {
-        "goHome": "Go to home"
+        "goHome": "Go to home",
+        "spanishLanguage": "Switch language to Spanish",
+        "englishLanguage": "Switch language to English",
+        "search": "Search dreams",
+        "likeDream": "Like this dream",
+        "unlikeDream": "Unlike this dream",
+        "editDream": "Edit this dream",
+        "deleteDream": "Delete this dream",
+        "translate": "Translate this dream",
+        "showOriginal": "Show original text",
+        "filterByHashtag": "Filter by hashtag {{hashtag}}",
+        "viewUserProfile": "View user profile {{name}}",
+        "securityVerification": "Security verification",
+        "changeAvatar": "Change profile picture",
+        "unreadNotification": "Unread notification from {{name}}",
+        "readNotification": "Notification from {{name}}",
+        "hashtagAriaLabel": "Hashtag {{nombre}}"
     },
     "search": {
         "placeholder": "Search dreams, users or hashtags..."
@@ -65,7 +82,10 @@
         "sort": "Sort by",
         "date": "Date",
         "likes": "Likes",
-        "comments": "Comments"
+        "comments": "Comments",
+        "sortedAsc": "ascending",
+        "sortedDesc": "descending",
+        "notSorted": "not sorted"
     },
     "dream": {
         "createTitle": "What did you dream about?",
@@ -128,7 +148,9 @@
         "loginRequired": "You must log in",
         "loading": "Loading profile...",
         "avatar": {
-            "change": "Change avatar"
+            "change": "Change avatar",
+            "alt": "Avatar of {{name}}",
+            "defaultAlt": "User avatar"
         },
         "info": {
             "memberSince": "Member since",
@@ -166,7 +188,8 @@
         "messages": {
             "profileUpdated": "Profile updated",
             "passwordUpdated": "Password updated",
-            "avatarUpdated": "Avatar updated"
+            "avatarUpdated": "Avatar updated",
+            "fillAllFields": "Please fill in all required fields."
         }
     },
     "userProfile": {
@@ -178,7 +201,9 @@
         "publicDreams": "Public dreams",
         "loadingDreams": "Loading dreams...",
         "emptyWithFilters": "No dreams match the selected filters.",
-        "empty": "This user has no public dreams"
+        "empty": "This user has no public dreams",
+        "viewProfile": "View profile of {{name}}",
+        "defaultUser": "user"
     },
     "dreamDetail": {
         "loading": "Loading dream...",
@@ -304,7 +329,8 @@
         "content_too_long": "The content is too long",
         "wait_a_moment": "Please wait a moment.",
         "invalid_turnstile_token": "Security verification failed. Please try again.",
-        "turnstile_verification_service_unavailable": "Security verification service is temporarily unavailable."
+        "turnstile_verification_service_unavailable": "Security verification service is temporarily unavailable.",
+        "fillAllFields": "Please fill in all required fields."
     },
     "success": {
         "profile_updated": "Profile updated successfully",

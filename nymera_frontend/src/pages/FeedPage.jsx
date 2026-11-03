@@ -104,13 +104,6 @@ function FeedPage() {
         setSuenos((prev) => prev.filter((s) => s.id !== id))
     }
 
-    if (loading) return (
-        <p className="feed-loading">
-            {t("feed.loading")}
-        </p>
-    )
-
-
     return (
         <div className="feed-page">
             <SEO
@@ -125,38 +118,40 @@ function FeedPage() {
                 </div>
             )}
 
-            {suenos.length === 0 ? (
-                <p className="feed-empty">
-                    {t("feed.empty")}
+            {loading ? (
+                <p className="feed-loading" role="status" aria-live="polite">
+                    {t("feed.loading")}
                 </p>
-            ) : (
-                <>
-                    <div className="feed-list">
-                        {suenos.map((sueno) => (
-                            <SuenoCard
-                                key={sueno.id}
-                                sueno={sueno}
-                                onSuenoEliminado={handleDelete}
-                            />
-                        ))}
-                    </div>
+            ) :
+                suenos.length === 0 ? (
+                    <p className="feed-empty" role="alert">
+                        {t("feed.empty")}
+                    </p>
+                ) : (
+                    <>
+                        <div className="feed-list">
+                            {suenos.map((sueno) => (
+                                <SuenoCard
+                                    key={sueno.id}
+                                    sueno={sueno}
+                                    onSuenoEliminado={handleDelete}
+                                />
+                            ))}
+                        </div>
 
-                    {hasMore && (
-                        <div ref={sentinelRef} className="feed-sentinel" />
-                    )}
+                        {hasMore && (
+                            <div ref={sentinelRef} className="feed-sentinel" />
+                        )}
 
-                    {loadingMore && (
-                        <p className="feed-loading-more">
-                            {t("feed.loadingMore")}
-                        </p>
-                    )}
-                </>
-
-            )}
-
+                        {loadingMore && (
+                            <p className="feed-loading-more" role="status" aria-live="polite">
+                                {t("feed.loadingMore")}
+                            </p>
+                        )}
+                    </>
+                )}
         </div>
     )
-
 }
 
 export default FeedPage
