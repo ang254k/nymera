@@ -20,6 +20,12 @@ export function me() {
     })
 }
 
+export function logout() {
+    return apiRequest("/auth/logout", {
+        method: "POST",
+    })
+}
+
 export function forgotPassword(email) {
     return apiRequest("/auth/forgot-password", {
         method: "POST",

@@ -71,7 +71,9 @@
         "changeAvatar": "Change profile picture",
         "unreadNotification": "Unread notification from {{name}}",
         "readNotification": "Notification from {{name}}",
-        "hashtagAriaLabel": "Hashtag {{nombre}}"
+        "hashtagAriaLabel": "Hashtag {{nombre}}",
+        "avatar_upload_error": "Could not upload avatar. Please make sure it is a valid image.",
+        "avatar_too_large": "The image is too large."
     },
     "search": {
         "placeholder": "Search dreams, users or hashtags..."

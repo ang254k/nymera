@@ -7,6 +7,8 @@ load_dotenv()
 class Settings:
 
     def __init__(self):
+        self.ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+        
         # BD
         self.DB_NAME = os.getenv("DB_NAME")
         self.DB_USER = os.getenv("DB_USER")

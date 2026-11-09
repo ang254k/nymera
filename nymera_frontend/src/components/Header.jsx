@@ -25,7 +25,8 @@ function Header() {
 
   useEffect(() => {
     async function load() {
-      if (!user) return
+      if (!user || location.pathname === "/login" || location.pathname === "/register") 
+        return
 
       try {
         const data = await getNotificaciones()

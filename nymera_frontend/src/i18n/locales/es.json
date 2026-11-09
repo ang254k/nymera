@@ -329,7 +329,9 @@
         "wait_a_moment": "Por favor, espera un momento.",
         "invalid_turnstile_token": "La verificación de seguridad ha fallado. Por favor, inténtalo de nuevo.",
         "turnstile_verification_service_unavailable": "No se pudo verificar la seguridad en este momento. Inténtalo más tarde.",
-        "fillAllFields": "Por favor, completa todos los campos obligatorios."
+        "fillAllFields": "Por favor, completa todos los campos obligatorios.",
+        "avatar_upload_error": "No se ha podido subir el avatar. Comprueba que sea una imagen válida.",
+        "avatar_too_large": "La imagen es demasiado grande."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",

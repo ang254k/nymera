@@ -38,15 +38,11 @@ function LoginPage() {
         setLoading(true)
 
         try {
-            const data = await login({ email, password })
+            await login({ email, password })
 
-            //Se guarda el token
-            localStorage.setItem("token", data.access_token)
-
-            //Ahora se puede llamar a me
             const user = await me()
 
-            loginUser(data.access_token, user)
+            loginUser(user)
 
             showToast(t("auth.loginSuccess"), "success")
 

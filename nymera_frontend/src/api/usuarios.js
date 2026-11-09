@@ -11,26 +11,25 @@ export function updateMe(data) {
 
 export async function uploadAvatar(file) {
     const formData = new FormData()
-
     formData.append("avatar", file)
-
-    const token = localStorage.getItem("token")
 
     const response = await fetch(
         `${API_URL}/usuarios/me/avatar`,
         {
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
+            credentials: "include",
             body: formData
         }
     )
+    let data = null
+    try{
+        data = await response.json()
+    } catch {
 
-    const data = await response.json()
+    }
 
     if (!response.ok) {
-        throw new Error(data.detail || "Error al subir el avatar")
+        throw new Error(data?.detail || "avatar_upload_error")
     }
 
     return data

@@ -3,7 +3,7 @@ import requests
 
 from app.config import settings
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends, Request, Response
 
 from app.schemas.auth_schema import (
     ForgotPasswordRequest,
@@ -71,9 +71,9 @@ def register(request: Request, data: RegisterRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login")
 @limiter.limit("5/minute")
-def login(request: Request, data: LoginRequest):
+def login(response: Response, request: Request, data: LoginRequest):
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
     
@@ -89,8 +89,21 @@ def login(request: Request, data: LoginRequest):
     
     token = create_access_token({"sub": str(usuario.id)})
 
-    return {"access_token": token, "token_type": "bearer"}
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=settings.ENVIRONMENT == "production",
+        samesite="lax",
+        max_age=settings.JWT_EXPIRE_MINUTES * 60
+    )
+    
+    return {"message": "login_success"}
 
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="access_token")
+    return {"message": "logout_success"}
 
 @router.get("/me", response_model=UsuarioResponse)
 def me(current_user: Usuario = Depends(get_current_user)):
