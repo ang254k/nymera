@@ -8,28 +8,34 @@ class Settings:
 
     def __init__(self):
         self.ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
-        
+
         # BD
         self.DB_NAME = os.getenv("DB_NAME")
         self.DB_USER = os.getenv("DB_USER")
         self.DB_PASSWORD = os.getenv("DB_PASSWORD")
         self.DB_HOST = os.getenv("DB_HOST")
         self.DB_PORT = os.getenv("DB_PORT")
-        
+
         self.FRONTEND_URL = os.getenv("FRONTEND_URL")
-        
+
         # JWT
         self.JWT_SECRET = os.getenv("JWT_SECRET")
         self.JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
         self.JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "60"))
+
+        # Cloudinary
+        self.CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+        self.CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+        self.CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 
         # Email
         self.RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
         # Traducción
         self.LIBRETRANSLATE_URL = os.getenv("LIBRETRANSLATE_URL")
-        
+
         # Cloudflare Turnstile
         self.TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY")
-        
+
+
 settings = Settings()

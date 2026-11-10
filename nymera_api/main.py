@@ -1,3 +1,5 @@
+import cloudinary
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -17,16 +19,22 @@ from app.config import settings
 
 app = FastAPI(title="Nymera API")
 
+cloudinary.config(
+    cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+    api_key=settings.CLOUDINARY_API_KEY,
+    api_secret=settings.CLOUDINARY_API_SECRET,
+    secure=True
+)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 security_log_repo = SecurityLogRepository()
 
-app.mount(
-    "/uploads",
-    StaticFiles(directory="uploads"),
-    name="uploads"
-)
+# app.mount(
+#     "/uploads",
+#     StaticFiles(directory="uploads"),
+#     name="uploads"
+# )
 
 app.add_middleware(
     CORSMiddleware,

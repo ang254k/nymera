@@ -1,6 +1,8 @@
+import cloudinary.uploader
 import re
 import os
 import uuid
+import io
 
 from PIL import Image
 from fastapi import UploadFile
@@ -155,7 +157,6 @@ class UsuarioService:
         return actualizado
 
     def update_avatar(self, usuario_id, avatar: UploadFile):
-
         usuario = self.repo.get_by_id(usuario_id)
 
         if usuario is None:
@@ -170,12 +171,6 @@ class UsuarioService:
         if extension not in ["jpg", "jpeg", "png", "webp"]:
             raise ValueError("image_format_invalid")
 
-        nombre_archivo = f"{uuid.uuid4()}.{extension}"
-
-        ruta_carpeta = "uploads/avatars"
-
-        ruta_archivo = os.path.join(ruta_carpeta, nombre_archivo)
-
         contenido = avatar.file.read()
 
         # Validacion tamaño
@@ -186,29 +181,30 @@ class UsuarioService:
         avatar.file.seek(0)
 
         try:
-            imagen = Image.open(avatar.file)
+            imagen = Image.open(io.BytesIO(contenido))
             imagen.verify()
         except Exception:
             raise ValueError("image_invalid")
 
-        os.makedirs(ruta_carpeta, exist_ok=True)
-
-        with open(ruta_archivo, "wb") as f:
-            f.write(contenido)
-
-        avatar_url = f"/uploads/avatars/{nombre_archivo}"
-
+        try:          
+            cloudinary.config(
+                cloudinary_url=os.getenv("CLOUDINARY_URL"),
+                secure=True
+            )  
+            
+            upload_result = cloudinary.uploader.upload(
+                contenido,
+                folder="nymera_avatars",
+                public_id=f"user_{usuario_id}",
+                overwrite=True,
+                resource_type="image"
+            )
+            avatar_url = upload_result.get("secure_url")
+        except Exception as e:
+            print(f"Error en Cloudinary: {e}")
+            raise ValueError("cloud_upload_failed")
+        
         actualizado = self.repo.update_avatar(usuario_id, avatar_url)
-
-        # Borrado avatar anterior
-        if usuario.avatar_url:
-            ruta_anterior = usuario.avatar_url.lstrip("/")
-
-            try:
-                if os.path.exists(ruta_anterior):
-                    os.remove(ruta_anterior)
-            except OSError:
-                pass
 
         return actualizado
 

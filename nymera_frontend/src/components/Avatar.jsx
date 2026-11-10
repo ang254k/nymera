@@ -20,6 +20,13 @@ function Avatar({
         navigate(`/usuarios/${usuarioId}`)
     }
 
+    const getAvatarSrc = (url) => {
+        if (!url) return null
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            return url
+        }
+        return `${API_URL}${url}`
+    }
     return (
         <div
             className={`avatar ${clickable ? "avatar-clickable" : ""}`}
@@ -34,7 +41,7 @@ function Avatar({
         >
             {avatarUrl ? (
                 <img
-                    src={`${API_URL}${avatarUrl}`}
+                    src={getAvatarSrc(avatarUrl)}
                     alt={nombre ? t("profile.avatar.alt", { name: nombre }) : t("profile.avatar.defaultAlt")}
                     className="avatar-image"
                 />

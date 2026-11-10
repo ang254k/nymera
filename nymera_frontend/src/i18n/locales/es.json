@@ -331,7 +331,8 @@
         "turnstile_verification_service_unavailable": "No se pudo verificar la seguridad en este momento. Inténtalo más tarde.",
         "fillAllFields": "Por favor, completa todos los campos obligatorios.",
         "avatar_upload_error": "No se ha podido subir el avatar. Comprueba que sea una imagen válida.",
-        "avatar_too_large": "La imagen es demasiado grande."
+        "avatar_too_large": "La imagen es demasiado grande.",
+        "cloud_upload_failed": "Error al subir la imagen a la nube. Inténtalo de nuevo."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",

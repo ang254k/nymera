@@ -73,7 +73,8 @@
         "readNotification": "Notification from {{name}}",
         "hashtagAriaLabel": "Hashtag {{nombre}}",
         "avatar_upload_error": "Could not upload avatar. Please make sure it is a valid image.",
-        "avatar_too_large": "The image is too large."
+        "avatar_too_large": "The image is too large.",
+        "cloud_upload_failed": "Failed to upload image to the cloud. Please try again."
     },
     "search": {
         "placeholder": "Search dreams, users or hashtags..."
