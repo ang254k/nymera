@@ -1,16 +1,18 @@
 import { useEffect, useState, useRef } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 
 import {
     getSuenosByUser,
     getLikedSuenosByUser
 } from "../api/suenos"
-import { updateMe, uploadAvatar, changePassword } from "../api/usuarios"
+import { updateMe, uploadAvatar, changePassword, deleteAccount } from "../api/usuarios"
 import { me } from "../api/auth"
 
 import SuenoCard from "../components/SuenoCard"
 import Avatar from "../components/Avatar"
 import SEO from "../components/SEO"
+import ConfirmModal from "../components/ConfirmModal"
 
 import { Heart } from "../lib/icons"
 
@@ -23,8 +25,9 @@ import { useDreamFilter } from "../context/DreamFilterContext"
 
 function PerfilPage() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
 
-    const { user, updateUserData } = useAuth()
+    const { user, updateUserData, logoutUser } = useAuth()
 
     const [suenos, setSuenos] = useState([])
     const [suenosLikeados, setSuenosLikeados] = useState([])
@@ -35,6 +38,9 @@ function PerfilPage() {
     const [nuevaPassword, setNuevaPassword] = useState("")
     const [confirmarPassword, setConfirmarPassword] = useState("")
     const fileInputRef = useRef(null)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [passwordEliminarCuenta, setPasswordEliminarCuenta] = useState("")
+    const [deletingAccount, setDeletingAccount] = useState(false)
 
     const { categoriasSeleccionadas, orden } = useDreamFilter()
     const hayFiltros = categoriasSeleccionadas.length > 0 || orden.field !== null
@@ -167,6 +173,34 @@ function PerfilPage() {
         }
     }
 
+    async function handleDeleteAccount() {
+        if (deletingAccount) return
+
+        if (!passwordEliminarCuenta) {
+            showToast(t("profile.messages.fillAllFields"), "error")
+            return
+        }
+
+        setDeletingAccount(true)
+
+        try {
+            await deleteAccount(passwordEliminarCuenta)
+
+            setIsDeleteModalOpen(false)
+            setPasswordEliminarCuenta("")
+            showToast(t("profile.messages.accountDeleted"), "success")
+            navigate("/login")
+            await logoutUser()
+
+        } catch (err) {
+            showToast(getErrorMessage(err, t), "error")
+        } finally {
+            setDeletingAccount(false)
+            setIsDeleteModalOpen(false)
+            setPasswordEliminarCuenta("")
+        }
+    }
+
     const suenosLikeadosExternos = suenosLikeados.filter(s => s.usuario_id !== user.id)
 
     return (
@@ -268,6 +302,15 @@ function PerfilPage() {
                                     onSubmit={handleUpdatePerfil}
                                     noValidate
                                 >
+                                    {/* Campo oculto de usuario para accesibilidad de Chrome */}
+                                    <input
+                                        type="text"
+                                        autoComplete="username"
+                                        value={user?.email || ""}
+                                        style={{ display: "none" }}
+                                        readOnly
+                                    />
+
                                     <input
                                         className="input"
                                         type="text"
@@ -308,6 +351,15 @@ function PerfilPage() {
                                 onSubmit={handleChangePassword}
                                 noValidate
                             >
+                                {/* Campo oculto de usuario para accesibilidad de Chrome */}
+                                <input
+                                    type="text"
+                                    autoComplete="username"
+                                    value={user?.email || ""}
+                                    style={{ display: "none" }}
+                                    readOnly
+                                />
+
                                 <input
                                     className="input"
                                     type="password"
@@ -344,6 +396,15 @@ function PerfilPage() {
                                     {changingPassword ? t("profile.password.changing") : t("profile.password.change")}
                                 </button>
                             </form>
+
+                            <div className="perfil-danger-zone">
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-full"
+                                    onClick={() => setIsDeleteModalOpen(true)}                                >
+                                    {t("profile.deleteAccount.button")}
+                                </button>
+                            </div>
 
                         </div>
                     </div>
@@ -410,6 +471,47 @@ function PerfilPage() {
                     </section>
                 </>
             )}
+            <ConfirmModal
+                open={isDeleteModalOpen}
+                title={t("profile.deleteAccount.modalTitle")}
+                message={t("profile.deleteAccount.modalDesc")}
+                confirmText={t("profile.deleteAccount.confirm")}
+                cancelText={t("dreamCard.cancel")}
+                loadingText={t("profile.deleteAccount.deleting")}
+                loading={deletingAccount}
+                onConfirm={handleDeleteAccount}
+                onCancel={() => {
+                    setIsDeleteModalOpen(false)
+                    setPasswordEliminarCuenta("")
+                }}
+            >
+                <form
+                    onSubmit={(e) => { e.preventDefault(); handleDeleteAccount(); }}
+                    className="modal-input-container"
+                >
+                    <label className="label" style={{ marginBottom: "8px" }}>
+                        {t("profile.deleteAccount.placeholder")}
+                    </label>
+
+                    {/* Campo oculto opcional para silenciar Chrome en modales */}
+                    <input
+                        type="text"
+                        autoComplete="username"
+                        value={user?.email || ""}
+                        style={{ display: "none" }}
+                        readOnly
+                    />
+
+                    <input
+                        className="input"
+                        type="password"
+                        placeholder={t("profile.deleteAccount.placeholder")}
+                        value={passwordEliminarCuenta}
+                        onChange={(e) => setPasswordEliminarCuenta(e.target.value)}
+                        autoComplete="new-password"
+                    />
+                </form>
+            </ConfirmModal>
         </div>
     )
 }

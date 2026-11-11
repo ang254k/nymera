@@ -49,3 +49,12 @@ export async function changePassword(currentPassword, newPassword) {
 export function getUsuario(id) {
     return apiRequest(`/usuarios/${id}`)
 }
+
+export function deleteAccount(currentPassword) {
+    return apiRequest("/usuarios/me", {
+        method: "DELETE",
+        body: JSON.stringify({
+            current_password: currentPassword,
+        }),
+    })
+}

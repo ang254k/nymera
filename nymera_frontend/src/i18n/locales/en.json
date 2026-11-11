@@ -74,7 +74,8 @@
         "hashtagAriaLabel": "Hashtag {{nombre}}",
         "avatar_upload_error": "Could not upload avatar. Please make sure it is a valid image.",
         "avatar_too_large": "The image is too large.",
-        "cloud_upload_failed": "Failed to upload image to the cloud. Please try again."
+        "cloud_upload_failed": "Failed to upload image to the cloud. Please try again.",
+        "user_delete_failed": "Could not delete the account. Please try again later."
     },
     "search": {
         "placeholder": "Search dreams, users or hashtags..."
@@ -192,7 +193,16 @@
             "profileUpdated": "Profile updated",
             "passwordUpdated": "Password updated",
             "avatarUpdated": "Avatar updated",
-            "fillAllFields": "Please fill in all required fields."
+            "fillAllFields": "Please fill in all required fields.",
+            "accountDeleted": "Account successfully deleted"
+        },
+        "deleteAccount": {
+            "button": "Delete account",
+            "modalTitle": "Delete account?",
+            "modalDesc": "This action is completely irreversible. All your data and posts will be erased. Enter your current password to confirm:",
+            "placeholder": "Current password",
+            "confirm": "Delete account",
+            "deleting": "Deleting..."
         }
     },
     "userProfile": {

@@ -10,7 +10,7 @@ from app.services.usuario_service import UsuarioService
 from app.services.translation_service import TranslationService
 
 from app.schemas.sueno_schema import SuenoFeedItem
-from app.schemas.usuario_schema import PasswordUpdate, UsuarioUpdate, UsuarioResponse
+from app.schemas.usuario_schema import PasswordUpdate, UsuarioUpdate, UsuarioResponse, UsuarioDelete
 
 from app.models.usuario import Usuario
 
@@ -71,7 +71,7 @@ def update_me(request: Request, data: UsuarioUpdate, current_user: Usuario = Dep
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+#Subir avatar
 @router.post("/me/avatar", response_model=UsuarioResponse)
 @limiter.limit("5/minute")
 def upload_avatar(
@@ -82,7 +82,7 @@ def upload_avatar(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+#Cambiar contraseña
 @router.put("/me/password")
 @limiter.limit("3/minute")
 def change_password(
@@ -99,6 +99,17 @@ def change_password(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+#Borrar usuario
+@router.delete("/me")
+@limiter.limit("3/minute")
+def delete_my_account(
+    request: Request, data: UsuarioDelete, current_user: Usuario = Depends(get_current_user)
+):
+    try:
+        usuario_service.delete_account(current_user.id, data.current_password)
+        return {"message": "account_deleted"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{id}", response_model=UsuarioResponse)
 def get_usuario(id: int):
@@ -107,3 +118,4 @@ def get_usuario(id: int):
     if not usuario:
         raise HTTPException(status_code=404, detail="user_not_found")
     return usuario
+

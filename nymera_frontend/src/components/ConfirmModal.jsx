@@ -9,7 +9,8 @@ function ConfirmModal({
     loadingText,
     loading = false,
     onConfirm,
-    onCancel
+    onCancel,
+    children
 }) {
     // Para cerrar con la tecla Esc
     useEffect(() => {
@@ -51,6 +52,8 @@ function ConfirmModal({
 
                     {message}
                 </p>
+
+                {children}
 
                 <div className="confirm-modal-actions">
                     <button

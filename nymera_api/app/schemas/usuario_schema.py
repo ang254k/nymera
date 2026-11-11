@@ -17,3 +17,6 @@ class UsuarioUpdate(BaseModel):
 class PasswordUpdate(BaseModel):
     current_password: str
     new_password: str
+    
+class UsuarioDelete(BaseModel):
+    current_password: str

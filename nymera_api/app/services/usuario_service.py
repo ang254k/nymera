@@ -210,3 +210,32 @@ class UsuarioService:
 
     def get_user_by_id(self, user_id):
         return self.repo.get_by_id(user_id)
+
+    def delete_account(self, user_id: int, current_password: str) -> bool:
+        usuario = self.repo.get_by_id_with_password(user_id)
+
+        if usuario is None:
+            raise ValueError("user_not_found")
+
+        if current_password is None:
+            raise ValueError("current_password_required")
+
+        if not bcrypt.verify(current_password, usuario.password):
+            raise ValueError("current_password_incorrect")
+
+        #Borrado avatar usuario
+        try:
+            cloudinary.config(
+                cloudinary_url=os.getenv("CLOUDINARY_URL"),
+                secure=True
+            )
+            cloudinary.uploader.destroy(f"nymera_avatars/user_{user_id}")
+        except Exception:
+            pass
+
+        eliminado = self.repo.delete(user_id)
+
+        if not eliminado:
+            raise ValueError("user_delete_failed")
+
+        return True
