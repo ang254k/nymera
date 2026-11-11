@@ -16,6 +16,8 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import ErrorPage from "./pages/ErrorPage"
 import NymeraBackground from "./components/NymeraBackground"
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
+import TermsOfUsePage from "./pages/TermsOfUsePage"
 
 function App() {
   return (
@@ -27,7 +29,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfUsePage />} />
           </Route>
           <Route element={<LayoutPrivado />}>
             <Route path="/home" element={<FeedPage />} />
