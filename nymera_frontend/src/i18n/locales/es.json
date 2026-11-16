@@ -410,5 +410,11 @@
             "title": "Página No Encontrada",
             "description": "Parece que este sueño se ha desvanecido. La página que buscas no existe."
         }
+    },
+    "cookies": {
+        "ariaLabel": "Aviso de uso de cookies y almacenamiento local",
+        "message": "Utilizamos almacenamiento local y cookies técnicas estrictamente necesarias para recordar tus preferencias de idioma y el funcionamiento de la sesión. Puedes consultar más detalles en nuestra",
+        "privacyLink": "Política de Privacidad",
+        "accept": "Entendido"
     }
 }

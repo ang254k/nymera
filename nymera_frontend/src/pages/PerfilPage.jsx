@@ -24,6 +24,7 @@ import { useDreamFilter } from "../context/DreamFilterContext"
 
 
 function PerfilPage() {
+
     const { t } = useTranslation()
     const navigate = useNavigate()
 
@@ -41,6 +42,7 @@ function PerfilPage() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [passwordEliminarCuenta, setPasswordEliminarCuenta] = useState("")
     const [deletingAccount, setDeletingAccount] = useState(false)
+    const [activeTab, setActiveTab] = useState("suenos")
 
     const { categoriasSeleccionadas, orden } = useDreamFilter()
     const hayFiltros = categoriasSeleccionadas.length > 0 || orden.field !== null
@@ -409,66 +411,78 @@ function PerfilPage() {
                         </div>
                     </div>
 
-                    {/* Sueños publicados */}
-                    <section className="perfil-dreams">
+                    {/* Selector de pestañas */}
+                    <div className="perfil-tabs" role="tablist">
+                        <button
+                            role="tab"
+                            aria-selected={activeTab === "suenos"}
+                            className={`perfil-tab-btn ${activeTab === "suenos" ? "active" : ""}`}
+                            onClick={() => setActiveTab("suenos")}
+                        >
+                            {t("profile.dreams.title")} ({suenos.length})
+                        </button>
+                        <button
+                            role="tab"
+                            aria-selected={activeTab === "likes"}
+                            className={`perfil-tab-btn ${activeTab === "likes" ? "active" : ""}`}
+                            onClick={() => setActiveTab("likes")}
+                        >
+                            <Heart size={16} aria-hidden="true" />
+                            <span>{t("profile.likedDreams.title")} ({suenosLikeadosExternos.length})</span>
+                        </button>
+                    </div>
 
-                        <h2 className="perfil-section-title">
-                            {t("profile.dreams.title")}
-                        </h2>
-
-                        {loadingSuenos ? (
-                            <p className="perfil-loading" role="status" aria-live="polite">
-                                {t("profile.dreams.loading")}
-                            </p>
-                        ) : suenos.length === 0 ? (
-                            hayFiltros ? (
-                                <p className="perfil-empty">{t("profile.dreams.emptyWithFilters")}</p>
-                            ) : (
-                                <p className="perfil-empty">{t("profile.dreams.empty")}</p>
-                            )
-                        ) : (
-                            suenos.map((sueno) => (
-                                <SuenoCard
-                                    key={sueno.id}
-                                    sueno={sueno}
-                                    onSuenoEliminado={handleDelete}
-                                />
-                            ))
-                        )}
-                    </section>
-
-                    {/* Sueños Likeados */}
-                    <section className="perfil-liked">
-                        <h2 className="perfil-section-title">
-                            <Heart size={20} aria-hidden="true" />
-                            <span>{t("profile.likedDreams.title")}</span>
-                        </h2>
-
-                        {loadingSuenos ? (
-                            <p className="perfil-loading" role="status" aria-live="polite">
-                                {t("profile.likedDreams.loading")}
-                            </p>
-                        ) : suenosLikeadosExternos.length === 0 ? (
-                            hayFiltros ? (
-                                <p className="perfil-empty">
-                                    {t("profile.likedDreams.emptyWithFilters")}
+                    {/* Listas Sueños posteados/likeados */}
+                    {activeTab === "suenos" ? (
+                        <section className="perfil-dreams" role="tabpanel">
+                            {loadingSuenos ? (
+                                <p className="perfil-loading" role="status" aria-live="polite">
+                                    {t("profile.dreams.loading")}
                                 </p>
+                            ) : suenos.length === 0 ? (
+                                hayFiltros ? (
+                                    <p className="perfil-empty">{t("profile.dreams.emptyWithFilters")}</p>
+                                ) : (
+                                    <p className="perfil-empty">{t("profile.dreams.empty")}</p>
+                                )
                             ) : (
-                                <p className="perfil-empty">
-                                    {t("profile.likedDreams.empty")}
-                                </p>
-                            )
-                        ) : (
-                            <div className="perfil-liked-list">
-                                {suenosLikeadosExternos.map((sueno) => (
+                                suenos.map((sueno) => (
                                     <SuenoCard
                                         key={sueno.id}
                                         sueno={sueno}
+                                        onSuenoEliminado={handleDelete}
                                     />
-                                ))}
-                            </div>
-                        )}
-                    </section>
+                                ))
+                            )}
+                        </section>
+                    ) : (
+                        <section className="perfil-liked" role="tabpanel">
+                            {loadingSuenos ? (
+                                <p className="perfil-loading" role="status" aria-live="polite">
+                                    {t("profile.likedDreams.loading")}
+                                </p>
+                            ) : suenosLikeadosExternos.length === 0 ? (
+                                hayFiltros ? (
+                                    <p className="perfil-empty">
+                                        {t("profile.likedDreams.emptyWithFilters")}
+                                    </p>
+                                ) : (
+                                    <p className="perfil-empty">
+                                        {t("profile.likedDreams.empty")}
+                                    </p>
+                                )
+                            ) : (
+                                <div className="perfil-liked-list">
+                                    {suenosLikeadosExternos.map((sueno) => (
+                                        <SuenoCard
+                                            key={sueno.id}
+                                            sueno={sueno}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </section>
+                    )}
                 </>
             )}
             <ConfirmModal

@@ -411,5 +411,11 @@
             "title": "Page Not Found",
             "description": "It seems this dream has faded away. The page you are looking for does not exist."
         }
+    },
+    "cookies": {
+        "ariaLabel": "Cookies and local storage notice",
+        "message": "We use strictly necessary local storage and technical cookies to remember your language preferences and keep your session working. You can find more details in our",
+        "privacyLink": "Privacy Policy",
+        "accept": "Got it"
     }
 }

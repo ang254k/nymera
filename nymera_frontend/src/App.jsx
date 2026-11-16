@@ -18,6 +18,7 @@ import ErrorPage from "./pages/ErrorPage"
 import NymeraBackground from "./components/NymeraBackground"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import TermsOfUsePage from "./pages/TermsOfUsePage"
+import CookieBanner from "./components/CookieBanner"
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
 
         </Routes>
-
+      <CookieBanner />
     </BrowserRouter>
   )
 }
