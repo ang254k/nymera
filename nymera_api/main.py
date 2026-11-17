@@ -19,6 +19,13 @@ from app.config import settings
 
 app = FastAPI(title="Nymera API")
 
+# ==========================
+# Health Check Endpoint
+# ==========================
+@app.get("/health", tags=["Health"])
+def health_check():
+    return {"status": "ok", "app": "nymera-backend"}
+
 cloudinary.config(
     cloud_name=settings.CLOUDINARY_CLOUD_NAME,
     api_key=settings.CLOUDINARY_API_KEY,
