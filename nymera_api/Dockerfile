@@ -1,5 +1,5 @@
 # 1. Imagen base oficial y ligera de Python
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # 2. Evita que Python genere archivos .pyc y fuerza los logs en tiempo real
 ENV PYTHONDONTWRITEBYTECODE=1
