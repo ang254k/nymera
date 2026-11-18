@@ -24,3 +24,13 @@ def marcar_leida(
 ):
     notificacion_service.marcar_como_leida(id, current_user.id)
     return {"ok": True}
+
+@router.patch("/marcar-todas")
+def marcar_todas_leidas(
+    current_user: Usuario = Depends(get_current_user)
+):
+    actualizadas = notificacion_service.marcar_todas_como_leidas(current_user.id)
+    return {
+        "ok": True,
+        "actualizadas": actualizadas
+    }

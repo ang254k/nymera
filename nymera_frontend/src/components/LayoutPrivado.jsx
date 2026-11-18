@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 
 import Header from "./Header"
@@ -9,6 +10,7 @@ import PageTransition from "./PageTransition"
 
 function LayoutPrivado() {
     const location = useLocation()
+    const contentRef = useRef(null)
 
     const rutasConFiltro = [
         "/home",
@@ -19,6 +21,12 @@ function LayoutPrivado() {
     ]
 
     const mostrarDreamFilter = rutasConFiltro.some(ruta => location.pathname.startsWith(ruta))
+
+    useEffect(() => {
+        if (window.innerWidth <= 1000 && contentRef.current) {
+            contentRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+    }, [location.pathname])
 
     return (
         <>
@@ -43,7 +51,7 @@ function LayoutPrivado() {
                 )}
 
                 {/* Contenido principal */}
-                <main className="layout-privado-content">
+                <main ref={contentRef} className="layout-privado-content">
                     <PageTransition>
                         <Outlet />
                     </PageTransition>

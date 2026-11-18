@@ -25,3 +25,6 @@ class NotificacionService:
             notificacion_id,
             usuario_id
         )
+        
+    def marcar_todas_como_leidas(self, usuario_id):
+        return self.notificacion_repository.marcar_todas_como_leidas(usuario_id)

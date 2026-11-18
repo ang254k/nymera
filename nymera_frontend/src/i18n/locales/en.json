@@ -285,7 +285,10 @@
         "loadError": "Error loading notifications",
         "markReadError": "Could not mark notification as read",
         "like": "liked",
-        "comment": "commented"
+        "comment": "commented",
+        "markAllAsRead": "Mark all as read",
+        "allMarkedReadSuccess": "All notifications marked as read",
+        "markAllReadError": "Error marking notifications as read"
     },
     "error": {
         "alt": "Lost dream",

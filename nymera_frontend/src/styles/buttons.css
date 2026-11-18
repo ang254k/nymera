@@ -164,3 +164,8 @@ button {
     border-color: var(--danger);
 
 }
+
+.btn-sm {
+    padding: 8px 14px;
+    font-size: 0.875rem;
+}

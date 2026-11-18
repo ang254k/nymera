@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { getNotificaciones, marcarNotificacionLeida } from "../api/notificaciones"
-import { useNavigate, Link } from "react-router-dom"
+import { getNotificaciones, marcarNotificacionLeida, marcarTodasComoLeidas } from "../api/notificaciones"
+import { Link } from "react-router-dom"
 import { useToast } from "../context/ToastContext"
 
 import SEO from "../components/SEO"
@@ -15,6 +15,7 @@ function NotificacionesPage() {
 
     const [notificaciones, setNotificaciones] = useState([])
     const [loading, setLoading] = useState(true)
+    const[markingAll, setMarkingAll] = useState(false)
     const { showToast } = useToast()
 
     useEffect(() => {
@@ -31,6 +32,27 @@ function NotificacionesPage() {
         load()
     }, [])
 
+    async function handleMarcarTodas() {
+        if (markingAll) return
+        setMarkingAll(true)
+
+        try {
+            await marcarTodasComoLeidas()
+            setNotificaciones(prev =>
+                prev.map(notif => ({ ...notif, leido: true }))
+            )
+            window.dispatchEvent(new CustomEvent("notificacionesActualizadas", { detail: { count: 0 } }))
+
+            showToast(t("notifications.allMarkedReadSuccess"), "success")
+        } catch (err) {
+            showToast(t("notifications.markAllReadError"), "error")
+        } finally {
+            setMarkingAll(false)
+        }
+    }
+
+    const hayNoLeidas = notificaciones.some(n => !n.leido)
+
     return (
         <div className="notificaciones-page">
             <SEO
@@ -38,9 +60,22 @@ function NotificacionesPage() {
                 description={t('seo.notificaciones.description')}
             />
 
-            <h1 className="notificaciones-title">
-                {t("notifications.title")}
-            </h1>
+            <div className="notificaciones-header">
+                <h1 className="notificaciones-title">
+                    {t("notifications.title")}
+                </h1>
+
+                {!loading && notificaciones.length > 0 && hayNoLeidas && (
+                    <button
+                        type="button"
+                        onClick={handleMarcarTodas}
+                        className="sueno-owner-button"
+                        disabled={markingAll}
+                    >
+                        {t("notifications.markAllAsRead")}
+                    </button>
+                )}
+            </div>
 
             {loading ? (
                 <p className="notificaciones-loading" role="status" aria-live="polite" >
@@ -69,6 +104,8 @@ function NotificacionesPage() {
                                                     : notif
                                             )
                                         )
+                                        const nuevasNoLeidas = notificaciones.filter(notif => notif.id !== n.id && !notif.leido).length
+                                        window.dispatchEvent(new CustomEvent("notificacionesActualizadas", { detail: { count: nuevasNoLeidas } }))
                                     } catch (err) {
                                         showToast(t("notifications.markReadError"), "error")
                                     }

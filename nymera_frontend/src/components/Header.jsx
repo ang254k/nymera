@@ -25,7 +25,7 @@ function Header() {
 
   useEffect(() => {
     async function load() {
-      if (!user || location.pathname === "/login" || location.pathname === "/register") 
+      if (!user || location.pathname === "/login" || location.pathname === "/register")
         return
 
       try {
@@ -38,6 +38,19 @@ function Header() {
     }
     load()
   }, [user, location.pathname])
+
+  useEffect(() => {
+    function handleNotificacionesActualizadas(e) {
+      if (typeof e.detail?.count === "number") {
+        setCount(e.detail.count)
+      }
+    }
+
+    window.addEventListener("notificacionesActualizadas", handleNotificacionesActualizadas)
+    return () => {
+      window.removeEventListener("notificacionesActualizadas", handleNotificacionesActualizadas)
+    }
+  }, [])
 
   function handleLogout() {
     setCount(0)

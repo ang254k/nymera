@@ -280,7 +280,10 @@
         "loadError": "Error cargando notificaciones",
         "markReadError": "No se pudo marcar la notificación como leída",
         "like": "ha dado like",
-        "comment": "ha comentado"
+        "comment": "ha comentado",
+        "markAllAsRead": "Marcar todas como leídas",
+        "allMarkedReadSuccess": "Todas las notificaciones marcadas como leídas",
+        "markAllReadError": "Error al marcar las notificaciones como leídas"
     },
     "error": {
         "alt": "Sueño perdido",

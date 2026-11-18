@@ -1037,7 +1037,7 @@ SuenoCard
 
 
 /* ==========================
-   Notificaciones Page
+   NotificacionesPage
 ========================== */
 
 .notificaciones-page {
@@ -1047,14 +1047,25 @@ SuenoCard
     padding: var(--space-5);
 }
 
+.notificaciones-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.notificaciones-header .notificaciones-title {
+    margin: 0;
+}
+
 .notificaciones-title {
-    margin: 0 0 var(--space-5);
+    margin: 0;
 
     font-family: var(--font-title);
     font-size: 1.5rem;
     font-weight: 700;
 
-    text-align: center;
 }
 
 .notificaciones-list {
@@ -2200,6 +2211,7 @@ Footer
         transform: translateY(100%);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -2213,6 +2225,7 @@ Footer
         align-items: stretch;
         text-align: center;
     }
+
     .cookie-actions {
         justify-content: center;
     }

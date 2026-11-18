@@ -9,3 +9,9 @@ export function marcarNotificacionLeida(id) {
         method: "PUT"
     })
 }
+
+export function marcarTodasComoLeidas() {
+    return apiRequest("/notificaciones/marcar-todas", {
+        method: "PATCH"
+    })
+}

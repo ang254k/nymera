@@ -42,3 +42,14 @@ class NotificacionRepository:
                     WHERE id = %s AND usuario_id = %s
                 """, (notificacion_id, usuario_id))
                 conn.commit()
+                
+    def marcar_todas_como_leidas(self, usuario_id):
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE notificacion
+                    SET leido = TRUE
+                    WHERE usuario_id = %s AND leido = FALSE
+                """, (usuario_id,))
+                conn.commit()
+                return cur.rowcount
