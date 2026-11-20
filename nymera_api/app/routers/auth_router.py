@@ -10,7 +10,7 @@ from app.schemas.auth_schema import (
     LoginRequest,
     RegisterRequest,
     TokenResponse,
-    ResetPasswordRequest
+    ResetPasswordRequest,
 )
 from app.schemas.usuario_schema import UsuarioResponse
 
@@ -33,32 +33,28 @@ auth_service = AuthService()
 @router.post("/register", response_model=UsuarioResponse)
 @limiter.limit("4/minute")
 def register(request: Request, data: RegisterRequest):
-    #Validar token con Turnstile
+    # Validar token con Turnstile
     turnstile_secret = settings.TURNSTILE_SECRET_KEY
-    
+
     if turnstile_secret:
         verify_url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
-        
+
         payload = {
             "secret": turnstile_secret,
             "response": data.turnstile_token,
-            "remoteip": request.client.host if request.client else None
+            "remoteip": request.client.host if request.client else None,
         }
         try:
             cf_response = requests.post(verify_url, data=payload, timeout=5)
             result = cf_response.json()
-            
+
             if not result.get("success"):
-                raise HTTPException(
-                    status_code=400, 
-                    detail="invalid_turnstile_token"
-                )
+                raise HTTPException(status_code=400, detail="invalid_turnstile_token")
         except requests.RequestException:
             raise HTTPException(
-                status_code=503, 
-                detail="turnstile_verification_service_unavailable"
+                status_code=503, detail="turnstile_verification_service_unavailable"
             )
-    
+
     try:
         usuario = usuario_service.register(data.nombre, data.email, data.password)
 
@@ -76,34 +72,43 @@ def register(request: Request, data: RegisterRequest):
 def login(response: Response, request: Request, data: LoginRequest):
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
-    
+
     usuario = usuario_service.login(
-        email = data.email, 
-        password = data.password, 
-        ip_address = client_ip, 
-        user_agent=user_agent
+        email=data.email,
+        password=data.password,
+        ip_address=client_ip,
+        user_agent=user_agent,
     )
 
     if usuario is None:
         raise HTTPException(status_code=401, detail="invalid_credentials")
-    
-    token = create_access_token({"sub": str(usuario.id)})
 
+    token = create_access_token({"sub": str(usuario.id)})
+    is_prod = settings.ENVIRONMENT == "production"
+    
     response.set_cookie(
         key="access_token",
         value=token,
         httponly=True,
         secure=settings.ENVIRONMENT == "production",
-        samesite="lax",
-        max_age=settings.JWT_EXPIRE_MINUTES * 60
+        samesite="none" if is_prod else "lax",
+        max_age=settings.JWT_EXPIRE_MINUTES * 60,
     )
-    
+
     return {"message": "login_success"}
+
 
 @router.post("/logout")
 def logout(response: Response):
-    response.delete_cookie(key="access_token")
+    is_prod = settings.ENVIRONMENT == "production"
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        secure=is_prod,
+        samesite="none" if is_prod else "lax",
+    )
     return {"message": "logout_success"}
+
 
 @router.get("/me", response_model=UsuarioResponse)
 def me(current_user: Usuario = Depends(get_current_user)):
@@ -119,16 +124,16 @@ def forgot_password(request: Request, data: ForgotPasswordRequest):
 @router.post("/reset-password")
 @limiter.limit("3/minute")
 def reset_password(request: Request, data: ResetPasswordRequest):
-    
+
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
-    
+
     try:
         return auth_service.reset_password(
-            token=data.token, 
+            token=data.token,
             new_password=data.new_password,
             ip_address=client_ip,
-            user_agent=user_agent
+            user_agent=user_agent,
         )
 
     except ValueError as e:

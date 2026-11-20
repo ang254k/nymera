@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 
 import RegisterPage from "./pages/RegisterPage"
 import LoginPage from "./pages/LoginPage"
@@ -34,6 +34,7 @@ function App() {
             <Route path="/terms" element={<TermsOfUsePage />} />
           </Route>
           <Route element={<LayoutPrivado />}>
+          <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<FeedPage />} />
             <Route
               path="/perfil"
