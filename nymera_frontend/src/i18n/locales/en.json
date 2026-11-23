@@ -346,7 +346,10 @@
         "wait_a_moment": "Please wait a moment.",
         "invalid_turnstile_token": "Security verification failed. Please try again.",
         "turnstile_verification_service_unavailable": "Security verification service is temporarily unavailable.",
-        "fillAllFields": "Please fill in all required fields."
+        "fillAllFields": "Please fill in all required fields.",
+        "translation_timeout": "The translation service took too long to respond. Please try again in a few seconds.",
+        "translation_rate_limit": "Too many translation requests. Please wait a moment and try again.",
+        "translation_unavailable": "The translation service is currently unavailable."
     },
     "success": {
         "profile_updated": "Profile updated successfully",

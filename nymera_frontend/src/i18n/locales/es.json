@@ -345,7 +345,10 @@
         "avatar_upload_error": "No se ha podido subir el avatar. Comprueba que sea una imagen válida.",
         "avatar_too_large": "La imagen es demasiado grande.",
         "cloud_upload_failed": "Error al subir la imagen a la nube. Inténtalo de nuevo.",
-        "user_delete_failed": "No se pudo eliminar la cuenta. Inténtalo de nuevo más tarde."
+        "user_delete_failed": "No se pudo eliminar la cuenta. Inténtalo de nuevo más tarde.",
+        "translation_timeout": "El servicio de traducción tardó demasiado en responder. Inténtalo de nuevo en unos segundos.",
+        "translation_rate_limit": "Demasiadas solicitudes de traducción. Espera un momento e inténtalo de nuevo.",
+        "translation_unavailable": "El servicio de traducción no está disponible en este momento."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",

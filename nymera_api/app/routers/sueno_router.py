@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from app.integrations.libretranslate import TranslationServiceError
 
 from app.schemas.sueno_schema import (
     SuenoCreateRequest,
@@ -48,10 +49,7 @@ notificacion_repository = NotificacionRepository()
 notificacion_service = NotificacionService(notificacion_repository)
 
 comentario_service = ComentarioService(
-    ComentarioRepository(),
-    sueno_service,
-    notificacion_service,
-    TranslationService()
+    ComentarioRepository(), sueno_service, notificacion_service, TranslationService()
 )
 
 like_service = LikeService(LikeRepository(), sueno_service, notificacion_service)
@@ -61,7 +59,9 @@ like_service = LikeService(LikeRepository(), sueno_service, notificacion_service
 @router.post("", response_model=SuenoFeedItem)
 @limiter.limit("10/minute")
 def create_sueno(
-    request: Request, data: SuenoCreateRequest, current_user: Usuario = Depends(get_current_user)
+    request: Request,
+    data: SuenoCreateRequest,
+    current_user: Usuario = Depends(get_current_user),
 ):
     try:
         sueno = sueno_service.create_sueno(
@@ -147,6 +147,9 @@ def translate_sueno(
 
     except PermissionError:
         raise HTTPException(status_code=403, detail="unauthorized")
+
+    except TranslationServiceError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.error_key)
 
 
 # Comentarios de sueno
