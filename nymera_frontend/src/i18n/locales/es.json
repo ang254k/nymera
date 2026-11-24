@@ -52,7 +52,8 @@
         "changePassword": "Cambiar contraseña",
         "ready": "¿Todo listo?",
         "loginRequired": "Debes iniciar sesión",
-        "loading": "Cargando..."
+        "loading": "Cargando...",
+        "tagline": "Sueños que conectan, significados que descubres"
     },
     "accessibility": {
         "goHome": "Ir al inicio",

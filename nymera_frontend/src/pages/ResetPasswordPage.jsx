@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
                         />
 
                         <p className="auth-subtitle">
-                            {APP_TAGLINE}
+                            {t("auth.tagline")}
                         </p>
                     </div>
 

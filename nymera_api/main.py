@@ -3,7 +3,7 @@ import cloudinary
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.routers import auth_router, sueno_router, comentario_router, home_router, categoria_router, notificacion_router, usuario_router, busqueda_router, hashtag_router
+from app.routers import auth_router, sueno_router, comentario_router, home_router, categoria_router, notificacion_router, usuario_router, busqueda_router, hashtag_router, sitemap_router
 
 from app.repositories.security_log_repository import SecurityLogRepository
 
@@ -66,6 +66,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"  # Bloquea la suplantación de tipos MIME
         response.headers["X-XSS-Protection"] = "1; mode=block"  # Protección extra contra XSS básico
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" # Controla la privacidad de la URL de origen
+        if settings.ENVIRONMENT == "production":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+            
         return response
 
 app.add_middleware(SecurityHeadersMiddleware)
@@ -103,3 +106,4 @@ app.include_router(notificacion_router.router)
 app.include_router(usuario_router.router)
 app.include_router(busqueda_router.router)
 app.include_router(hashtag_router.router)
+app.include_router(sitemap_router.router)

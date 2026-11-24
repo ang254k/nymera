@@ -52,7 +52,8 @@
         "changePassword": "Change password",
         "ready": "All set?",
         "loginRequired": "You must log in",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "tagline": "Dreams that connect, meanings you uncover"
     },
     "accessibility": {
         "goHome": "Go to home",
