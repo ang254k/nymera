@@ -208,10 +208,11 @@
         "loading": "Cargando perfil...",
         "dreams": "sueños",
         "likes": "likes",
-        "publicDreams": "Sueños públicos",
+        "publicDreams": "Sueños publicados",
         "loadingDreams": "Cargando sueños...",
         "emptyWithFilters": "No hay sueños que coincidan con los filtros seleccionados.",
-        "empty": "Este usuario no tiene sueños públicos",
+        "empty": "Este usuario no ha publicado sueños",
+        "viewProfile": "Ver perfil de {{name}}",
         "defaultUser": "usuario"
     },
     "dreamDetail": {

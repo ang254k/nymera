@@ -212,10 +212,10 @@
         "loading": "Loading profile...",
         "dreams": "dreams",
         "likes": "likes",
-        "publicDreams": "Public dreams",
+        "publicDreams": "Shared Dreams",
         "loadingDreams": "Loading dreams...",
         "emptyWithFilters": "No dreams match the selected filters.",
-        "empty": "This user has no public dreams",
+        "empty": "This user hasn't published any dreams",
         "viewProfile": "View profile of {{name}}",
         "defaultUser": "user"
     },

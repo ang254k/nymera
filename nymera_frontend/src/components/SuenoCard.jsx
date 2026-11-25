@@ -271,7 +271,9 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                 aria-label={t("accessibility.editDream")}
                             >
                                 <Pencil size={14} aria-hidden="true" />
-                                {t("dreamCard.edit")}
+                                <span className="sueno-owner-label">
+                                    {t("dreamCard.edit")}
+                                </span>
                             </button>
 
                             <button
@@ -285,7 +287,9 @@ function SuenoCard({ sueno, onSuenoEliminado }) {
                                 aria-label={t("accessibility.deleteDream")}
                             >
                                 <Trash2 size={14} aria-hidden="true" />
-                                {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
+                                <span className="sueno-owner-label">
+                                    {deleting ? t("dreamCard.deleting") : t("dreamCard.delete")}
+                                </span>
                             </button>
                         </div>
                     )}

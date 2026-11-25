@@ -22,6 +22,8 @@ function Header() {
   const { showToast } = useToast()
 
   const [count, setCount] = useState(0)
+  const [langAnimating, setLangAnimating] = useState(false)
+  const isSpanish = i18n.language.startsWith("es")
 
   useEffect(() => {
     async function load() {
@@ -57,6 +59,12 @@ function Header() {
     showToast(t("messages.logoutSuccess"), "info")
     logoutUser()
     navigate("/login")
+  }
+
+  function handleToggleLanguage() {
+    const nextLang = i18n.language.startsWith("es") ? "en" : "es"
+    setLangAnimating(true)
+    i18n.changeLanguage(nextLang)
   }
 
   return (
@@ -136,9 +144,16 @@ function Header() {
           </>
         ) : (
           <>
-            <Link className="header-link" to="/login">
-              {t("navigation.login")}
+            <Link
+              className="header-link"
+              to="/login"
+              aria-label={t("navigation.login")}
+            >
+              <span>
+                {t("navigation.login")}
+              </span>
             </Link>
+
             <Link
               className="btn btn-primary btn-sm"
               to="/register">
@@ -150,22 +165,20 @@ function Header() {
         <div className="language-switcher">
           <button
             type="button"
-            onClick={() => i18n.changeLanguage("es")}
-            aria-label={t("language.spanishLanguage")}
-            title="Español"
-            aria-pressed={i18n.language.startsWith("es")}
+            className={`language-toggle-btn ${langAnimating ? "is-animating" : ""}`}
+            onClick={handleToggleLanguage}
+            onAnimationEnd={() => setLangAnimating(false)}
+            aria-label={
+              isSpanish
+                ? t("language.englishLanguage")
+                : t("language.spanishLanguage")
+            }
+            title={isSpanish ? "Cambiar a English" : "Switch to Español"}
           >
-            <img src={banderaES} alt="" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => i18n.changeLanguage("en")}
-            aria-label={t("language.englishLanguage")}
-            title="English"
-            aria-pressed={i18n.language.startsWith("en")}
-          >
-            <img src={banderaEN} alt="" />
+            <img
+              src={isSpanish ? banderaES : banderaEN}
+              alt=""
+            />
           </button>
         </div>
 

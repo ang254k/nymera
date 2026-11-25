@@ -156,37 +156,124 @@
     outline-offset: 2px;
 }
 
+.language-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.language-toggle-btn:hover {
+    color: var(--text);
+    border-color: var(--primary);
+}
+
+.language-toggle-btn:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+}
+
+.language-toggle-btn img {
+    display: block;
+    width: 24px;
+    height: 16px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.language-toggle-btn.is-animating img {
+    animation: flagFlip 0.35s ease;
+}
+
+@keyframes flagFlip {
+    0% {
+        transform: perspective(200px) rotateY(0deg) scale(1);
+    }
+
+    50% {
+        transform: perspective(200px) rotateY(90deg) scale(0.88);
+    }
+
+    100% {
+        transform: perspective(200px) rotateY(0deg) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .language-toggle-btn.is-animating img {
+        animation: none;
+    }
+}
+
 @media (max-width: 600px) {
 
     .header {
-        padding: var(--space-3) var(--space-4)
+        padding: var(--space-3) var(--space-3);
+        gap: var(--space-3);
     }
 
     .brand-icon {
-        height: 42px;
+        height: 40px;
         width: auto;
     }
 
     .header-nav {
-        gap: var(--space-4);
+        gap: var(--space-2);
+        min-width: 0;
     }
 
     .header-link-text {
         display: none;
     }
 
+
     .header-link {
-        padding: var(--space-1)
+        padding: var(--space-1);
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .header-link svg {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .header-nav .btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .header-nav .btn svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
+    }
+
+    .language-toggle-btn {
+        padding: 4px 6px;
+        gap: 4px;
+    }
+
+    .language-toggle-btn img {
+        width: 22px;
+        height: 15px;
+    }
+
+    .lang-code {
+        display: none;
     }
 
 }
@@ -579,8 +666,6 @@ SuenoCard
 
     transition: transform var(--transition-fast);
     animation: sueno-card-enter 500ms ease-out;
-    /* cursor: pointer; */
-    /* Para quitar el puntero para comentarios y fecha */
 
 }
 
@@ -860,12 +945,18 @@ SuenoCard
 
     .sueno-card-footer {
         grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: var(--space-1);
-        padding: var(--space-2) var(--space-4)
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-3)
     }
 
     .sueno-actions {
         flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .sueno-owner-actions {
+        display: flex;
+        align-items: center;
         gap: var(--space-2);
     }
 
@@ -875,15 +966,22 @@ SuenoCard
 
     .sueno-meta {
         min-width: 0;
+        justify-self: end;
     }
 
     .sueno-date {
         white-space: nowrap;
-        overflow-wrap: anywhere;
+        font-size: 0.8rem;
     }
 
-    .sueno-owner-actions {
-        flex-wrap: wrap;
+    @media (max-width: 480px) {
+        .sueno-owner-actions .sueno-owner-button {
+            padding: 6px;
+        }
+
+        .sueno-owner-label {
+            display: none;
+        }
     }
 
 }
@@ -1758,6 +1856,7 @@ Footer
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--space-2);
 
     margin-top: var(--space-5);
     padding: var(--space-3) var(--space-5);
@@ -1766,8 +1865,6 @@ Footer
 
     font-size: .875rem;
 }
-
-
 
 .sueno-detalle-stats {
     display: flex;
@@ -1798,6 +1895,43 @@ Footer
 
     padding: 0;
     justify-self: center;
+}
+
+@media (max-width: 700px) {
+    .sueno-detalle-meta {
+        padding: var(--space-3);
+        gap: var(--space-2);
+    }
+
+    .sueno-detalle-stats {
+        gap: var(--space-3);
+    }
+
+    .sueno-detalle-owner-actions {
+        gap: var(--space-2);
+    }
+
+    .sueno-detalle-date {
+        font-size: .8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sueno-detalle-owner-actions .sueno-owner-button {
+        padding: 6px;
+    }
+
+    .sueno-detalle-owner-label {
+        display: none;
+    }
+
+    .sueno-detalle-stats {
+        gap: var(--space-2);
+    }
+
+    .sueno-detalle-date {
+        font-size: .78rem;
+    }
 }
 
 /* ==========================

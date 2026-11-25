@@ -627,7 +627,10 @@ function SuenoDetallePage() {
 
                                     {/* Botón Editar */}
                                     <button
+                                        type="button"
                                         className="sueno-owner-button"
+                                        aria-label={t("dreamDetail.edit.edit")}
+                                        title={t("dreamDetail.edit.edit")}
                                         onClick={() => {
                                             setEditando(true)
                                             setTituloEdit(sueno.titulo)
@@ -637,21 +640,28 @@ function SuenoDetallePage() {
                                         }}
                                     >
                                         <Pencil size={14} />
-                                        {t("dreamDetail.edit.edit")}
+                                        <span className="sueno-detalle-owner-label">
+                                            {t("dreamDetail.edit.edit")}
+                                        </span>
                                     </button>
 
 
                                     {/* Botón eliminar */}
                                     <button
+                                        type="button"
                                         className="sueno-owner-button"
+                                        aria-label={t("dreamDetail.delete.delete")}
+                                        title={t("dreamDetail.delete.delete")}
                                         onClick={() => setConfirmandoBorrado(true)}
                                         disabled={deleting}
                                     >
-                                        <Trash2 size={14} />
-                                        {deleting
-                                            ? t("dreamDetail.delete.deleting")
-                                            : t("dreamDetail.delete.delete")
-                                        }
+                                        <Trash2 size={14} aria-hidden="true" />
+                                        <span className="sueno-detalle-owner-label">
+                                            {deleting
+                                                ? t("dreamDetail.delete.deleting")
+                                                : t("dreamDetail.delete.delete")
+                                            }
+                                        </span>
                                     </button>
                                 </div>
                             )}
