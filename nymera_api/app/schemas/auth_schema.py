@@ -9,6 +9,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
     turnstile_token: str
+    lang: str = "es"
     
 class TokenResponse(BaseModel):
     access_token: str
@@ -16,7 +17,15 @@ class TokenResponse(BaseModel):
     
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+    lang: str = "es"
     
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str 
+    
+class VerifyEmailRequest(BaseModel):
+    token: str
+    
+class ResendVerificationRequest(BaseModel):
+    email: EmailStr
+    lang: str = "es"

@@ -1,9 +1,9 @@
 import { apiRequest } from "./client"
 
-export function register({ nombre, email, password, turnstile_token }) {
+export function register({ nombre, email, password, turnstile_token, lang = "es" }) {
     return apiRequest("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ nombre, email, password, turnstile_token }),
+        body: JSON.stringify({ nombre, email, password, turnstile_token, lang }),
     })
 }
 
@@ -26,10 +26,10 @@ export function logout() {
     })
 }
 
-export function forgotPassword(email) {
+export function forgotPassword(email, lang = "es") {
     return apiRequest("/auth/forgot-password", {
         method: "POST",
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, lang })
     })
 }
 
@@ -40,5 +40,19 @@ export function resetPassword(token, newPassword) {
             token,
             new_password: newPassword,
         }),
+    })
+}
+
+export function verifyEmail(token) {
+    return apiRequest("/auth/verify-email", {
+        method: "POST",
+        body: JSON.stringify({ token }),
+    })
+}
+
+export function resendVerification(email, lang = "es") {
+    return apiRequest("/auth/resend-verification", {
+        method: "POST",
+        body: JSON.stringify({ email, lang }),
     })
 }

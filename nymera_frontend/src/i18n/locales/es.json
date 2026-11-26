@@ -53,7 +53,12 @@
         "ready": "¿Todo listo?",
         "loginRequired": "Debes iniciar sesión",
         "loading": "Cargando...",
-        "tagline": "Sueños que conectan, significados que descubres"
+        "tagline": "Sueños que conectan, significados que descubres",
+        "verifyEmailTitle": "Verificación de cuenta",
+        "verifyingEmail": "Verificando tu correo electrónico...",
+        "resendVerification": "Reenviar correo de verificación",
+        "resendingVerification": "Reenviando correo...",
+        "resendVerificationCooldown": "Reenviar correo ({{seconds}}s)"
     },
     "accessibility": {
         "goHome": "Ir al inicio",
@@ -72,7 +77,9 @@
         "changeAvatar": "Cambiar foto de perfil",
         "unreadNotification": "Notificación no leída de {{name}}",
         "readNotification": "Notificación de {{name}}",
-        "hashtagAriaLabel": "Hashtag {{nombre}}"
+        "hashtagAriaLabel": "Hashtag {{nombre}}",
+        "resendVerification": "Reenviar correo de verificación",
+        "resendingVerification": "Reenviando correo..."
     },
     "search": {
         "placeholder": "Buscar sueños, usuarios o hashtags..."
@@ -300,13 +307,10 @@
         "invalid_credentials": "Credenciales inválidas",
         "invalid_language": "Idioma no válido.",
         "same_language": "El sueño ya está escrito en este idioma.",
-        "user_not_found": "Usuario no encontrado",
         "unauthorized": "No autorizado",
-        "token_invalid": "Token inválido",
         "reset_link_used": "Este enlace ya fue utilizado",
         "reset_link_expired": "El enlace ha expirado",
         "password_update_failed": "No se pudo actualizar la contraseña",
-        "token_invalidation_failed": "No se pudo invalidar el token",
         "comment_empty": "El comentario está vacío",
         "comment_too_short": "El comentario es demasiado corto",
         "comment_too_long": "El comentario es demasiado largo",
@@ -350,12 +354,24 @@
         "user_delete_failed": "No se pudo eliminar la cuenta. Inténtalo de nuevo más tarde.",
         "translation_timeout": "El servicio de traducción tardó demasiado en responder. Inténtalo de nuevo en unos segundos.",
         "translation_rate_limit": "Demasiadas solicitudes de traducción. Espera un momento e inténtalo de nuevo.",
-        "translation_unavailable": "El servicio de traducción no está disponible en este momento."
+        "translation_unavailable": "El servicio de traducción no está disponible en este momento.",
+        "email_not_verified": "Debes verificar tu correo electrónico antes de iniciar sesión.",
+        "verification_email_failed": "No se pudo enviar el correo de verificación. Inténtalo de nuevo.",
+        "token_invalid": "El enlace no es válido.",
+        "verification_link_used": "Este enlace de verificación ya ha sido utilizado.",
+        "verification_link_expired": "El enlace de verificación ha caducado.",
+        "user_not_found": "No se ha encontrado el usuario.",
+        "email_verification_failed": "No se pudo verificar el correo electrónico.",
+        "token_invalidation_failed": "No se pudo invalidar el token.",
+        "verification_resend_cooldown": "Espera {{seconds}} segundos antes de volver a solicitar el correo."
     },
     "success": {
         "profile_updated": "Perfil actualizado correctamente",
         "password_updated": "Contraseña actualizada correctamente",
-        "password_reset_email_sent": "Si existe una cuenta asociada a ese correo, recibirás un email."
+        "password_reset_email_sent": "Si existe una cuenta asociada a ese correo, recibirás un email.",
+        "verification_email_sent": "Te hemos enviado un correo para verificar tu cuenta. Revisa tu bandeja de entrada.",
+        "email_verified": "Tu correo electrónico ha sido verificado. Ya puedes iniciar sesión.",
+        "verification_email_resent": "Te hemos reenviado el correo de verificación. Revisa tu bandeja de entrada."
     },
     "categories": {
         "1": "Cotidiano",
@@ -417,6 +433,10 @@
         "error": {
             "title": "Página No Encontrada",
             "description": "Parece que este sueño se ha desvanecido. La página que buscas no existe."
+        },
+        "verifyEmail": {
+            "title": "Verificar cuenta | Nymera",
+            "description": "Confirma tu correo electrónico para activar tu cuenta en Nymera."
         }
     },
     "cookies": {

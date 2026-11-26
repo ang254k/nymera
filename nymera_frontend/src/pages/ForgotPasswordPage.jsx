@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
-import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
+import { APP_NAME, APP_LOGO } from "../config/app"
 
 import { forgotPassword } from "../api/auth"
 
@@ -11,7 +11,7 @@ import { getErrorMessage } from "../utils/getErrorMessage"
 import { useToast } from "../context/ToastContext"
 
 export default function ForgotPasswordPage() {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const { showToast } = useToast()
 
@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
         setLoading(true)
 
         try {
-            await forgotPassword(email)
+            await forgotPassword(email, i18n.language)
 
             showToast(t("success.password_reset_email_sent"), "success")
 

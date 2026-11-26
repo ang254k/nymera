@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -13,7 +13,7 @@ import { useToast } from "../context/ToastContext"
 import { Turnstile } from '@marsidev/react-turnstile'
 
 function RegisterPage() {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const [nombre, setNombre] = useState("")
     const [email, setEmail] = useState("")
@@ -26,6 +26,7 @@ function RegisterPage() {
     const navigate = useNavigate()
 
     const [turnstileToken, setTurnstileToken] = useState('')
+    const turnstileRef = useRef(null)
 
     async function handleRegister(e) {
         e.preventDefault()
@@ -38,7 +39,7 @@ function RegisterPage() {
 
         // Validación Turnstile
         if (!turnstileToken) {
-            showToast("Por favor, completa la verificación de seguridad.", "error")
+            showToast(t("errors.invalid_turnstile_token"), "error")
             return
         }
 
@@ -52,13 +53,21 @@ function RegisterPage() {
         setLoading(true)
 
         try {
-            await register({ nombre, email, password, turnstile_token: turnstileToken })
+            await register({
+                nombre,
+                email,
+                password,
+                turnstile_token: turnstileToken,
+                lang: i18n.language,
+            })
 
-            showToast(t("auth.registerSuccess"), "success")
+            showToast(t("success.verification_email_sent"), "success")
 
             navigate("/login")
 
         } catch (err) {
+            setTurnstileToken("")
+            turnstileRef.current?.reset()
             showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
@@ -73,9 +82,7 @@ function RegisterPage() {
             />
 
             <div className="container-sm">
-
                 <div className="card auth-card">
-
                     <div className="brand">
                         <img
                             src={APP_LOGO}
@@ -98,7 +105,6 @@ function RegisterPage() {
                         noValidate
                     >
                         <label className="label stack-sm">
-
                             {t("auth.name")}
 
                             <input
@@ -109,11 +115,9 @@ function RegisterPage() {
                                 onChange={(e) => setNombre(e.target.value)}
                                 autoComplete="name"
                             />
-
                         </label>
 
                         <label className="label stack-sm">
-
                             {t("auth.email")}
 
                             <input
@@ -128,7 +132,6 @@ function RegisterPage() {
                         </label>
 
                         <label className="label stack-sm">
-
                             {t("auth.password")}
 
                             <input
@@ -146,7 +149,6 @@ function RegisterPage() {
                         </label>
 
                         <label className="label stack-sm">
-
                             {t("auth.confirmPassword")}
 
                             <input
@@ -165,6 +167,7 @@ function RegisterPage() {
                             aria-label={t("accessibility.securityVerification")}
                         >
                             <Turnstile
+                            ref={turnstileRef}
                                 siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
                                 options={{
                                     theme: "dark"
@@ -196,13 +199,9 @@ function RegisterPage() {
                     >
                         {t("auth.goToLogin")}
                     </Link>
-
                 </div>
-
             </div >
-
         </div >
-
     )
 }
 

@@ -377,7 +377,7 @@
 } */
 
 /* ==========================
-   Auth ( Login Register ForgotPassword ResetPassword )
+   Auth ( Login Register ForgotPassword ResetPassword VerifyEmail)
 ========================== */
 
 .auth-card {
@@ -490,6 +490,39 @@
     justify-content: center;
     margin: 4px 0;
     width: 100%;
+}
+
+.verify-status-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verify-status-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.verify-status-icon--verifying {
+    color: #c77dff;
+    animation: verifySpin 1s linear infinite;
+}
+
+.verify-status-icon--success {
+    color: #64e0d0;
+}
+
+.verify-status-icon--error {
+    color: #ff6b6b;
+}
+
+@keyframes verifySpin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ==========================

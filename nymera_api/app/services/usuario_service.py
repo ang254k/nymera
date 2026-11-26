@@ -3,19 +3,32 @@ import re
 import os
 import uuid
 import io
+import secrets
 
+from datetime import datetime, timedelta
+from app.config import settings
 from PIL import Image
 from fastapi import UploadFile
 from passlib.hash import bcrypt
 from app.models.usuario import Usuario
 from app.repositories.usuario_repository import UsuarioRepository
 from app.repositories.security_log_repository import SecurityLogRepository
+from app.repositories.email_verification_repository import EmailVerificationRepository
+from app.services.email_service import EmailService
+
 
 class UsuarioService:
 
-    def __init__(self, repo: UsuarioRepository):
+    def __init__(
+        self,
+        repo: UsuarioRepository,
+        verification_repo: EmailVerificationRepository | None = None,
+        email_service: EmailService | None = None,
+    ):
         self.repo = repo
         self.security_log_repo = SecurityLogRepository()
+        self.verification_repo = verification_repo or EmailVerificationRepository()
+        self.email_service = email_service or EmailService()
 
     def _hash_password(self, password: str) -> str:
         return bcrypt.hash(password)
@@ -25,7 +38,13 @@ class UsuarioService:
         if not re.match(email_regex, email):
             raise ValueError("email_invalid")
 
-    def login(self, email: str, password: str, ip_address: str = "unknown", user_agent: str = "unknown") -> Usuario | None:
+    def login(
+        self,
+        email: str,
+        password: str,
+        ip_address: str = "unknown",
+        user_agent: str = "unknown",
+    ) -> Usuario | None:
         email = email.strip().lower()
 
         usuario = self.repo.get_by_email(email)
@@ -36,25 +55,32 @@ class UsuarioService:
                 email_intentado=email,
                 ip_address=ip_address,
                 user_agent=user_agent,
-                exito=False
+                exito=False,
             )
             return None
 
-        if bcrypt.verify(password, usuario.password):
-            return usuario
-        
-        #Si la contraseña es incorrecta, registramos
-        self.security_log_repo.create_log(
-            evento="LOGIN_FAILED",
-            email_intentado=email,
-            ip_address=ip_address,
-            user_agent=user_agent,
-            exito=False
-        )
-        return None
+        if not bcrypt.verify(password, usuario.password):
+            self.security_log_repo.create_log(
+                evento="LOGIN_FAILED",
+                email_intentado=email,
+                ip_address=ip_address,
+                user_agent=user_agent,
+                exito=False,
+            )
+            return None
 
-    def register(self, nombre: str, email: str, password: str) -> Usuario:
+        if not usuario.email_verificado:
+            raise ValueError("email_not_verified")
 
+        return usuario
+
+    def register(
+        self,
+        nombre: str,
+        email: str,
+        password: str,
+        lang: str = "es",
+    ) -> dict | None:
         nombre = nombre.strip()
         email = email.strip().lower()
         password = password.strip()
@@ -84,7 +110,32 @@ class UsuarioService:
 
         pw_hash = self._hash_password(password)
 
-        return self.repo.insert(nombre, email, pw_hash)
+        usuario = self.repo.insert(nombre, email, pw_hash)
+        if usuario is None:
+            return None
+
+        token = secrets.token_urlsafe(32)
+        fecha_expiracion = datetime.now() + timedelta(hours=24)
+
+        self.verification_repo.invalidate_user_tokens(usuario.id)
+        self.verification_repo.create_token(usuario.id, token, fecha_expiracion)
+
+        verify_url = f"{settings.FRONTEND_URL}/verify-email/{token}"
+
+        try:
+            self.email_service.enviar_email_verificacion(
+                destinatario=usuario.email,
+                verify_url=verify_url,
+                lang=lang,
+            )
+        except Exception:
+            self.repo.delete(usuario.id)
+            raise ValueError("verification_email_failed")
+
+        return {
+            "message": "verification_email_sent",
+            "email": usuario.email,
+        }
 
     def update_user(
         self,
@@ -186,24 +237,21 @@ class UsuarioService:
         except Exception:
             raise ValueError("image_invalid")
 
-        try:          
-            cloudinary.config(
-                cloudinary_url=os.getenv("CLOUDINARY_URL"),
-                secure=True
-            )  
-            
+        try:
+            cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"), secure=True)
+
             upload_result = cloudinary.uploader.upload(
                 contenido,
                 folder="nymera_avatars",
                 public_id=f"user_{usuario_id}",
                 overwrite=True,
-                resource_type="image"
+                resource_type="image",
             )
             avatar_url = upload_result.get("secure_url")
         except Exception as e:
             print(f"Error en Cloudinary: {e}")
             raise ValueError("cloud_upload_failed")
-        
+
         actualizado = self.repo.update_avatar(usuario_id, avatar_url)
 
         return actualizado
@@ -223,12 +271,9 @@ class UsuarioService:
         if not bcrypt.verify(current_password, usuario.password):
             raise ValueError("current_password_incorrect")
 
-        #Borrado avatar usuario
+        # Borrado avatar usuario
         try:
-            cloudinary.config(
-                cloudinary_url=os.getenv("CLOUDINARY_URL"),
-                secure=True
-            )
+            cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"), secure=True)
             cloudinary.uploader.destroy(f"nymera_avatars/user_{user_id}")
         except Exception:
             pass

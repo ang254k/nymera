@@ -53,7 +53,12 @@
         "ready": "All set?",
         "loginRequired": "You must log in",
         "loading": "Loading...",
-        "tagline": "Dreams that connect, meanings you uncover"
+        "tagline": "Dreams that connect, meanings you uncover",
+        "verifyEmailTitle": "Account verification",
+        "verifyingEmail": "Verifying your email address...",
+        "resendVerification": "Resend verification email",
+        "resendingVerification": "Resending email...",
+        "resendVerificationCooldown": "Resend email ({{seconds}}s)"
     },
     "accessibility": {
         "goHome": "Go to home",
@@ -306,11 +311,9 @@
         "same_language": "The dream is already written in this language.",
         "user_not_found": "User not found",
         "unauthorized": "Unauthorized",
-        "token_invalid": "Invalid token",
         "reset_link_used": "This link has already been used",
         "reset_link_expired": "The link has expired",
         "password_update_failed": "Could not update the password",
-        "token_invalidation_failed": "Could not invalidate the token",
         "comment_empty": "The comment is empty",
         "comment_too_short": "The comment is too short",
         "comment_too_long": "The comment is too long",
@@ -350,12 +353,23 @@
         "fillAllFields": "Please fill in all required fields.",
         "translation_timeout": "The translation service took too long to respond. Please try again in a few seconds.",
         "translation_rate_limit": "Too many translation requests. Please wait a moment and try again.",
-        "translation_unavailable": "The translation service is currently unavailable."
+        "translation_unavailable": "The translation service is currently unavailable.",
+        "email_not_verified": "Please verify your email address before signing in.",
+        "verification_email_failed": "Could not send the verification email. Please try again.",
+        "token_invalid": "This link is not valid.",
+        "verification_link_used": "This verification link has already been used.",
+        "verification_link_expired": "This verification link has expired.",
+        "email_verification_failed": "Could not verify your email address.",
+        "token_invalidation_failed": "Could not invalidate the token.",
+        "verification_resend_cooldown": "Please wait {{seconds}} seconds before requesting another email."
     },
     "success": {
         "profile_updated": "Profile updated successfully",
         "password_updated": "Password updated successfully",
-        "password_reset_email_sent": "If an account exists for that email, you will receive an email."
+        "password_reset_email_sent": "If an account exists for that email, you will receive an email.",
+        "verification_email_sent": "We sent you an email to verify your account. Check your inbox.",
+        "email_verified": "Your email address has been verified. You can now sign in.",
+        "verification_email_resent": "We've resent the verification email. Please check your inbox."
     },
     "categories": {
         "1": "Everyday",
@@ -417,6 +431,10 @@
         "error": {
             "title": "Page Not Found",
             "description": "It seems this dream has faded away. The page you are looking for does not exist."
+        },
+        "verifyEmail": {
+            "title": "Verify account | Nymera",
+            "description": "Confirm your email address to activate your Nymera account."
         }
     },
     "cookies": {

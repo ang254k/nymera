@@ -19,6 +19,7 @@ import NymeraBackground from "./components/NymeraBackground"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import TermsOfUsePage from "./pages/TermsOfUsePage"
 import CookieBanner from "./components/CookieBanner"
+import VerifyEmailPage from "./pages/VerifyEmailPage"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsOfUsePage />} />
           </Route>

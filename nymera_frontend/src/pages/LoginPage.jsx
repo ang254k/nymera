@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
 
 import { APP_NAME, APP_TAGLINE, APP_LOGO } from "../config/app"
 
-import { login, me } from "../api/auth"
+import { login, me, resendVerification } from "../api/auth"
 
 import SEO from "../components/SEO"
 
@@ -13,7 +13,7 @@ import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 
 function LoginPage() {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -23,7 +23,21 @@ function LoginPage() {
 
     const [loading, setLoading] = useState(false)
 
+    const [unverifiedEmail, setUnverifiedEmail] = useState("")
+    const [resending, setResending] = useState(false)
+    const [resendCooldown, setResendCooldown] = useState(0)
+
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (resendCooldown <= 0) return
+
+        const timer = setInterval(() => {
+            setResendCooldown((prev) => (prev <= 1 ? 0 : prev - 1))
+        }, 1000)
+
+        return () => clearInterval(timer)
+    }, [resendCooldown])
 
     async function handleLogin(e) {
         e.preventDefault()
@@ -36,7 +50,7 @@ function LoginPage() {
         }
 
         setLoading(true)
-
+        setUnverifiedEmail("")
         try {
             await login({ email, password })
 
@@ -49,9 +63,31 @@ function LoginPage() {
             navigate("/home")
 
         } catch (err) {
+            if (err.message === "email_not_verified") {
+                setUnverifiedEmail(email.trim())
+            }
             showToast(getErrorMessage(err, t), "error")
         } finally {
             setLoading(false)
+        }
+    }
+
+    async function handleResendVerification() {
+        if (!unverifiedEmail || resending || resendCooldown > 0) return
+
+        setResending(true)
+        try {
+            await resendVerification(unverifiedEmail, i18n.language)
+            showToast(t("success.verification_email_resent"), "success")
+            setResendCooldown(180)
+        } catch (err) {
+            if (err.message?.startsWith("verification_resend_cooldown:")) {
+                const seconds = Number(err.message.split(":")[1]) || 180
+                setResendCooldown(seconds)
+            }
+            showToast(getErrorMessage(err, t), "error")
+        } finally {
+            setResending(false)
         }
     }
 
@@ -128,6 +164,22 @@ function LoginPage() {
                             {loading ? t("auth.loggingIn") : t("auth.loginButton")}
                         </button>
 
+                        {unverifiedEmail && (
+                            <button
+                                className="btn btn-secondary btn-full"
+                                type="button"
+                                onClick={handleResendVerification}
+                                disabled={resending || resendCooldown > 0}
+                                aria-busy={resending}
+                            >
+                                {resending
+                                    ? t("auth.resendingVerification")
+                                    : resendCooldown > 0
+                                        ? t("auth.resendVerificationCooldown", { seconds: resendCooldown })
+                                        : t("auth.resendVerification")
+                                }
+                            </button>
+                        )}
                     </form>
                     <p className="auth-footer">
                         {t("auth.noAccount")}

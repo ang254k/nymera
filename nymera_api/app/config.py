@@ -29,8 +29,11 @@ class Settings:
         self.CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 
         # Email
+        self.EMAIL_LOGO_URL = os.getenv("EMAIL_LOGO_URL")
         self.RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-
+        self.BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+        self.EMAIL_FROM = os.getenv("EMAIL_FROM")
+        self.EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME")
         # Traducción
         self.LIBRETRANSLATE_URL = os.getenv("LIBRETRANSLATE_URL")
 

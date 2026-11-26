@@ -21,7 +21,7 @@ class UsuarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, nombre, email, password, fecha_creacion, avatar_url
+                    SELECT id, nombre, email, password, fecha_creacion, avatar_url, email_verificado
                     FROM usuario
                     WHERE email = %s
                     """,
@@ -37,7 +37,7 @@ class UsuarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, nombre, email, NULL, fecha_creacion, avatar_url
+                    SELECT id, nombre, email, NULL, fecha_creacion, avatar_url, email_verificado
                     FROM usuario
                     WHERE id = %s
                     """,
@@ -77,14 +77,15 @@ class UsuarioRepository:
     def update_password(self, user_id, password_hash):
         with get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("""
+                cur.execute(
+                    """
                 UPDATE usuario
                 SET password = %s
                 WHERE id = %s
                 """,
-                (password_hash, user_id)
+                    (password_hash, user_id),
                 )
-                
+
                 return cur.rowcount > 0
 
     def get_by_nombre(self, user):
@@ -92,7 +93,7 @@ class UsuarioRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, nombre, email, password, fecha_creacion, avatar_url
+                    SELECT id, nombre, email, password, fecha_creacion, avatar_url, email_verificado
                     FROM usuario
                     WHERE nombre = %s
                     """,
@@ -110,7 +111,7 @@ class UsuarioRepository:
                     cur.execute(
                         """
                         INSERT INTO usuario (nombre, email, password) VALUES (%s, %s, %s)
-                        RETURNING id, nombre, email, NULL, fecha_creacion, avatar_url
+                        RETURNING id, nombre, email, NULL, fecha_creacion, avatar_url, email_verificado
                         """,
                         (nombre, email, password),
                     )
@@ -158,7 +159,7 @@ class UsuarioRepository:
                     UPDATE usuario
                     SET avatar_url = %s
                     WHERE id = %s
-                    RETURNING id, nombre, email, NULL, fecha_creacion, avatar_url
+                    RETURNING id, nombre, email, NULL, fecha_creacion, avatar_url, email_verificado
                     """,
                     (avatar_url, usuario_id),
                 )
@@ -169,3 +170,29 @@ class UsuarioRepository:
                     return None
 
                 return Usuario(*row)
+
+    def mark_email_verified(self, user_id: int) -> bool:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE usuario
+                    SET email_verificado = TRUE
+                    WHERE id = %s
+                    """,
+                    (user_id,),
+                )
+                return cur.rowcount > 0
+
+    def delete_unverified_older_than(self, hours: int = 48) -> int:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM usuario
+                    WHERE email_verificado = FALSE
+                      AND fecha_creacion < (NOW() - (%s * INTERVAL '1 hour'))
+                    """,
+                    (hours,),
+                )
+                return cur.rowcount

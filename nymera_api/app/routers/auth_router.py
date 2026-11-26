@@ -9,8 +9,9 @@ from app.schemas.auth_schema import (
     ForgotPasswordRequest,
     LoginRequest,
     RegisterRequest,
-    TokenResponse,
     ResetPasswordRequest,
+    VerifyEmailRequest,
+    ResendVerificationRequest
 )
 from app.schemas.usuario_schema import UsuarioResponse
 
@@ -30,7 +31,7 @@ usuario_service = UsuarioService(UsuarioRepository())
 auth_service = AuthService()
 
 
-@router.post("/register", response_model=UsuarioResponse)
+@router.post("/register")
 @limiter.limit("4/minute")
 def register(request: Request, data: RegisterRequest):
     # Validar token con Turnstile
@@ -56,12 +57,17 @@ def register(request: Request, data: RegisterRequest):
             )
 
     try:
-        usuario = usuario_service.register(data.nombre, data.email, data.password)
+        resultado = usuario_service.register(
+            data.nombre,
+            data.email,
+            data.password,
+            lang=data.lang,
+        )
 
-        if usuario is None:
+        if resultado is None:
             raise HTTPException(status_code=400, detail="email_already_registered")
 
-        return usuario
+        return resultado
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -73,19 +79,22 @@ def login(response: Response, request: Request, data: LoginRequest):
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
 
-    usuario = usuario_service.login(
-        email=data.email,
-        password=data.password,
-        ip_address=client_ip,
-        user_agent=user_agent,
-    )
+    try:
+        usuario = usuario_service.login(
+            email=data.email,
+            password=data.password,
+            ip_address=client_ip,
+            user_agent=user_agent,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail=str(e))
 
     if usuario is None:
         raise HTTPException(status_code=401, detail="invalid_credentials")
 
     token = create_access_token({"sub": str(usuario.id)})
     is_prod = settings.ENVIRONMENT == "production"
-    
+
     response.set_cookie(
         key="access_token",
         value=token,
@@ -118,7 +127,7 @@ def me(current_user: Usuario = Depends(get_current_user)):
 @router.post("/forgot-password")
 @limiter.limit("4/minute")
 def forgot_password(request: Request, data: ForgotPasswordRequest):
-    return auth_service.forgot_password(data.email)
+    return auth_service.forgot_password(data.email, lang=data.lang)
 
 
 @router.post("/reset-password")
@@ -136,6 +145,44 @@ def reset_password(request: Request, data: ResetPasswordRequest):
             user_agent=user_agent,
         )
 
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+
+
+@router.post("/verify-email")
+@limiter.limit("6/minute")
+def verify_email(request: Request, data: VerifyEmailRequest):
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+
+    try:
+        return auth_service.verify_email(
+            token=data.token,
+            ip_address=client_ip,
+            user_agent=user_agent,
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+
+@router.post("/resend-verification")
+@limiter.limit("3/hour")
+def resend_verification(request: Request, data: ResendVerificationRequest):
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+
+    try:
+        return auth_service.resend_verification_email(
+            email=data.email,
+            lang=data.lang,
+            ip_address=client_ip,
+            user_agent=user_agent,
+        )
     except ValueError as e:
         raise HTTPException(
             status_code=400,
