@@ -99,8 +99,8 @@ def login(response: Response, request: Request, data: LoginRequest):
         key="access_token",
         value=token,
         httponly=True,
-        secure=settings.ENVIRONMENT == "production",
-        samesite="none" if is_prod else "lax",
+        secure=is_prod,
+        samesite="lax",
         max_age=settings.JWT_EXPIRE_MINUTES * 60,
     )
 
@@ -114,7 +114,7 @@ def logout(response: Response):
         key="access_token",
         httponly=True,
         secure=is_prod,
-        samesite="none" if is_prod else "lax",
+        samesite="lax",
     )
     return {"message": "logout_success"}
 
