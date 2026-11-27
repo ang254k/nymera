@@ -1,8 +1,6 @@
 import { API_URL } from "../config/api"
 
-
 export async function apiRequest(endpoint, options = {}) {
-
     const headers = {
         "Content-Type": "application/json",
         ...options.headers,
@@ -14,12 +12,25 @@ export async function apiRequest(endpoint, options = {}) {
         credentials: "include"
     })
 
+    if (response.status === 204) {
+        return null
+    }
+
+    const contentType = response.headers.get("content-type") || ""
+    const isJson = contentType.includes("application/json")
+
     let data = null
 
-    try {
-        data = await response.json()
-    } catch {
-
+    if (isJson) {
+        try {
+            data = await response.json()
+        } catch {
+            if (response.ok) {
+                throw new Error("invalid_json_response")
+            }
+        }
+    } else if (response.ok) {
+        throw new Error("unexpected_response_format")
     }
 
     if (!response.ok) {

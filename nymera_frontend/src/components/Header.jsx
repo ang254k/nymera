@@ -26,19 +26,30 @@ function Header() {
   const isSpanish = i18n.language.startsWith("es")
 
   useEffect(() => {
+    let active = true
+
     async function load() {
-      if (!user || location.pathname === "/login" || location.pathname === "/register")
+      if (!user || location.pathname === "/login" || location.pathname === "/register") {
+        if (active) setCount(0)
         return
+      }
 
       try {
         const data = await getNotificaciones()
-        const noLeidas = data.filter(n => !n.leido).length
+        if (!active) return
+
+        const lista = Array.isArray(data) ? data : []
+        const noLeidas = lista.filter(n => n && !n.leido).length
         setCount(noLeidas)
       } catch (err) {
-        setCount(0)
+        if (active) setCount(0)
       }
     }
+
     load()
+    return () => {
+      active = false
+    }
   }, [user, location.pathname])
 
   useEffect(() => {
