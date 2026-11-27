@@ -66,6 +66,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"  # Bloquea la suplantación de tipos MIME
         response.headers["X-XSS-Protection"] = "1; mode=block"  # Protección extra contra XSS básico
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" # Controla la privacidad de la URL de origen
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
         if settings.ENVIRONMENT == "production":
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
             
