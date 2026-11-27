@@ -15,14 +15,14 @@ function NotificacionesPage() {
 
     const [notificaciones, setNotificaciones] = useState([])
     const [loading, setLoading] = useState(true)
-    const[markingAll, setMarkingAll] = useState(false)
+    const [markingAll, setMarkingAll] = useState(false)
     const { showToast } = useToast()
 
     useEffect(() => {
         async function load() {
             try {
                 const data = await getNotificaciones()
-                setNotificaciones(data)
+                setNotificaciones(Array.isArray(data) ? data : [])
             } catch (err) {
                 showToast(t("notifications.loadError"), "error")
             } finally {
@@ -50,8 +50,8 @@ function NotificacionesPage() {
             setMarkingAll(false)
         }
     }
-
-    const hayNoLeidas = notificaciones.some(n => !n.leido)
+    const listaNotificaciones = Array.isArray(notificaciones) ? notificaciones : []
+    const hayNoLeidas = listaNotificaciones.some(n => !n.leido)
 
     return (
         <div className="notificaciones-page">
@@ -65,7 +65,7 @@ function NotificacionesPage() {
                     {t("notifications.title")}
                 </h1>
 
-                {!loading && notificaciones.length > 0 && hayNoLeidas && (
+                {!loading && listaNotificaciones.length > 0 && hayNoLeidas && (
                     <button
                         type="button"
                         onClick={handleMarcarTodas}
@@ -81,13 +81,13 @@ function NotificacionesPage() {
                 <p className="notificaciones-loading" role="status" aria-live="polite" >
                     {t("notifications.loading")}
                 </p>
-            ) : notificaciones.length === 0 ? (
+            ) : listaNotificaciones.length === 0 ? (
                 <p className="notificaciones-empty">
                     {t("notifications.empty")}
                 </p>
             ) : (
                 <div className="notificaciones-list">
-                    {notificaciones.map((n) => (
+                    {listaNotificaciones.map((n) => (
                         <Link
                             key={n.id}
                             to={`/suenos/${n.sueno_id}`}
@@ -104,7 +104,7 @@ function NotificacionesPage() {
                                                     : notif
                                             )
                                         )
-                                        const nuevasNoLeidas = notificaciones.filter(notif => notif.id !== n.id && !notif.leido).length
+                                        const nuevasNoLeidas = listaNotificaciones.filter(notif => notif.id !== n.id && !notif.leido).length
                                         window.dispatchEvent(new CustomEvent("notificacionesActualizadas", { detail: { count: nuevasNoLeidas } }))
                                     } catch (err) {
                                         showToast(t("notifications.markReadError"), "error")
