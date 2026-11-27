@@ -1,7 +1,7 @@
 import { apiRequest } from "./client"
 
 export async function getNotificaciones() {
-    return apiRequest("/notificaciones/")
+    return apiRequest("/notificaciones")
 }
 
 export function marcarNotificacionLeida(id) {

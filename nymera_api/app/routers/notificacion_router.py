@@ -13,7 +13,7 @@ router = APIRouter(
 notificacion_repository = NotificacionRepository()
 notificacion_service = NotificacionService(notificacion_repository)
 
-@router.get("/", response_model=list[NotificacionOut])
+@router.get("", response_model=list[NotificacionOut])
 def get_notificaciones(current_user: Usuario = Depends(get_current_user)):
     return notificacion_service.get_by_user(current_user.id)
 
